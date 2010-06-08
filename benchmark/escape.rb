@@ -8,7 +8,12 @@ require 'benchmark'
 require 'rack'
 require 'erb'
 require 'cgi'
+require 'haml'
 require 'escape_utils'
+
+module HamlBench
+  extend Haml::Helpers
+end
 
 times = 100
 url = "http://maps.google.com"
@@ -34,6 +39,13 @@ Benchmark.bmbm do |x|
     puts "CGI.escapeHTML"
     times.times do
       CGI.escapeHTML(html)
+    end
+  end
+
+  x.report do
+    puts "Haml::Helpers.html_escape"
+    times.times do
+      HamlBench.html_escape(html)
     end
   end
 
