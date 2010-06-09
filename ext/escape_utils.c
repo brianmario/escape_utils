@@ -33,33 +33,23 @@ static size_t unescape_html(unsigned char *out, const unsigned char *in, size_t 
   for(;i<in_len;i++) {
     switch(in[i]) {
       case '&':
-        if (i+5 <= in_len) {
-          if (memcmp(&in[i], "&amp;", 5) == 0) {
-            APPEND_BUFFER("&", 1, 5);
-          } else if (memcmp(&in[i], "&lt;", 4) == 0) {
-            APPEND_BUFFER("<", 1, 4);
-          } else if (memcmp(&in[i], "&gt;", 4) == 0) {
-            APPEND_BUFFER(">", 1, 4);
-          } else if (memcmp(&in[i], "&#39;", 5) == 0) {
-            APPEND_BUFFER("\'", 1, 5);
-          } else if (memcmp(&in[i], "&quot;", 6) == 0) {
-            APPEND_BUFFER("\"", 1, 6);
-          }
-        } else if (i+4 <= in_len) {
-          if (memcmp(&in[i], "&amp;", 5) == 0) {
-            APPEND_BUFFER("&", 1, 5);
-          } else if (memcmp(&in[i], "&lt;", 4) == 0) {
-            APPEND_BUFFER("<", 1, 4);
-          } else if (memcmp(&in[i], "&gt;", 4) == 0) {
-            APPEND_BUFFER(">", 1, 4);
-          } else if (memcmp(&in[i], "&#39;", 5) == 0) {
-            APPEND_BUFFER("\'", 1, 5);
-          }
-        } else if (i+3 <= in_len) {
+        if (i+3 <= in_len) {
           if (memcmp(&in[i], "&lt;", 4) == 0) {
             APPEND_BUFFER("<", 1, 4);
           } else if (memcmp(&in[i], "&gt;", 4) == 0) {
             APPEND_BUFFER(">", 1, 4);
+          }
+        }
+        if (i+4 <= in_len) {
+          if (memcmp(&in[i], "&amp;", 5) == 0) {
+            APPEND_BUFFER("&", 1, 5);
+          } else if (memcmp(&in[i], "&#39;", 5) == 0) {
+            APPEND_BUFFER("\'", 1, 5);
+          }
+        }
+        if (i+5 <= in_len) {
+          if (memcmp(&in[i], "&quot;", 6) == 0) {
+            APPEND_BUFFER("\"", 1, 6);
           }
         }
       break;
