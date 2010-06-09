@@ -1,22 +1,18 @@
 #include <ruby.h>
 
-#define APPEND_BUFFER(escape, len, scoot)           \
-  memcpy(&dst_buf[total], &buf[offset], i-offset);  \
-  total += i-offset;                                \
-  offset = i+scoot;                                 \
-  memcpy(&dst_buf[total], escape, len);             \
-  total += len;                                     \
-  break;                                            \
+#define APPEND_BUFFER(escape, len, scoot_by)  \
+  memcpy(&out[total], &in[offset], i-offset); \
+  total += i-offset;                          \
+  offset = i+scoot_by;                        \
+  memcpy(&out[total], escape, len);           \
+  total += len;                               \
+  break;                                      \
 
-static VALUE rb_escape_html(VALUE self, VALUE str) {
-  char *buf = (char*)RSTRING_PTR(str);
-  size_t i = 0, len = RSTRING_LEN(str), offset = 0, total = 0;
-  // max size the string could be; we should try to be more intelligent about this
-  char *dst_buf = (char *)malloc(sizeof(char *)*(len*5));
-  VALUE dst_str;
+static size_t escape_html(unsigned char *out, const unsigned char *in, size_t in_len) {
+  size_t i = 0, offset = 0, total = 0;
 
-  for(;i<len;i++) {
-    switch(buf[i]) {
+  for(;i<in_len;i++) {
+    switch(in[i]) {
       case '&':  APPEND_BUFFER("&amp;",  5, 1);
       case '<':  APPEND_BUFFER("&lt;",   4, 1);
       case '>':  APPEND_BUFFER("&gt;",   4, 1);
@@ -26,48 +22,43 @@ static VALUE rb_escape_html(VALUE self, VALUE str) {
   }
 
   // append the rest of the buffer
-  memcpy(&dst_buf[total], &buf[offset], i-offset);
-  total += i-offset;
-  dst_str = rb_str_new(dst_buf, total);
-  free(dst_buf);
-  return dst_str;
+  memcpy(&out[total], &in[offset], i-offset);
+
+  return total + (i-offset);
 }
 
-static VALUE rb_unescape_html(VALUE self, VALUE str) {
-  char *buf = (char*)RSTRING_PTR(str);
-  size_t i = 0, len = RSTRING_LEN(str), offset = 0, total = 0;
-  char *dst_buf = (char *)malloc(sizeof(char *)*len);
-  VALUE dst_str;
-
-  for(;i<len;i++) {
-    switch(buf[i]) {
+static size_t unescape_html(unsigned char *out, const unsigned char *in, size_t in_len) {
+  size_t i = 0, offset = 0, total = 0;
+  
+  for(;i<in_len;i++) {
+    switch(in[i]) {
       case '&':
-        if (i+5 <= len) {
-          if (memcmp(&buf[i], "&amp;", 5) == 0) {
+        if (i+5 <= in_len) {
+          if (memcmp(&in[i], "&amp;", 5) == 0) {
             APPEND_BUFFER("&", 1, 5);
-          } else if (memcmp(&buf[i], "&lt;", 4) == 0) {
+          } else if (memcmp(&in[i], "&lt;", 4) == 0) {
             APPEND_BUFFER("<", 1, 4);
-          } else if (memcmp(&buf[i], "&gt;", 4) == 0) {
+          } else if (memcmp(&in[i], "&gt;", 4) == 0) {
             APPEND_BUFFER(">", 1, 4);
-          } else if (memcmp(&buf[i], "&#39;", 5) == 0) {
+          } else if (memcmp(&in[i], "&#39;", 5) == 0) {
             APPEND_BUFFER("\'", 1, 5);
-          } else if (memcmp(&buf[i], "&quot;", 6) == 0) {
+          } else if (memcmp(&in[i], "&quot;", 6) == 0) {
             APPEND_BUFFER("\"", 1, 6);
           }
-        } else if (i+4 <= len) {
-          if (memcmp(&buf[i], "&amp;", 5) == 0) {
+        } else if (i+4 <= in_len) {
+          if (memcmp(&in[i], "&amp;", 5) == 0) {
             APPEND_BUFFER("&", 1, 5);
-          } else if (memcmp(&buf[i], "&lt;", 4) == 0) {
+          } else if (memcmp(&in[i], "&lt;", 4) == 0) {
             APPEND_BUFFER("<", 1, 4);
-          } else if (memcmp(&buf[i], "&gt;", 4) == 0) {
+          } else if (memcmp(&in[i], "&gt;", 4) == 0) {
             APPEND_BUFFER(">", 1, 4);
-          } else if (memcmp(&buf[i], "&#39;", 5) == 0) {
+          } else if (memcmp(&in[i], "&#39;", 5) == 0) {
             APPEND_BUFFER("\'", 1, 5);
           }
-        } else if (i+3 <= len) {
-          if (memcmp(&buf[i], "&lt;", 4) == 0) {
+        } else if (i+3 <= in_len) {
+          if (memcmp(&in[i], "&lt;", 4) == 0) {
             APPEND_BUFFER("<", 1, 4);
-          } else if (memcmp(&buf[i], "&gt;", 4) == 0) {
+          } else if (memcmp(&in[i], "&gt;", 4) == 0) {
             APPEND_BUFFER(">", 1, 4);
           }
         }
@@ -76,11 +67,51 @@ static VALUE rb_unescape_html(VALUE self, VALUE str) {
   }
 
   // append the rest of the buffer
-  memcpy(&dst_buf[total], &buf[offset], i-offset);
-  total += i-offset;
-  dst_str = rb_str_new(dst_buf, total);
-  free(dst_buf);
-  return dst_str;
+  memcpy(&out[total], &in[offset], i-offset);
+
+  return total + (i-offset);
+}
+
+static VALUE rb_escape_html(VALUE self, VALUE str) {
+  VALUE rb_output_buf;
+  unsigned char *inBuf = (unsigned char*)RSTRING_PTR(str);
+  size_t len = RSTRING_LEN(str), new_len = 0;
+
+  // this is the max size the string could be
+  // TODO: we should try to be more intelligent about this
+  unsigned char *outBuf = (unsigned char *)malloc(sizeof(unsigned char *)*(len*5));
+
+  // perform our escape, returning the new string's length
+  new_len = escape_html(outBuf, inBuf, len);
+
+  // create our new ruby string
+  rb_output_buf = rb_str_new((char *)outBuf, new_len);
+
+  // free the temporary C string
+  free(outBuf);
+
+  return rb_output_buf;
+}
+
+static VALUE rb_unescape_html(VALUE self, VALUE str) {
+  VALUE rb_output_buf;
+  unsigned char *inBuf = (unsigned char*)RSTRING_PTR(str);
+  size_t len = RSTRING_LEN(str), new_len = 0;
+
+  // this is the max size the string could be
+  // TODO: we should try to be more intelligent about this
+  unsigned char *outBuf = (unsigned char *)malloc(sizeof(unsigned char *)*len);
+
+  // perform our escape, returning the new string's length
+  new_len = unescape_html(outBuf, inBuf, len);
+
+  // create our new ruby string
+  rb_output_buf = rb_str_new((char *)outBuf, new_len);
+
+  // free the temporary C string
+  free(outBuf);
+
+  return rb_output_buf;
 }
 
 /* Ruby Extension initializer */
