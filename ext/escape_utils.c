@@ -1,4 +1,8 @@
 #include <ruby.h>
+#ifdef HAVE_RUBY_ENCODING_H
+#include <ruby/encoding.h>
+int utf8Encoding;
+#endif
 
 #define APPEND_BUFFER(escape, len, scoot_by)  \
   memcpy(&out[total], &in[offset], i-offset); \
@@ -109,6 +113,9 @@ static VALUE rb_escape_html(VALUE self, VALUE str) {
   // free the temporary C string
   free(outBuf);
 
+#ifdef HAVE_RUBY_ENCODING_H
+  rb_enc_associate_index(rb_output_buf, utf8Encoding);
+#endif
   return rb_output_buf;
 }
 
@@ -132,6 +139,9 @@ static VALUE rb_unescape_html(VALUE self, VALUE str) {
   // free the temporary C string
   free(outBuf);
 
+#ifdef HAVE_RUBY_ENCODING_H
+  rb_enc_associate_index(rb_output_buf, utf8Encoding);
+#endif
   return rb_output_buf;
 }
 
@@ -159,6 +169,9 @@ static VALUE rb_escape_javascript(VALUE self, VALUE str) {
   // free the temporary C string
   free(outBuf);
 
+#ifdef HAVE_RUBY_ENCODING_H
+  rb_enc_associate_index(rb_output_buf, utf8Encoding);
+#endif
   return rb_output_buf;
 }
 
@@ -171,4 +184,8 @@ void Init_escape_utils_ext() {
   rb_define_module_function(mEscape,  "unescape_html",  rb_unescape_html, 1);
   rb_define_method(mEscape,           "escape_javascript",  rb_escape_javascript, 1);
   rb_define_module_function(mEscape,  "escape_javascript",  rb_escape_javascript, 1);
+
+#ifdef HAVE_RUBY_ENCODING_H
+  utf8Encoding = rb_enc_find_index("UTF-8");
+#endif
 }
