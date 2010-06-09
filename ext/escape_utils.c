@@ -103,6 +103,8 @@ static size_t escape_javascript(unsigned char *out, const unsigned char *in, siz
 }
 
 static VALUE rb_escape_html(VALUE self, VALUE str) {
+  Check_Type(str, T_STRING);
+
   VALUE rb_output_buf;
   unsigned char *inBuf = (unsigned char*)RSTRING_PTR(str);
   size_t len = RSTRING_LEN(str), new_len = 0;
@@ -124,6 +126,8 @@ static VALUE rb_escape_html(VALUE self, VALUE str) {
 }
 
 static VALUE rb_unescape_html(VALUE self, VALUE str) {
+  Check_Type(str, T_STRING);
+
   VALUE rb_output_buf;
   unsigned char *inBuf = (unsigned char*)RSTRING_PTR(str);
   size_t len = RSTRING_LEN(str), new_len = 0;
