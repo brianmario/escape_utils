@@ -12,28 +12,36 @@ It has monkey-patches for Rack::Utils, CGI, ERB::Util and Haml
 
 == Usage
 
-=== Escaping HTML
+=== HTML
+
+==== Escaping
 
   html = `curl -s http://maps.google.com`
   escaped_html = EscapeUtils.escape_html(html)
 
-=== Unescaping HTML
+==== Unescaping
 
   html = `curl -s http://maps.google.com`
   escaped_html = EscapeUtils.escape_html(html)
   html = EscapeUtils.unescape_html(escaped_html)
 
-=== Escaping Javascript
+==== Monkey Patches
+
+  require 'escape_utils/html/rack' # to patch Rack::Utils
+  require 'escape_utils/html/erb' # to patch ERB::Util
+  require 'escape_utils/html/cgi' # to patch CGI
+  require 'escape_utils/html/haml' # to patch Haml::Helpers
+
+=== Javascript
+
+==== Escaping
 
   javascript = `curl -s http://code.jquery.com/jquery-1.4.2.js`
   escaped_javascript = EscapeUtils.escape_javascript(javascript)
 
-=== Monkey Patches
+==== Monkey Patches
 
-  require 'escape_utils/rack' # to patch Rack::Utils
-  require 'escape_utils/erb' # to patch ERB::Util
-  require 'escape_utils/cgi' # to patch CGI
-  require 'escape_utils/haml' # to patch Haml::Helpers
+  require 'escape_utils/javascript/action_view' # to patch ActionView::Helpers::JavaScriptHelper
 
 == Benchmarks
 
@@ -42,7 +50,9 @@ While unescaping is around 20-40x faster than CGI.unescapeHTML - also pure ruby.
 
 This output is from my laptop using the benchmark scripts in the benchmarks folder.
 
-=== HTML Escaping
+=== HTML
+
+==== Escaping
 
  Rack::Utils.escape_html
   0.560000   0.040000   0.600000 (  0.589475)
@@ -55,14 +65,16 @@ This output is from my laptop using the benchmark scripts in the benchmarks fold
  EscapeUtils.escape_html
   0.050000   0.010000   0.060000 (  0.054799)
 
-=== HTML Unescaping
+=== Unescaping
 
  CGI.unescapeHTML
   1.140000   0.010000   1.150000 (  1.148470)
  EscapeUtils.unescape_html
   0.040000   0.000000   0.040000 (  0.046166)
 
-=== Javascript Escaping
+=== Javascript
+
+==== Escaping
 
  ActionView::Helpers::JavaScriptHelper#escape_javascript
   2.000000   0.020000   2.020000 (  2.023047)
