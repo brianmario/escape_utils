@@ -5,7 +5,7 @@
 
 Gem::Specification.new do |s|
   s.name = %q{escape_utils}
-  s.version = "0.1.0"
+  s.version = "0.1.1"
 
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
   s.authors = ["Brian Lopez"]
@@ -22,8 +22,9 @@ Gem::Specification.new do |s|
      "README.rdoc",
      "Rakefile",
      "VERSION",
-     "benchmark/escape.rb",
-     "benchmark/unescape.rb",
+     "benchmark/html_escape.rb",
+     "benchmark/html_unescape.rb",
+     "benchmark/javascript_escape.rb",
      "escape_utils.gemspec",
      "ext/escape_utils.c",
      "ext/extconf.rb",
@@ -34,6 +35,7 @@ Gem::Specification.new do |s|
      "lib/escape_utils/rack.rb",
      "spec/html/escape_spec.rb",
      "spec/html/unescape_spec.rb",
+     "spec/javascript/escape_spec.rb",
      "spec/rcov.opts",
      "spec/spec.opts",
      "spec/spec_helper.rb"
@@ -46,6 +48,7 @@ Gem::Specification.new do |s|
   s.test_files = [
     "spec/html/escape_spec.rb",
      "spec/html/unescape_spec.rb",
+     "spec/javascript/escape_spec.rb",
      "spec/spec_helper.rb"
   ]
 
