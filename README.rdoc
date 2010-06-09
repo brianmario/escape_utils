@@ -45,8 +45,9 @@ It has monkey-patches for Rack::Utils, CGI, ERB::Util and Haml and ActionView so
 
 == Benchmarks
 
-In my testing, escaping is around 10-20x faster than the pure ruby implementations in wide use today.
-While unescaping is around 20-40x faster than CGI.unescapeHTML - also pure ruby.
+In my testing, escaping html is around 10-20x faster than the pure ruby implementations in wide use today.
+While unescaping html is around 20-40x faster than CGI.unescapeHTML - also pure ruby.
+Escaping Javascript is around 16-30x faster.
 
 This output is from my laptop using the benchmark scripts in the benchmarks folder.
 
