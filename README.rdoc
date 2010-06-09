@@ -1,0 +1,58 @@
+= escape_utils
+
+Being as though we're all html escaping everything these days, why not make it faster?
+
+At the moment escape_utils supports escaping and unescaping of HTML, but I wanna add URL encoding soon
+
+It has monkey-patches for Rack::Utils, CGI, ERB::Util and Haml
+
+== Installing
+
+  gem install escape_utils
+
+== Usage
+
+=== Escaping HTML
+
+  html = `curl -s http://maps.google.com`
+  escaped_html = EscapeUtils.escape_html(html)
+
+=== Unescaping HTML
+
+  html = `curl -s http://maps.google.com`
+  escaped_html = EscapeUtils.escape_html(html)
+  html = EscapeUtils.unescape_html(escaped_html)
+
+=== Monkey Patches
+
+  require 'escape_utils/rack' # to patch Rack::Utils
+  require 'escape_utils/erb' # to patch ERB::Util
+  require 'escape_utils/cgi' # to patch CGI
+  require 'escape_utils/haml' # to patch Haml::Helpers
+
+== Benchmarks
+
+In my testing, escaping is around 10-20x faster than the pure ruby implementations in wide use today.
+While unescaping is around 24x faster than CGI.unescapeHTML - also pure ruby.
+
+This output is from my laptop using the benchmark scripts in the benchmarks folder.
+
+=== Escaping
+
+ Rack::Utils.escape_html
+  0.560000   0.040000   0.600000 (  0.589475)
+ ERB::Util.html_escape
+  0.450000   0.040000   0.490000 (  0.492893)
+ CGI.escapeHTML
+  0.460000   0.030000   0.490000 (  0.490171)
+ Haml::Helpers.html_escape
+  0.430000   0.010000   0.440000 (  0.444694)
+ EscapeUtils.escape_html
+  0.050000   0.010000   0.060000 (  0.054799)
+
+=== Unescaping
+
+ CGI.unescapeHTML
+  1.140000   0.010000   1.150000 (  1.148470)
+ EscapeUtils.unescape_html
+  0.040000   0.000000   0.040000 (  0.046166)
