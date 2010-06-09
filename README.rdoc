@@ -2,7 +2,7 @@
 
 Being as though we're all html escaping everything these days, why not make it faster?
 
-At the moment escape_utils supports escaping and unescaping of HTML, but I wanna add URL encoding soon
+At the moment escape_utils supports escaping and unescaping of HTML, and Javascript but I wanna add URL encoding soon
 
 It has monkey-patches for Rack::Utils, CGI, ERB::Util and Haml
 
@@ -23,6 +23,11 @@ It has monkey-patches for Rack::Utils, CGI, ERB::Util and Haml
   escaped_html = EscapeUtils.escape_html(html)
   html = EscapeUtils.unescape_html(escaped_html)
 
+=== Escaping Javascript
+
+  javascript = `curl -s http://code.jquery.com/jquery-1.4.2.js`
+  escaped_javascript = EscapeUtils.escape_javascript(javascript)
+
 === Monkey Patches
 
   require 'escape_utils/rack' # to patch Rack::Utils
@@ -37,7 +42,7 @@ While unescaping is around 20-40x faster than CGI.unescapeHTML - also pure ruby.
 
 This output is from my laptop using the benchmark scripts in the benchmarks folder.
 
-=== Escaping
+=== HTML Escaping
 
  Rack::Utils.escape_html
   0.560000   0.040000   0.600000 (  0.589475)
@@ -50,9 +55,16 @@ This output is from my laptop using the benchmark scripts in the benchmarks fold
  EscapeUtils.escape_html
   0.050000   0.010000   0.060000 (  0.054799)
 
-=== Unescaping
+=== HTML Unescaping
 
  CGI.unescapeHTML
   1.140000   0.010000   1.150000 (  1.148470)
  EscapeUtils.unescape_html
   0.040000   0.000000   0.040000 (  0.046166)
+
+=== Javascript Escaping
+
+ ActionView::Helpers::JavaScriptHelper#escape_javascript
+  2.000000   0.020000   2.020000 (  2.023047)
+ EscapeUtils.escape_javascript
+  0.110000   0.010000   0.120000 (  0.121761)
