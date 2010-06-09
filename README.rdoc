@@ -33,7 +33,7 @@ It has monkey-patches for Rack::Utils, CGI, ERB::Util and Haml
 == Benchmarks
 
 In my testing, escaping is around 10-20x faster than the pure ruby implementations in wide use today.
-While unescaping is around 24x faster than CGI.unescapeHTML - also pure ruby.
+While unescaping is around 20-40x faster than CGI.unescapeHTML - also pure ruby.
 
 This output is from my laptop using the benchmark scripts in the benchmarks folder.
 

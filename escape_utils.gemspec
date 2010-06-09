@@ -12,8 +12,14 @@ Gem::Specification.new do |s|
   s.date = %q{2010-06-08}
   s.email = %q{seniorlopez@gmail.com}
   s.extensions = ["ext/extconf.rb"]
+  s.extra_rdoc_files = [
+    "README.rdoc"
+  ]
   s.files = [
     ".gitignore",
+     "CHANGELOG.md",
+     "MIT-LICENSE",
+     "README.rdoc",
      "Rakefile",
      "VERSION",
      "benchmark/escape.rb",
