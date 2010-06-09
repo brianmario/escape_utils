@@ -8,9 +8,10 @@
   total += len;                                     \
   break;                                            \
 
-VALUE rb_html_escape(VALUE self, VALUE str) {
+static VALUE rb_escape_html(VALUE self, VALUE str) {
   char *buf = (char*)RSTRING_PTR(str);
   size_t i = 0, len = RSTRING_LEN(str), offset = 0, total = 0;
+  // max size the string could be; we should try to be more intelligent about this
   char *dst_buf = (char *)malloc(sizeof(char *)*(len*5));
   VALUE dst_str;
 
@@ -23,6 +24,7 @@ VALUE rb_html_escape(VALUE self, VALUE str) {
       case '\"': APPEND_BUFFER("&quot;", 6);
     }
   }
+
   // append the rest of the buffer
   memcpy(&dst_buf[total], &buf[offset], i-offset);
   total += i-offset;
@@ -34,6 +36,6 @@ VALUE rb_html_escape(VALUE self, VALUE str) {
 /* Ruby Extension initializer */
 void Init_escape_utils_ext() {
   VALUE mEscape = rb_define_module("EscapeUtils");
-  rb_define_method(mEscape,           "escape_html", rb_html_escape, 1);
-  rb_define_module_function(mEscape,  "escape_html", rb_html_escape, 1);
+  rb_define_method(mEscape,           "escape_html", rb_escape_html, 1);
+  rb_define_module_function(mEscape,  "escape_html", rb_escape_html, 1);
 }
