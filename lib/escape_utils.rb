@@ -4,5 +4,5 @@ require 'escape_utils_ext'
 
 EscapeUtils.send(:extend, EscapeUtils)
 module EscapeUtils
-  VERSION = "0.1.1"
+  VERSION = "0.1.2"
 end

@@ -5,7 +5,7 @@
 
 Gem::Specification.new do |s|
   s.name = %q{escape_utils}
-  s.version = "0.1.1"
+  s.version = "0.1.2"
 
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
   s.authors = ["Brian Lopez"]
@@ -29,10 +29,11 @@ Gem::Specification.new do |s|
      "ext/escape_utils.c",
      "ext/extconf.rb",
      "lib/escape_utils.rb",
-     "lib/escape_utils/cgi.rb",
-     "lib/escape_utils/erb.rb",
-     "lib/escape_utils/haml.rb",
-     "lib/escape_utils/rack.rb",
+     "lib/escape_utils/html/cgi.rb",
+     "lib/escape_utils/html/erb.rb",
+     "lib/escape_utils/html/haml.rb",
+     "lib/escape_utils/html/rack.rb",
+     "lib/escape_utils/javascript/action_view.rb",
      "spec/html/escape_spec.rb",
      "spec/html/unescape_spec.rb",
      "spec/javascript/escape_spec.rb",
