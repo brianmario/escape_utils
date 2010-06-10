@@ -3,7 +3,7 @@
 class ERB
   module Util
     def html_escape(s)
-      EscapeUtils.escape_html(s)
+      EscapeUtils.escape_html(s.to_s)
     end
 
     alias h html_escape

@@ -2,6 +2,6 @@
 
 class CGI
   def self.escapeHTML(s)
-    EscapeUtils.escape_html(s)
+    EscapeUtils.escape_html(s.to_s)
   end
 end
