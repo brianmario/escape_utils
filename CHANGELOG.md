@@ -1,5 +1,8 @@
 # Changelog
 
+## 0.1.4 (June 9th, 2010)
+* ensure strings are passed in from monkey-patches
+
 ## 0.1.3 (June 9th, 2010)
 * cleaned some code up, removing duplication
 * moved to a more flexible character encoding scheme using Encoding.defaut_internal for 1.9 users
