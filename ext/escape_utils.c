@@ -1,7 +1,7 @@
 #include <ruby.h>
 #ifdef HAVE_RUBY_ENCODING_H
 #include <ruby/encoding.h>
-static int utf8Encoding;
+static rb_encoding *utf8Encoding;
 #endif
 
 #define APPEND_BUFFER(escape, len, scoot_by)  \
@@ -97,6 +97,10 @@ static VALUE rb_escape_html(VALUE self, VALUE str) {
   Check_Type(str, T_STRING);
 
   VALUE rb_output_buf;
+#ifdef HAVE_RUBY_ENCODING_H
+  rb_encoding *default_internal_enc = rb_default_internal_encoding();
+  rb_encoding *original_encoding = rb_enc_get(str);
+#endif
   unsigned char *inBuf = (unsigned char*)RSTRING_PTR(str);
   size_t len = RSTRING_LEN(str), new_len = 0;
 
@@ -114,7 +118,12 @@ static VALUE rb_escape_html(VALUE self, VALUE str) {
   free(outBuf);
 
 #ifdef HAVE_RUBY_ENCODING_H
-  rb_enc_associate_index(rb_output_buf, utf8Encoding);
+  rb_enc_associate(rb_output_buf, original_encoding);
+  if (default_internal_enc) {
+    rb_output_buf = rb_str_export_to_enc(rb_output_buf, default_internal_enc);
+  } else {
+    rb_output_buf = rb_str_export_to_enc(rb_output_buf, utf8Encoding);
+  }
 #endif
   return rb_output_buf;
 }
@@ -123,6 +132,10 @@ static VALUE rb_unescape_html(VALUE self, VALUE str) {
   Check_Type(str, T_STRING);
 
   VALUE rb_output_buf;
+#ifdef HAVE_RUBY_ENCODING_H
+  rb_encoding *default_internal_enc = rb_default_internal_encoding();
+  rb_encoding *original_encoding = rb_enc_get(str);
+#endif
   unsigned char *inBuf = (unsigned char*)RSTRING_PTR(str);
   size_t len = RSTRING_LEN(str), new_len = 0;
 
@@ -140,7 +153,12 @@ static VALUE rb_unescape_html(VALUE self, VALUE str) {
   free(outBuf);
 
 #ifdef HAVE_RUBY_ENCODING_H
-  rb_enc_associate_index(rb_output_buf, utf8Encoding);
+  rb_enc_associate(rb_output_buf, original_encoding);
+  if (default_internal_enc) {
+    rb_output_buf = rb_str_export_to_enc(rb_output_buf, default_internal_enc);
+  } else {
+    rb_output_buf = rb_str_export_to_enc(rb_output_buf, utf8Encoding);
+  }
 #endif
   return rb_output_buf;
 }
@@ -153,6 +171,10 @@ static VALUE rb_escape_javascript(VALUE self, VALUE str) {
   Check_Type(str, T_STRING);
 
   VALUE rb_output_buf;
+#ifdef HAVE_RUBY_ENCODING_H
+  rb_encoding *default_internal_enc = rb_default_internal_encoding();
+  rb_encoding *original_encoding = rb_enc_get(str);
+#endif
   unsigned char *inBuf = (unsigned char*)RSTRING_PTR(str);
   size_t len = RSTRING_LEN(str), new_len = 0;
 
@@ -170,7 +192,12 @@ static VALUE rb_escape_javascript(VALUE self, VALUE str) {
   free(outBuf);
 
 #ifdef HAVE_RUBY_ENCODING_H
-  rb_enc_associate_index(rb_output_buf, utf8Encoding);
+  rb_enc_associate(rb_output_buf, original_encoding);
+  if (default_internal_enc) {
+    rb_output_buf = rb_str_export_to_enc(rb_output_buf, default_internal_enc);
+  } else {
+    rb_output_buf = rb_str_export_to_enc(rb_output_buf, utf8Encoding);
+  }
 #endif
   return rb_output_buf;
 }
@@ -186,6 +213,6 @@ void Init_escape_utils_ext() {
   rb_define_module_function(mEscape,  "escape_javascript",  rb_escape_javascript, 1);
 
 #ifdef HAVE_RUBY_ENCODING_H
-  utf8Encoding = rb_enc_find_index("UTF-8");
+  utf8Encoding = rb_utf8_encoding();
 #endif
 }

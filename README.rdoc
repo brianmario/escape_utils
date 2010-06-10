@@ -4,7 +4,7 @@ Being as though we're all html escaping everything these days, why not make it f
 
 At the moment escape_utils supports escaping and unescaping of HTML, and Javascript but I wanna add URL encoding soon.
 
-As for character encoding, you get UTF-8 strings back so it's best if they go in that way as well ;)
+For character encoding in 1.9, we'll return strings in whatever Encoding.default_internal is set to or utf-8 otherwise.
 
 It has monkey-patches for Rack::Utils, CGI, ERB::Util and Haml and ActionView so you can drop this in and have your app start escaping fast as balls in no time
 
