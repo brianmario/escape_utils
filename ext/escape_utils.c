@@ -1,7 +1,7 @@
 #include <ruby.h>
 #ifdef HAVE_RUBY_ENCODING_H
 #include <ruby/encoding.h>
-int utf8Encoding;
+static int utf8Encoding;
 #endif
 
 #define APPEND_BUFFER(escape, len, scoot_by)  \
