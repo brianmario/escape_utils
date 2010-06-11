@@ -12,7 +12,7 @@ describe EscapeUtils, "escape_javascript" do
   end
 
   it "should escape quotes and newlines" do
-    EscapeUtils.escape_javascript(%(This "thing" is really\n netos')).should eql(%(This \\"thing\\" is really\\n netos\\'))
+    EscapeUtils.escape_javascript(%(This "thing" is really\n netos\r\n')).should eql(%(This \\"thing\\" is really\\n netos\\n\\'))
   end
 
   it "should escape backslashes" do

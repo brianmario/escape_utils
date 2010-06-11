@@ -83,33 +83,53 @@ static size_t unescape_html(unsigned char *out, const unsigned char *in, size_t 
 }
 
 static size_t escape_javascript(unsigned char *out, const unsigned char *in, size_t in_len) {
-  size_t i = 0, offset = 0, total = 0;
+  size_t total = 0;
+  unsigned char curChar;
 
-  for(;i<in_len;i++) {
-    switch(in[i]) {
-      case '\\':  APPEND_BUFFER("\\\\", 2, 1); break;
-      case '<':
-        if (i+1 <= in_len && in[i+1] == '/') {
-          APPEND_BUFFER("<\\/", 3, 2);
-        }
-        break;
-      case '\r':
-        if (i+1 <= in_len && in[i+1] == '\n') {
-          APPEND_BUFFER("\\n", 2, 1);
-        } else {
-          APPEND_BUFFER("\\n", 2, 1);
-        }
-        break;
-      case '\n': APPEND_BUFFER("\\n", 2, 1); break;
-      case '\"': APPEND_BUFFER("\\\"", 2, 1); break;
-      case '\'': APPEND_BUFFER("\\'", 2, 1); break;
+  total = in_len;
+  while (in_len) {
+    curChar = *in++;
+    switch (curChar) {
+    case '\\':
+      *out++ = '\\'; *out++ = '\\';
+      total += 1;
+      break;
+    case '<':
+      if (*in == '/') {
+        *out++ = '<'; *out++ = '\\'; *out++ = '/';
+        in++;
+        total += 1;
+      }
+      break;
+    case '\r':
+      if (*in == '\n') {
+        *out++ = '\\'; *out++ = 'n';
+        in++;
+      } else {
+        *out++ = '\\'; *out++ = 'n';
+        total += 1;
+      }
+      break;
+    case '\n':
+      *out++ = '\\'; *out++ = 'n';
+      total += 1;
+      break;
+    case '\'':
+      *out++ = '\\'; *out++ = '\'';
+      total += 1;
+      break;
+    case '\"':
+      *out++ = '\\'; *out++ = '\"';
+      total += 1;
+      break;
+    default:
+      *out++ = curChar;
+      break;
     }
+    in_len--;
   }
 
-  // append the rest of the buffer
-  memcpy(&out[total], &in[offset], i-offset);
-
-  return total + (i-offset);
+  return total;
 }
 
 static VALUE rb_escape_html(VALUE self, VALUE str) {
