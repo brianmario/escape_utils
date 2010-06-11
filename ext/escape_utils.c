@@ -12,22 +12,41 @@ static rb_encoding *utf8Encoding;
   total += len;                               \
 
 static size_t escape_html(unsigned char *out, const unsigned char *in, size_t in_len) {
-  size_t i = 0, offset = 0, total = 0;
+  size_t total = 0;
+  unsigned char curChar;
 
-  for(;i<in_len;i++) {
-    switch(in[i]) {
-      case '&':  APPEND_BUFFER("&amp;",  5, 1); break;
-      case '<':  APPEND_BUFFER("&lt;",   4, 1); break;
-      case '>':  APPEND_BUFFER("&gt;",   4, 1); break;
-      case '\'': APPEND_BUFFER("&#39;",  5, 1); break;
-      case '\"': APPEND_BUFFER("&quot;", 6, 1); break;
+  total = in_len;
+  while (in_len) {
+    curChar = *in++;
+    switch (curChar) {
+    case '<':
+      *out++ = '&'; *out++ = 'l'; *out++ = 't'; *out++ = ';';
+      total += 3;
+      break;
+    case '>':
+      *out++ = '&'; *out++ = 'g'; *out++ = 't'; *out++ = ';';
+      total += 3;
+      break;
+    case '&':
+      *out++ = '&'; *out++ = 'a'; *out++ = 'm'; *out++ = 'p'; *out++ = ';';
+      total += 4;
+      break;
+    case '\'':
+      *out++ = '&'; *out++ = '#'; *out++ = '3'; *out++ = '9'; *out++ = ';';
+      total += 4;
+      break;
+    case '\"':
+      *out++ = '&'; *out++ = 'q'; *out++ = 'u'; *out++ = 'o'; *out++ = 't'; *out++ = ';';
+      total += 5;
+      break;
+    default:
+      *out++ = curChar;
+      break;
     }
+    in_len--;
   }
 
-  // append the rest of the buffer
-  memcpy(&out[total], &in[offset], i-offset);
-
-  return total + (i-offset);
+  return total;
 }
 
 static size_t unescape_html(unsigned char *out, const unsigned char *in, size_t in_len) {
