@@ -17,8 +17,6 @@ url = "http://code.jquery.com/jquery-1.4.2.js"
 javascript = `curl -s #{url}`
 puts "Escaping #{javascript.bytesize} bytes of javascript from #{url}"
 
-puts ActionPackBench.escape_javascript(javascript).eql?(EscapeUtils.escape_javascript(javascript))
-
 Benchmark.bmbm do |x|
   x.report do
     puts "ActionView::Helpers::JavaScriptHelper#escape_javascript"
