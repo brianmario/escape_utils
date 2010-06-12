@@ -97,14 +97,14 @@ static size_t escape_javascript(unsigned char *out, const unsigned char *in, siz
     case '<':
       if (*in == '/') {
         *out++ = '<'; *out++ = '\\'; *out++ = '/';
-        in++;
+        in++; in_len--;
         total++;
       }
       break;
     case '\r':
       if (*in == '\n') {
         *out++ = '\\'; *out++ = 'n';
-        in++;
+        in++; in_len--;
       } else {
         *out++ = '\\'; *out++ = 'n';
         total++;
@@ -158,7 +158,7 @@ static size_t unescape_javascript(unsigned char *out, const unsigned char *in, s
       } else {
         *out++ = curChar;
       }
-      in++;
+      in++; in_len--;
     } else {
       *out++ = curChar;
     }
