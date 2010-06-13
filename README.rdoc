@@ -68,7 +68,7 @@ This output is from my laptop using the benchmark scripts in the benchmarks fold
  EscapeUtils.escape_html
   0.040000   0.010000   0.050000 (  0.046350)
 
-=== Unescaping
+==== Unescaping
 
  CGI.unescapeHTML
   1.140000   0.010000   1.150000 (  1.148470)
