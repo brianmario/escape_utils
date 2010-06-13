@@ -1,7 +1,9 @@
 # encoding: utf-8
 
 class CGI
-  def self.escapeHTML(s)
-    EscapeUtils.escape_html(s.to_s)
+  extend ::EscapeUtils::HtmlSafety
+
+  class << self
+    alias escapeHTML _escape_html
   end
 end

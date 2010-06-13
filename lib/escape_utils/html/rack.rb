@@ -2,11 +2,9 @@
 
 module Rack
   module Utils
-    def escape_html(s)
-      EscapeUtils.escape_html(s.to_s)
-    end
-    def self.escape_html(s)
-      EscapeUtils.escape_html(s.to_s)
-    end
+    include ::EscapeUtils::HtmlSafety
+
+    alias escape_html _escape_html
+    module_function :escape_html
   end
 end
