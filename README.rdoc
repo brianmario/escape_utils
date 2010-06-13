@@ -48,7 +48,7 @@ It has monkey-patches for Rack::Utils, CGI, ERB::Util and Haml and ActionView so
 == Benchmarks
 
 In my testing, escaping html is around 10-20x faster than the pure ruby implementations in wide use today.
-While unescaping html is around 20-40x faster than CGI.unescapeHTML - also pure ruby.
+While unescaping html is around 40-70x faster than CGI.unescapeHTML - also pure ruby.
 Escaping Javascript is around 16-30x faster.
 
 This output is from my laptop using the benchmark scripts in the benchmarks folder.
@@ -66,14 +66,14 @@ This output is from my laptop using the benchmark scripts in the benchmarks fold
  Haml::Helpers.html_escape
   0.430000   0.010000   0.440000 (  0.444694)
  EscapeUtils.escape_html
-  0.050000   0.010000   0.060000 (  0.054799)
+  0.040000   0.010000   0.050000 (  0.046350)
 
 === Unescaping
 
  CGI.unescapeHTML
   1.140000   0.010000   1.150000 (  1.148470)
  EscapeUtils.unescape_html
-  0.040000   0.000000   0.040000 (  0.046166)
+  0.020000   0.010000   0.030000 (  0.017914)
 
 === Javascript
 
@@ -82,4 +82,8 @@ This output is from my laptop using the benchmark scripts in the benchmarks fold
  ActionView::Helpers::JavaScriptHelper#escape_javascript
   2.000000   0.020000   2.020000 (  2.023047)
  EscapeUtils.escape_javascript
-  0.110000   0.010000   0.120000 (  0.121761)
+  0.090000   0.010000   0.100000 (  0.100854)
+
+==== Unescaping
+
+I didn't look that hard, but I'm not aware of another ruby library that does Javascript unescaping to benchmark against. Anyone know of any?
