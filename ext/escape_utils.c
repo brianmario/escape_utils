@@ -50,36 +50,46 @@ static size_t escape_html(unsigned char *out, const unsigned char *in, size_t in
 }
 
 static size_t unescape_html(unsigned char *out, const unsigned char *in, size_t in_len) {
-  size_t i = 0, offset = 0, total = 0;
-  
-  for(;i<in_len;i++) {
-    if(in[i] == '&') {
-      if (i+3 <= in_len) {
-        if (memcmp(&in[i], "&lt;", 4) == 0) {
-          APPEND_BUFFER("<", 1, 4);
-        } else if (memcmp(&in[i], "&gt;", 4) == 0) {
-          APPEND_BUFFER(">", 1, 4);
-        }
+  size_t total = 0;
+  unsigned char curChar;
+
+  total = in_len;
+  while (in_len) {
+    curChar = *in++;
+    if (curChar == '&') {
+      if (*in == 'l' && *(in+1) == 't' && *(in+2) == ';') {
+        *out++ = '<';
+        total-=3;
+        in+=3;
+        in_len-=3;
+      } else if (*in == 'g' && *(in+1) == 't' && *(in+2) == ';') {
+        *out++ = '>';
+        total-=3;
+        in+=3;
+        in_len-=3;
+      } else if (*in == 'a' && *(in+1) == 'm' && *(in+2) == 'p' && *(in+3) == ';') {
+        *out++ = '&';
+        total-=4;
+        in+=4;
+        in_len-=4;
+      } else if (*in == '#' && *(in+1) == '3' && *(in+2) == '9' && *(in+3) == ';') {
+        *out++ = '\'';
+        total-=4;
+        in+=4;
+        in_len-=4;
+      } else if (*in == 'q' && *(in+1) == 'u' && *(in+2) == 'o' && *(in+3) == 't' && *(in+4) == ';') {
+        *out++ = '\"';
+        total-=5;
+        in+=5;
+        in_len-=5;
       }
-      if (i+4 <= in_len) {
-        if (memcmp(&in[i], "&amp;", 5) == 0) {
-          APPEND_BUFFER("&", 1, 5);
-        } else if (memcmp(&in[i], "&#39;", 5) == 0) {
-          APPEND_BUFFER("\'", 1, 5);
-        }
-      }
-      if (i+5 <= in_len) {
-        if (memcmp(&in[i], "&quot;", 6) == 0) {
-          APPEND_BUFFER("\"", 1, 6);
-        }
-      }
+    } else {
+      *out++ = curChar;
     }
+    in_len--;
   }
 
-  // append the rest of the buffer
-  memcpy(&out[total], &in[offset], i-offset);
-
-  return total + (i-offset);
+  return total;
 }
 
 static size_t escape_javascript(unsigned char *out, const unsigned char *in, size_t in_len) {
