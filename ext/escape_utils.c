@@ -53,7 +53,7 @@ static size_t unescape_html(unsigned char *out, const unsigned char *in, size_t 
   size_t total = 0, len = in_len;
   unsigned char curChar, *start;
 
-  start = &in[0];
+  start = (unsigned char *)&in[0];
   total = in_len;
   while (len) {
     curChar = *in++;
