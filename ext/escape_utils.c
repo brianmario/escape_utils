@@ -4,13 +4,6 @@
 static rb_encoding *utf8Encoding;
 #endif
 
-#define APPEND_BUFFER(escape, len, scoot_by)  \
-  memcpy(&out[total], &in[offset], i-offset); \
-  total += i-offset;                          \
-  offset = i+scoot_by;                        \
-  memcpy(&out[total], escape, len);           \
-  total += len;                               \
-
 static size_t escape_html(unsigned char *out, const unsigned char *in, size_t in_len) {
   size_t total = 0;
   unsigned char curChar;
