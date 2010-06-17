@@ -9,6 +9,7 @@ require 'rack'
 require 'erb'
 require 'cgi'
 require 'haml'
+require 'fast_xs_extra'
 require 'escape_utils'
 
 module HamlBench
@@ -16,9 +17,9 @@ module HamlBench
 end
 
 times = 100
-url = "http://maps.google.com"
+url = "http://en.wikipedia.org/wiki/Line_of_succession_to_the_British_throne"
 html = `curl -s #{url}`
-puts "Escaping #{html.bytesize} bytes of html from #{url}"
+puts "Escaping #{html.bytesize} bytes of html #{times} times, from #{url}"
 
 Benchmark.bmbm do |x|
   x.report do
@@ -46,6 +47,13 @@ Benchmark.bmbm do |x|
     puts "Haml::Helpers.html_escape"
     times.times do
       HamlBench.html_escape(html)
+    end
+  end
+
+  x.report do
+    puts "fast_xs_extra#fast_xs_html"
+    times.times do
+      html.fast_xs_html
     end
   end
 

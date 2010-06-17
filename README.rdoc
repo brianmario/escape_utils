@@ -47,8 +47,8 @@ It has monkey-patches for Rack::Utils, CGI, ERB::Util and Haml and ActionView so
 
 == Benchmarks
 
-In my testing, escaping html is around 10-20x faster than the pure ruby implementations in wide use today.
-While unescaping html is around 40-70x faster than CGI.unescapeHTML - also pure ruby.
+In my testing, escaping html is around 10-30x faster than the pure ruby implementations in wide use today.
+While unescaping html is around 40-100x faster than CGI.unescapeHTML which is also pure ruby.
 Escaping Javascript is around 16-30x faster.
 
 This output is from my laptop using the benchmark scripts in the benchmarks folder.
@@ -58,31 +58,33 @@ This output is from my laptop using the benchmark scripts in the benchmarks fold
 ==== Escaping
 
  Rack::Utils.escape_html
-  0.560000   0.040000   0.600000 (  0.589475)
+  8.430000   0.190000   8.620000 (  8.852027)
  ERB::Util.html_escape
-  0.450000   0.040000   0.490000 (  0.492893)
+  4.900000   0.560000   5.460000 (  5.829465)
  CGI.escapeHTML
-  0.460000   0.030000   0.490000 (  0.490171)
+  4.930000   0.560000   5.490000 (  5.959992)
  Haml::Helpers.html_escape
-  0.430000   0.010000   0.440000 (  0.444694)
+  8.160000   0.210000   8.370000 (  8.754335)
+ fast_xs_extra#fast_xs_html
+  0.300000   0.030000   0.330000 (  0.358113)
  EscapeUtils.escape_html
-  0.040000   0.010000   0.050000 (  0.046350)
+  0.210000   0.050000   0.260000 (  0.281877)
 
 ==== Unescaping
 
  CGI.unescapeHTML
-  1.140000   0.010000   1.150000 (  1.148470)
+  16.520000   0.080000  16.600000 ( 16.853888)
  EscapeUtils.unescape_html
-  0.020000   0.010000   0.030000 (  0.017914)
+  0.120000   0.040000   0.160000  (  0.162696)
 
 === Javascript
 
 ==== Escaping
 
  ActionView::Helpers::JavaScriptHelper#escape_javascript
-  2.000000   0.020000   2.020000 (  2.023047)
+  3.810000   0.100000   3.910000 (  3.925557)
  EscapeUtils.escape_javascript
-  0.090000   0.010000   0.100000 (  0.100854)
+  0.200000   0.040000   0.240000 (  0.236692)
 
 ==== Unescaping
 

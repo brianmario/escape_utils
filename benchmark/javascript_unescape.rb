@@ -8,10 +8,10 @@ require 'benchmark'
 require 'escape_utils'
 
 times = 100
-url = "http://code.jquery.com/jquery-1.4.2.js"
+url = "http://ajax.googleapis.com/ajax/libs/dojo/1.4.3/dojo/dojo.xd.js.uncompressed.js"
 javascript = `curl -s #{url}`
 escaped_javascript = EscapeUtils.escape_javascript(javascript)
-puts "Escaping #{escaped_javascript.bytesize} bytes of javascript from #{url}"
+puts "Escaping #{escaped_javascript.bytesize} bytes of javascript #{times} times, from #{url}"
 
 Benchmark.bmbm do |x|
   x.report do
