@@ -58,17 +58,19 @@ This output is from my laptop using the benchmark scripts in the benchmarks fold
 ==== Escaping
 
  Rack::Utils.escape_html
-  8.430000   0.190000   8.620000 (  8.852027)
- ERB::Util.html_escape
-  4.900000   0.560000   5.460000 (  5.829465)
- CGI.escapeHTML
-  4.930000   0.560000   5.490000 (  5.959992)
+  9.650000   0.090000   9.740000 (  9.750756)
  Haml::Helpers.html_escape
-  8.160000   0.210000   8.370000 (  8.754335)
+  9.310000   0.110000   9.420000 (  9.417317)
+ ERB::Util.html_escape
+  5.330000   0.390000   5.720000 (  5.748394)
+ CGI.escapeHTML
+  5.370000   0.380000   5.750000 (  5.791344)
+ FasterHTMLEscape.html_escape
+  0.520000   0.010000   0.530000 (  0.539485)
  fast_xs_extra#fast_xs_html
-  0.300000   0.030000   0.330000 (  0.358113)
+  0.310000   0.030000   0.340000 (  0.336734)
  EscapeUtils.escape_html
-  0.210000   0.050000   0.260000 (  0.281877)
+  0.200000   0.050000   0.250000 (  0.258839)
 
 ==== Unescaping
 

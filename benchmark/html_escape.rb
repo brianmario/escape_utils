@@ -10,6 +10,7 @@ require 'erb'
 require 'cgi'
 require 'haml'
 require 'fast_xs_extra'
+require 'faster_html_escape'
 require 'escape_utils'
 
 module HamlBench
@@ -30,6 +31,13 @@ Benchmark.bmbm do |x|
   end
 
   x.report do
+    puts "Haml::Helpers.html_escape"
+    times.times do
+      HamlBench.html_escape(html)
+    end
+  end
+
+  x.report do
     puts "ERB::Util.html_escape"
     times.times do
       ERB::Util.html_escape(html)
@@ -44,9 +52,9 @@ Benchmark.bmbm do |x|
   end
 
   x.report do
-    puts "Haml::Helpers.html_escape"
+    puts "FasterHTMLEscape.html_escape"
     times.times do
-      HamlBench.html_escape(html)
+      FasterHTMLEscape.html_escape(html)
     end
   end
 
