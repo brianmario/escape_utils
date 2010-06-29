@@ -6,6 +6,7 @@ require 'rubygems'
 require 'benchmark'
 
 require 'rack'
+require 'erb'
 require 'cgi'
 require 'fast_xs_extra'
 require 'escape_utils'
@@ -15,6 +16,13 @@ url = "https://www.yourmom.com/cgi-bin/session.cgi?sess_args=mYHcEA  dh435dqUs0m
 puts "Escaping a #{url.bytesize} byte URL #{times} times"
 
 Benchmark.bmbm do |x|
+  x.report do
+    puts "ERB::Util.url_encode"
+    times.times do
+      ERB::Util.url_encode(url)
+    end
+  end
+
   x.report do
     puts "Rack::Utils.escape"
     times.times do
