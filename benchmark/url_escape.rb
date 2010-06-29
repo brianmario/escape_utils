@@ -8,6 +8,7 @@ require 'benchmark'
 require 'rack'
 require 'erb'
 require 'cgi'
+require 'url_escape'
 require 'fast_xs_extra'
 require 'escape_utils'
 
@@ -34,6 +35,13 @@ Benchmark.bmbm do |x|
     puts "CGI.escape"
     times.times do
       CGI.escape(url)
+    end
+  end
+
+  x.report do
+    puts "URLEscape#escape"
+    times.times do
+      URLEscape.escape(url)
     end
   end
 
