@@ -91,3 +91,18 @@ This output is from my laptop using the benchmark scripts in the benchmarks fold
 ==== Unescaping
 
 I didn't look that hard, but I'm not aware of another ruby library that does Javascript unescaping to benchmark against. Anyone know of any?
+
+=== URL
+
+==== Escaping
+
+ ERB::Util.url_encode
+  0.520000   0.010000   0.530000 (  0.528893)
+ Rack::Utils.escape
+  0.460000   0.010000   0.470000 (  0.467273)
+ CGI.escape
+  0.440000   0.010000   0.450000 (  0.445920)
+ fast_xs_extra#fast_xs_url
+  0.010000   0.000000   0.010000 (  0.015439)
+ EscapeUtils.escape_url
+  0.010000   0.000000   0.010000 (  0.010617)
