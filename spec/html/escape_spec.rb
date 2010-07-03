@@ -7,19 +7,19 @@ describe EscapeUtils, "escape_html" do
   end
 
   it "should escape a basic html tag" do
-    EscapeUtils.escape_html("<some_tag/>").should eql("&lt;some_tag/&gt;")
+    EscapeUtils.escape_html("<some_tag/>").should eql("&lt;some_tag&#47;&gt;")
   end
 
   it "should escape double-quotes" do
-    EscapeUtils.escape_html("<some_tag some_attr=\"some value\"/>").should eql("&lt;some_tag some_attr=&quot;some value&quot;/&gt;")
+    EscapeUtils.escape_html("<some_tag some_attr=\"some value\"/>").should eql("&lt;some_tag some_attr=&quot;some value&quot;&#47;&gt;")
   end
 
   it "should escape single-quotes" do
-    EscapeUtils.escape_html("<some_tag some_attr='some value'/>").should eql("&lt;some_tag some_attr=&#39;some value&#39;/&gt;")
+    EscapeUtils.escape_html("<some_tag some_attr='some value'/>").should eql("&lt;some_tag some_attr=&#39;some value&#39;&#47;&gt;")
   end
 
   it "should escape the & character" do
-    EscapeUtils.escape_html("<b>Bourbon & Branch</b>").should eql("&lt;b&gt;Bourbon &amp; Branch&lt;/b&gt;")
+    EscapeUtils.escape_html("<b>Bourbon & Branch</b>").should eql("&lt;b&gt;Bourbon &amp; Branch&lt;&#47;b&gt;")
   end
 
   if RUBY_VERSION =~ /^1.9/

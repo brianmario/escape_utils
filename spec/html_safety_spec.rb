@@ -33,7 +33,7 @@ describe EscapeUtils::HtmlSafety do
 
   it "should escape unsafe strings and make them safe" do
     escaped = _escape_html("<strong>unsafe</strong>")
-    escaped.should eql("&lt;strong&gt;unsafe&lt;/strong&gt;")
+    escaped.should eql("&lt;strong&gt;unsafe&lt;&#47;strong&gt;")
     escaped.should be_html_safe
   end
 

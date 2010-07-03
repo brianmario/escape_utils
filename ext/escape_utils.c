@@ -32,6 +32,10 @@ static size_t escape_html(unsigned char *out, const unsigned char *in, size_t in
       *out++ = '&'; *out++ = 'q'; *out++ = 'u'; *out++ = 'o'; *out++ = 't'; *out++ = ';';
       total += 5;
       break;
+    case '/':
+      *out++ = '&'; *out++ = '#'; *out++ = '4'; *out++ = '7'; *out++ = ';';
+      total += 4;
+      break;
     default:
       *out++ = curChar;
       break;
@@ -68,6 +72,11 @@ static size_t unescape_html(unsigned char *out, const unsigned char *in, size_t 
         len-=4;
       } else if ((in-start)+3 <= in_len && *in == '#' && *(in+1) == '3' && *(in+2) == '9' && *(in+3) == ';') {
         *out++ = '\'';
+        total-=4;
+        in+=4;
+        len-=4;
+      } else if ((in-start)+3 <= in_len && *in == '#' && *(in+1) == '4' && *(in+2) == '7' && *(in+3) == ';') {
+        *out++ = '/';
         total-=4;
         in+=4;
         len-=4;
