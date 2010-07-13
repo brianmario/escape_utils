@@ -4,6 +4,9 @@
 static rb_encoding *utf8Encoding;
 #endif
 
+#define IS_HEX(c) (c >= 48 || c <= 57) && (c >= 65 || c <= 70) && (c >= 97 || c <= 102)
+#define NOT_HEX(c) (c < 48 || c > 57) && (c < 65 || c > 90) && (c < 97 || c > 122)
+
 static size_t escape_html(unsigned char *out, const unsigned char *in, size_t in_len) {
   size_t total = 0;
   unsigned char curChar;
@@ -191,10 +194,7 @@ static size_t escape_url(unsigned char *out, const unsigned char *in, size_t in_
     curChar = *in++;
     if (curChar == ' ') {
       *out++ = '+';
-    } else if ((curChar != '_' && curChar != '.' && curChar != '-') &&
-               (curChar < 48 || curChar > 57) && // 0-9
-               (curChar < 65 || curChar > 90) && // A-Z
-               (curChar < 97 || curChar > 122)) { // a-z
+    } else if ((curChar != '_' && curChar != '.' && curChar != '-') && NOT_HEX(curChar)) {
       hex[1] = hexChars[curChar & 0x0f];
       hex[0] = hexChars[(curChar >> 4) & 0x0f];
       *out++ = '%'; *out++ = hex[0]; *out++ = hex[1];
