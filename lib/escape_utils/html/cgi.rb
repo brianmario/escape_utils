@@ -5,5 +5,9 @@ class CGI
 
   class << self
     alias escapeHTML _escape_html
+
+    def unescapeHTML(s)
+      EscapeUtils.unescape_html(s)
+    end
   end
 end
