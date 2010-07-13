@@ -108,3 +108,16 @@ I didn't look that hard, but I'm not aware of another ruby library that does Jav
   0.010000   0.000000   0.010000 (  0.015429)
  EscapeUtils.escape_url
   0.010000   0.000000   0.010000 (  0.010843)
+
+==== Unescaping
+
+ Rack::Utils.unescape
+  0.250000   0.010000   0.260000 (  0.257558)
+ CGI.unescape
+  0.250000   0.000000   0.250000 (  0.257837)
+ URLEscape#unescape
+  0.040000   0.000000   0.040000 (  0.031548)
+ fast_xs_extra#fast_uxs_cgi
+  0.010000   0.000000   0.010000 (  0.006062)
+ EscapeUtils.unescape_url
+  0.000000   0.000000   0.000000 (  0.005679)
