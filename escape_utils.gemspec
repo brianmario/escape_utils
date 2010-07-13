@@ -5,11 +5,11 @@
 
 Gem::Specification.new do |s|
   s.name = %q{escape_utils}
-  s.version = "0.1.4"
+  s.version = "0.1.5"
 
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
   s.authors = ["Brian Lopez"]
-  s.date = %q{2010-06-09}
+  s.date = %q{2010-07-13}
   s.email = %q{seniorlopez@gmail.com}
   s.extensions = ["ext/extconf.rb"]
   s.extra_rdoc_files = [
@@ -25,6 +25,9 @@ Gem::Specification.new do |s|
      "benchmark/html_escape.rb",
      "benchmark/html_unescape.rb",
      "benchmark/javascript_escape.rb",
+     "benchmark/javascript_unescape.rb",
+     "benchmark/url_escape.rb",
+     "benchmark/url_unescape.rb",
      "escape_utils.gemspec",
      "ext/escape_utils.c",
      "ext/extconf.rb",
@@ -33,31 +36,43 @@ Gem::Specification.new do |s|
      "lib/escape_utils/html/erb.rb",
      "lib/escape_utils/html/haml.rb",
      "lib/escape_utils/html/rack.rb",
+     "lib/escape_utils/html_safety.rb",
      "lib/escape_utils/javascript/action_view.rb",
+     "lib/escape_utils/url/cgi.rb",
+     "lib/escape_utils/url/erb.rb",
+     "lib/escape_utils/url/rack.rb",
      "spec/html/escape_spec.rb",
      "spec/html/unescape_spec.rb",
+     "spec/html_safety_spec.rb",
      "spec/javascript/escape_spec.rb",
+     "spec/javascript/unescape_spec.rb",
      "spec/rcov.opts",
      "spec/spec.opts",
-     "spec/spec_helper.rb"
+     "spec/spec_helper.rb",
+     "spec/url/escape_spec.rb",
+     "spec/url/unescape_spec.rb"
   ]
   s.homepage = %q{http://github.com/brianmario/escape_utils}
   s.rdoc_options = ["--charset=UTF-8"]
   s.require_paths = ["lib", "ext"]
-  s.rubygems_version = %q{1.3.6}
+  s.rubygems_version = %q{1.3.7}
   s.summary = %q{Faster string escaping routines for your web apps}
   s.test_files = [
     "spec/html/escape_spec.rb",
      "spec/html/unescape_spec.rb",
+     "spec/html_safety_spec.rb",
      "spec/javascript/escape_spec.rb",
-     "spec/spec_helper.rb"
+     "spec/javascript/unescape_spec.rb",
+     "spec/spec_helper.rb",
+     "spec/url/escape_spec.rb",
+     "spec/url/unescape_spec.rb"
   ]
 
   if s.respond_to? :specification_version then
     current_version = Gem::Specification::CURRENT_SPECIFICATION_VERSION
     s.specification_version = 3
 
-    if Gem::Version.new(Gem::RubyGemsVersion) >= Gem::Version.new('1.2.0') then
+    if Gem::Version.new(Gem::VERSION) >= Gem::Version.new('1.2.0') then
     else
     end
   else

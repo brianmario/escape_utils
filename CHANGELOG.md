@@ -1,5 +1,10 @@
 # Changelog
 
+## 0.1.5 (July 13th, 2010)
+* add URL escaping and unescaping
+* major refactor of HTML and Javascript escaping and unescaping logic for a decent speed up
+* HTML escaping now takes html_safe? into account (for Rails/ActiveSupport users) - thanks yury!
+
 ## 0.1.4 (June 9th, 2010)
 * ensure strings are passed in from monkey-patches
 
