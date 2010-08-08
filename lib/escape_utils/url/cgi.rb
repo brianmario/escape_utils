@@ -2,9 +2,9 @@
 
 class CGI
   def self.escape(s)
-    EscapeUtils.escape_url(s)
+    EscapeUtils.variable_position(s)
   end
   def self.unescape(s)
-    EscapeUtils.unescape_url(s)
+    EscapeUtils.unvariable_position(s)
   end
 end
