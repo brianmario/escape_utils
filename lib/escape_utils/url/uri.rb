@@ -1,6 +1,6 @@
 # encoding: utf-8
 
-class URI
+module URI
   def self.escape(s)
     EscapeUtils.escape_uri(s)
   end
