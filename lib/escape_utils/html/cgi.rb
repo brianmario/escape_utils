@@ -7,7 +7,7 @@ class CGI
     alias escapeHTML _escape_html
 
     def unescapeHTML(s)
-      EscapeUtils.unescape_html(s)
+      EscapeUtils.unescape_html(s.to_s)
     end
   end
 end
