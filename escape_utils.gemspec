@@ -5,11 +5,11 @@
 
 Gem::Specification.new do |s|
   s.name = %q{escape_utils}
-  s.version = "0.1.5"
+  s.version = "0.1.6"
 
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
   s.authors = ["Brian Lopez"]
-  s.date = %q{2010-08-07}
+  s.date = %q{2010-09-05}
   s.email = %q{seniorlopez@gmail.com}
   s.extensions = ["ext/extconf.rb"]
   s.extra_rdoc_files = [
@@ -41,14 +41,19 @@ Gem::Specification.new do |s|
      "lib/escape_utils/url/cgi.rb",
      "lib/escape_utils/url/erb.rb",
      "lib/escape_utils/url/rack.rb",
+     "lib/escape_utils/url/uri.rb",
      "spec/html/escape_spec.rb",
      "spec/html/unescape_spec.rb",
      "spec/html_safety_spec.rb",
      "spec/javascript/escape_spec.rb",
      "spec/javascript/unescape_spec.rb",
+     "spec/query/escape_spec.rb",
+     "spec/query/unescape_spec.rb",
      "spec/rcov.opts",
      "spec/spec.opts",
-     "spec/spec_helper.rb"
+     "spec/spec_helper.rb",
+     "spec/uri/escape_spec.rb",
+     "spec/uri/unescape_spec.rb"
   ]
   s.homepage = %q{http://github.com/brianmario/escape_utils}
   s.rdoc_options = ["--charset=UTF-8"]
@@ -56,13 +61,15 @@ Gem::Specification.new do |s|
   s.rubygems_version = %q{1.3.7}
   s.summary = %q{Faster string escaping routines for your web apps}
   s.test_files = [
-    "spec/html/escape_spec.rb",
-     "spec/html/unescape_spec.rb",
-     "spec/html_safety_spec.rb",
-     "spec/javascript/escape_spec.rb",
+    "spec/javascript/escape_spec.rb",
      "spec/javascript/unescape_spec.rb",
+     "spec/html/escape_spec.rb",
+     "spec/html/unescape_spec.rb",
      "spec/query/escape_spec.rb",
      "spec/query/unescape_spec.rb",
+     "spec/html_safety_spec.rb",
+     "spec/uri/escape_spec.rb",
+     "spec/uri/unescape_spec.rb",
      "spec/spec_helper.rb"
   ]
 

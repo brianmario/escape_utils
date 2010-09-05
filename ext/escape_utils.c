@@ -114,8 +114,9 @@ static size_t escape_javascript(unsigned char *out, const unsigned char *in, siz
       total++;
       break;
     case '<':
+      *out++ = '<';
       if (*in == '/') {
-        *out++ = '<'; *out++ = '\\'; *out++ = '/';
+        *out++ = '\\'; *out++ = '/';
         in++; in_len--;
         total++;
       }
@@ -593,3 +594,4 @@ void Init_escape_utils_ext() {
   utf8Encoding = rb_utf8_encoding();
 #endif
 }
+

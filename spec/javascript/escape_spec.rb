@@ -20,7 +20,7 @@ describe EscapeUtils, "escape_javascript" do
   end
 
   it "should escape closed html tags" do
-    EscapeUtils.escape_javascript(%(dont </close> tags)).should eql(%(dont <\\/close> tags))
+    EscapeUtils.escape_javascript(%(keep <open>, but dont </close> tags)).should eql(%(keep <open>, but dont <\\/close> tags))
   end
 
   if RUBY_VERSION =~ /^1.9/
@@ -37,3 +37,4 @@ describe EscapeUtils, "escape_javascript" do
     end
   end
 end
+
