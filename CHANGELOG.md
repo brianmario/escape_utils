@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.1.5 (September 6th, 2010)
+* support for URI escaping added (thanks to @joshbuddy)
+* bugfix to ensure we don't drop opening tags during escape_javascript (thanks to @nagybence)
+
 ## 0.1.5 (July 13th, 2010)
 * add URL escaping and unescaping
 * major refactor of HTML and Javascript escaping and unescaping logic for a decent speed up

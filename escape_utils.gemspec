@@ -9,7 +9,7 @@ Gem::Specification.new do |s|
 
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
   s.authors = ["Brian Lopez"]
-  s.date = %q{2010-09-05}
+  s.date = %q{2010-09-06}
   s.email = %q{seniorlopez@gmail.com}
   s.extensions = ["ext/extconf.rb"]
   s.extra_rdoc_files = [
@@ -61,16 +61,16 @@ Gem::Specification.new do |s|
   s.rubygems_version = %q{1.3.7}
   s.summary = %q{Faster string escaping routines for your web apps}
   s.test_files = [
-    "spec/javascript/escape_spec.rb",
-     "spec/javascript/unescape_spec.rb",
-     "spec/html/escape_spec.rb",
+    "spec/html/escape_spec.rb",
      "spec/html/unescape_spec.rb",
+     "spec/html_safety_spec.rb",
+     "spec/javascript/escape_spec.rb",
+     "spec/javascript/unescape_spec.rb",
      "spec/query/escape_spec.rb",
      "spec/query/unescape_spec.rb",
-     "spec/html_safety_spec.rb",
+     "spec/spec_helper.rb",
      "spec/uri/escape_spec.rb",
-     "spec/uri/unescape_spec.rb",
-     "spec/spec_helper.rb"
+     "spec/uri/unescape_spec.rb"
   ]
 
   if s.respond_to? :specification_version then
