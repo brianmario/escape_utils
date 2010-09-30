@@ -1,6 +1,10 @@
 # Changelog
 
-## 0.1.5 (September 6th, 2010)
+## 0.1.7 (September 29th, 2010)
+* fix URI escaping to act according to the RFC
+* add specs for URL escaping
+
+## 0.1.6 (September 6th, 2010)
 * support for URI escaping added (thanks to @joshbuddy)
 * bugfix to ensure we don't drop opening tags during escape_javascript (thanks to @nagybence)
 
