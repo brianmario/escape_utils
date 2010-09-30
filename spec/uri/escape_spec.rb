@@ -7,7 +7,7 @@ describe EscapeUtils, "escape_uri" do
   end
 
   it "should escape a basic url" do
-    EscapeUtils.escape_uri("http://www.homerun.com/").should eql("http%3A//www.homerun.com/")
+    EscapeUtils.escape_uri("http://www.homerun.com/").should eql("http%3A%2F%2Fwww.homerun.com%2F")
   end
 
   # NOTE: from Rack's test suite
@@ -23,7 +23,7 @@ describe EscapeUtils, "escape_uri" do
 
   # NOTE: from Rack's test suite
   it "should escape a string of mixed characters" do
-    EscapeUtils.escape_uri("q1!2\"'w$5&7/z8)?\\").should eql("q1%212%22'w%245&7/z8)%3F%5C")
+    EscapeUtils.escape_uri("q1!2\"'w$5&7/z8)?\\").should eql("q1%212%22%27w%245%267%2Fz8%29%3F%5C")
   end
 
   # NOTE: from Rack's test suite
