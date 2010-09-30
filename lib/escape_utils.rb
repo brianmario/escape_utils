@@ -4,7 +4,7 @@ require 'escape_utils_ext'
 
 EscapeUtils.send(:extend, EscapeUtils)
 module EscapeUtils
-  VERSION = "0.1.7"
+  VERSION = "0.1.8"
 
   autoload :HtmlSafety, 'escape_utils/html_safety'
 end

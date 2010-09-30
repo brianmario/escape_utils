@@ -1,5 +1,8 @@
 # Changelog
 
+## 0.1.8 (September 29th, 2010)
+* fix URI escaping one last time ;)
+
 ## 0.1.7 (September 29th, 2010)
 * fix URI escaping to act according to the RFC
 * add specs for URL escaping
