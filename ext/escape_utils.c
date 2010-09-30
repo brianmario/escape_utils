@@ -8,7 +8,7 @@ static rb_encoding *utf8Encoding;
 #define NOT_HEX(c) (c < 48 || c > 57) && (c < 65 || c > 90) && (c < 97 || c > 122)
 #define UNHEX(c) (c >= '0' && c <= '9' ? c - '0' : c >= 'A' && c <= 'F' ? c - 'A' + 10 : c - 'a' + 10)
 #define URI_SAFE(c) (c >= '0' && c <= '9') || (c >= 'a' && c <= 'z') || (c >= 'A' && c <= 'Z') || (c >= 38 && c <= 47) || c == 95 || c == 126
-//              \.:\/?\[\]\-_~\!\$&'\(\)\*\+,;=@
+//                  ALPHA / DIGIT / "-" / "." / "_" / "~"
 
 static size_t escape_html(unsigned char *out, const unsigned char *in, size_t in_len) {
   size_t total = 0;
