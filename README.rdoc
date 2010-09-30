@@ -8,6 +8,8 @@ For character encoding in 1.9, we'll return strings in whatever Encoding.default
 
 It has monkey-patches for Rack::Utils, CGI, ERB::Util and Haml and ActionView so you can drop this in and have your app start escaping fast as balls in no time
 
+It supports HTML, URL, URI and Javascript escaping/unescaping.
+
 == Installing
 
   gem install escape_utils
@@ -34,12 +36,31 @@ It has monkey-patches for Rack::Utils, CGI, ERB::Util and Haml and ActionView so
   require 'escape_utils/html/cgi' # to patch CGI
   require 'escape_utils/html/haml' # to patch Haml::Helpers
 
+=== URL
+
+=== Escaping
+
+  url = "https://www.yourmom.com/cgi-bin/session.cgi?sess_args=mcEA~!!#*YH*>@!U"
+  escaped_url = EscapeUtils.url_escape(url)
+
+=== Unescaping
+
+  url = "https://www.yourmom.com/cgi-bin/session.cgi?sess_args=mcEA~!!#*YH*>@!U"
+  escaped_url = EscapeUtils.url_escape(url)
+  EscapeUtils.url_unescape(escaped_url) == url # => true
+
 === Javascript
 
 ==== Escaping
 
   javascript = `curl -s http://code.jquery.com/jquery-1.4.2.js`
   escaped_javascript = EscapeUtils.escape_javascript(javascript)
+
+==== Unescaping
+
+  javascript = `curl -s http://code.jquery.com/jquery-1.4.2.js`
+  escaped_javascript = EscapeUtils.escape_javascript(javascript)
+  EscapeUtils.unescape_javascript(escaped_javascript) == javascript # => true
 
 ==== Monkey Patches
 
