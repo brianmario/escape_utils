@@ -5,11 +5,11 @@
 
 Gem::Specification.new do |s|
   s.name = %q{escape_utils}
-  s.version = "0.1.8"
+  s.version = "0.1.9"
 
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
   s.authors = ["Brian Lopez"]
-  s.date = %q{2010-09-29}
+  s.date = %q{2010-10-15}
   s.email = %q{seniorlopez@gmail.com}
   s.extensions = ["ext/extconf.rb"]
   s.extra_rdoc_files = [

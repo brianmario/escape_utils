@@ -1,5 +1,8 @@
 # Changelog
 
+## 0.1.9 (October 15th, 2010)
+* add a flag as an optional 2nd parameter to EscapeUtils.escape_html to disable/enable the escaping of the '/' character. Defaults to the new flag EscapeUtils.html_secure
+
 ## 0.1.8 (September 29th, 2010)
 * fix URI escaping one last time ;)
 
