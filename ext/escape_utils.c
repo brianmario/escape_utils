@@ -4,47 +4,43 @@
 static rb_encoding *utf8Encoding;
 #endif
 
+static VALUE mEscapeUtils;
+static ID rb_html_secure;
+
 #define IS_HEX(c) (c >= 48 || c <= 57) && (c >= 65 || c <= 70) && (c >= 97 || c <= 102)
 #define NOT_HEX(c) (c < 48 || c > 57) && (c < 65 || c > 90) && (c < 97 || c > 122)
 #define UNHEX(c) (c >= '0' && c <= '9' ? c - '0' : c >= 'A' && c <= 'F' ? c - 'A' + 10 : c - 'a' + 10)
 #define URI_SAFE(c) (c >= '0' && c <= '9') || (c >= 'a' && c <= 'z') || (c >= 'A' && c <= 'Z') || c== 45 || c == 46 || c == 95 || c == 126
 //                  ALPHA / DIGIT / "-" / "." / "_" / "~"
 
-static size_t escape_html(unsigned char *out, const unsigned char *in, size_t in_len) {
+static size_t escape_html(unsigned char *out, const unsigned char *in, size_t in_len, unsigned short int secure) {
   size_t total = 0;
   unsigned char curChar;
 
   total = in_len;
   while (in_len) {
     curChar = *in++;
-    switch (curChar) {
-    case '<':
+
+    if (curChar == '<') {
       *out++ = '&'; *out++ = 'l'; *out++ = 't'; *out++ = ';';
       total += 3;
-      break;
-    case '>':
+    } else if (curChar == '>') {
       *out++ = '&'; *out++ = 'g'; *out++ = 't'; *out++ = ';';
       total += 3;
-      break;
-    case '&':
+    } else if (curChar == '&') {
       *out++ = '&'; *out++ = 'a'; *out++ = 'm'; *out++ = 'p'; *out++ = ';';
       total += 4;
-      break;
-    case '\'':
+    } else if (curChar == '\'') {
       *out++ = '&'; *out++ = '#'; *out++ = '3'; *out++ = '9'; *out++ = ';';
       total += 4;
-      break;
-    case '\"':
+    } else if (curChar == '\"') {
       *out++ = '&'; *out++ = 'q'; *out++ = 'u'; *out++ = 'o'; *out++ = 't'; *out++ = ';';
       total += 5;
-      break;
-    case '/':
+    } else if (secure && curChar == '/') {
       *out++ = '&'; *out++ = '#'; *out++ = '4'; *out++ = '7'; *out++ = ';';
       total += 4;
-      break;
-    default:
+    } else {
       *out++ = curChar;
-      break;
     }
     in_len--;
   }
@@ -282,7 +278,19 @@ static size_t unescape_uri(unsigned char *out, const unsigned char *in, size_t i
   return total;
 }
 
-static VALUE rb_escape_html(VALUE self, VALUE str) {
+static VALUE rb_escape_html(int argc, VALUE * argv, VALUE self) {
+  VALUE str, rb_secure = rb_funcall(mEscapeUtils, rb_html_secure, 0);
+  unsigned short secure = 1;
+  if (rb_secure == Qfalse) {
+    secure = 0;
+  }
+
+  if (rb_scan_args(argc, argv, "11", &str, &rb_secure) == 2) {
+    if (rb_secure == Qfalse) {
+      secure = 0;
+    }
+  }
+
   Check_Type(str, T_STRING);
 
   VALUE rb_output_buf;
@@ -298,7 +306,7 @@ static VALUE rb_escape_html(VALUE self, VALUE str) {
   unsigned char *outBuf = (unsigned char *)malloc(sizeof(unsigned char *)*(len*5));
 
   // perform our escape, returning the new string's length
-  new_len = escape_html(outBuf, inBuf, len);
+  new_len = escape_html(outBuf, inBuf, len, secure);
 
   // create our new ruby string
   rb_output_buf = rb_str_new((char *)outBuf, new_len);
@@ -572,26 +580,28 @@ static VALUE rb_unescape_uri(VALUE self, VALUE str) {
 
 /* Ruby Extension initializer */
 void Init_escape_utils_ext() {
-  VALUE mEscape = rb_define_module("EscapeUtils");
-  rb_define_method(mEscape,           "escape_html",          rb_escape_html,   1);
-  rb_define_module_function(mEscape,  "escape_html",          rb_escape_html,   1);
-  rb_define_method(mEscape,           "unescape_html",        rb_unescape_html, 1);
-  rb_define_module_function(mEscape,  "unescape_html",        rb_unescape_html, 1);
-  rb_define_method(mEscape,           "escape_javascript",    rb_escape_javascript, 1);
-  rb_define_module_function(mEscape,  "escape_javascript",    rb_escape_javascript, 1);
-  rb_define_method(mEscape,           "unescape_javascript",  rb_unescape_javascript, 1);
-  rb_define_module_function(mEscape,  "unescape_javascript",  rb_unescape_javascript, 1);
-  rb_define_method(mEscape,           "escape_url",           rb_escape_url, 1);
-  rb_define_module_function(mEscape,  "escape_url",           rb_escape_url, 1);
-  rb_define_method(mEscape,           "unescape_url",         rb_unescape_url, 1);
-  rb_define_module_function(mEscape,  "unescape_url",         rb_unescape_url, 1);
-  rb_define_method(mEscape,           "escape_uri",           rb_escape_uri, 1);
-  rb_define_module_function(mEscape,  "escape_uri",           rb_escape_uri, 1);
-  rb_define_method(mEscape,           "unescape_uri",         rb_unescape_uri, 1);
-  rb_define_module_function(mEscape,  "unescape_uri",         rb_unescape_uri, 1);
+  mEscapeUtils = rb_define_module("EscapeUtils");
+  rb_define_method(mEscapeUtils,           "escape_html",          rb_escape_html,   -1);
+  rb_define_module_function(mEscapeUtils,  "escape_html",          rb_escape_html,   -1);
+  rb_define_method(mEscapeUtils,           "unescape_html",        rb_unescape_html, 1);
+  rb_define_module_function(mEscapeUtils,  "unescape_html",        rb_unescape_html, 1);
+  rb_define_method(mEscapeUtils,           "escape_javascript",    rb_escape_javascript, 1);
+  rb_define_module_function(mEscapeUtils,  "escape_javascript",    rb_escape_javascript, 1);
+  rb_define_method(mEscapeUtils,           "unescape_javascript",  rb_unescape_javascript, 1);
+  rb_define_module_function(mEscapeUtils,  "unescape_javascript",  rb_unescape_javascript, 1);
+  rb_define_method(mEscapeUtils,           "escape_url",           rb_escape_url, 1);
+  rb_define_module_function(mEscapeUtils,  "escape_url",           rb_escape_url, 1);
+  rb_define_method(mEscapeUtils,           "unescape_url",         rb_unescape_url, 1);
+  rb_define_module_function(mEscapeUtils,  "unescape_url",         rb_unescape_url, 1);
+  rb_define_method(mEscapeUtils,           "escape_uri",           rb_escape_uri, 1);
+  rb_define_module_function(mEscapeUtils,  "escape_uri",           rb_escape_uri, 1);
+  rb_define_method(mEscapeUtils,           "unescape_uri",         rb_unescape_uri, 1);
+  rb_define_module_function(mEscapeUtils,  "unescape_uri",         rb_unescape_uri, 1);
 
 #ifdef HAVE_RUBY_ENCODING_H
   utf8Encoding = rb_utf8_encoding();
 #endif
+
+  rb_html_secure = rb_intern("html_secure");
 }
 

@@ -6,8 +6,18 @@ describe EscapeUtils, "escape_html" do
     EscapeUtils.should respond_to(:escape_html)
   end
 
-  it "should escape a basic html tag" do
+  it "should escape a basic html tag, also escaping the '/' character if the secure parameter is true" do
     EscapeUtils.escape_html("<some_tag/>").should eql("&lt;some_tag&#47;&gt;")
+  end
+
+  it "should escape a basic html tag, not escaping the '/' character if the secure parameter is false" do
+    EscapeUtils.escape_html("<some_tag/>", false).should eql("&lt;some_tag/&gt;")
+  end
+
+  it "should escape a basic html tag, not escaping the '/' character if EscapeUtils.html_secure is false" do
+    EscapeUtils.html_secure = false
+    EscapeUtils.escape_html("<some_tag/>").should eql("&lt;some_tag/&gt;")
+    EscapeUtils.html_secure = true
   end
 
   it "should escape double-quotes" do
