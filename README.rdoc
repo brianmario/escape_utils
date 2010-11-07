@@ -41,13 +41,13 @@ It supports HTML, URL, URI and Javascript escaping/unescaping.
 ==== Escaping
 
   url = "https://www.yourmom.com/cgi-bin/session.cgi?sess_args=mcEA~!!#*YH*>@!U"
-  escaped_url = EscapeUtils.url_escape(url)
+  escaped_url = EscapeUtils.escape_url(url)
 
 ==== Unescaping
 
   url = "https://www.yourmom.com/cgi-bin/session.cgi?sess_args=mcEA~!!#*YH*>@!U"
-  escaped_url = EscapeUtils.url_escape(url)
-  EscapeUtils.url_unescape(escaped_url) == url # => true
+  escaped_url = EscapeUtils.escape_url(url)
+  EscapeUtils.unescape_url(escaped_url) == url # => true
 
 === Javascript
 
