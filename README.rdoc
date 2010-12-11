@@ -2,11 +2,9 @@
 
 Being as though we're all html escaping everything these days, why not make it faster?
 
-At the moment escape_utils supports escaping and unescaping of HTML, and Javascript but I wanna add URL encoding soon.
-
 For character encoding in 1.9, we'll return strings in whatever Encoding.default_internal is set to or utf-8 otherwise.
 
-It has monkey-patches for Rack::Utils, CGI, ERB::Util and Haml and ActionView so you can drop this in and have your app start escaping fast as balls in no time
+It has monkey-patches for Rack::Utils, CGI, URI, ERB::Util and Haml and ActionView so you can drop this in and have your app start escaping fast as balls in no time
 
 It supports HTML, URL, URI and Javascript escaping/unescaping.
 
@@ -37,6 +35,10 @@ It supports HTML, URL, URI and Javascript escaping/unescaping.
   require 'escape_utils/html/haml' # to patch Haml::Helpers
 
 === URL
+
+Use (un)escape_uri to get RFC-compliant escaping (like PHP rawurlencode).
+
+Use (un)escape_url to get CGI escaping (where space is +).
 
 ==== Escaping
 
