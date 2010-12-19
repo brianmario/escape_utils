@@ -281,6 +281,13 @@ static size_t unescape_uri(unsigned char *out, const unsigned char *in, size_t i
 static VALUE rb_escape_html(int argc, VALUE * argv, VALUE self) {
   VALUE str, rb_secure = rb_funcall(mEscapeUtils, rb_html_secure, 0);
   unsigned short secure = 1;
+  VALUE rb_output_buf;
+#ifdef HAVE_RUBY_ENCODING_H
+  rb_encoding *default_internal_enc;
+  rb_encoding *original_encoding;
+#endif
+  unsigned char *inBuf, *outBuf;
+  size_t len, new_len;
   if (rb_secure == Qfalse) {
     secure = 0;
   }
@@ -293,17 +300,16 @@ static VALUE rb_escape_html(int argc, VALUE * argv, VALUE self) {
 
   Check_Type(str, T_STRING);
 
-  VALUE rb_output_buf;
 #ifdef HAVE_RUBY_ENCODING_H
-  rb_encoding *default_internal_enc = rb_default_internal_encoding();
-  rb_encoding *original_encoding = rb_enc_get(str);
+  default_internal_enc = rb_default_internal_encoding();
+  original_encoding = rb_enc_get(str);
 #endif
-  unsigned char *inBuf = (unsigned char*)RSTRING_PTR(str);
-  size_t len = RSTRING_LEN(str), new_len = 0;
+  inBuf = (unsigned char*)RSTRING_PTR(str);
+  len = RSTRING_LEN(str), new_len = 0;
 
   // this is the max size the string could be
   // TODO: we should try to be more intelligent about this
-  unsigned char *outBuf = (unsigned char *)malloc(sizeof(unsigned char *)*(len*5));
+  outBuf = (unsigned char *)malloc(sizeof(unsigned char *)*(len*5));
 
   // perform our escape, returning the new string's length
   new_len = escape_html(outBuf, inBuf, len, secure);
@@ -326,19 +332,25 @@ static VALUE rb_escape_html(int argc, VALUE * argv, VALUE self) {
 }
 
 static VALUE rb_unescape_html(VALUE self, VALUE str) {
-  Check_Type(str, T_STRING);
-
   VALUE rb_output_buf;
 #ifdef HAVE_RUBY_ENCODING_H
-  rb_encoding *default_internal_enc = rb_default_internal_encoding();
-  rb_encoding *original_encoding = rb_enc_get(str);
+  rb_encoding *default_internal_enc;
+  rb_encoding *original_encoding;
 #endif
-  unsigned char *inBuf = (unsigned char*)RSTRING_PTR(str);
-  size_t len = RSTRING_LEN(str), new_len = 0;
+  unsigned char *inBuf, *outBuf;
+  size_t len, new_len;
+
+  Check_Type(str, T_STRING);
+#ifdef HAVE_RUBY_ENCODING_H
+  default_internal_enc = rb_default_internal_encoding();
+  original_encoding = rb_enc_get(str);
+#endif
+  inBuf = (unsigned char*)RSTRING_PTR(str);
+  len = RSTRING_LEN(str), new_len = 0;
 
   // this is the max size the string could be
   // TODO: we should try to be more intelligent about this
-  unsigned char *outBuf = (unsigned char *)malloc(sizeof(unsigned char *)*len);
+  outBuf = (unsigned char *)malloc(sizeof(unsigned char *)*len);
 
   // perform our escape, returning the new string's length
   new_len = unescape_html(outBuf, inBuf, len);
@@ -361,23 +373,30 @@ static VALUE rb_unescape_html(VALUE self, VALUE str) {
 }
 
 static VALUE rb_escape_javascript(VALUE self, VALUE str) {
+  VALUE rb_output_buf;
+#ifdef HAVE_RUBY_ENCODING_H
+  rb_encoding *default_internal_enc;
+  rb_encoding *original_encoding;
+#endif
+  unsigned char *inBuf, *outBuf;
+  size_t len, new_len;
+
   if (str == Qnil) {
     return rb_str_new2("");
   }
 
   Check_Type(str, T_STRING);
 
-  VALUE rb_output_buf;
 #ifdef HAVE_RUBY_ENCODING_H
-  rb_encoding *default_internal_enc = rb_default_internal_encoding();
-  rb_encoding *original_encoding = rb_enc_get(str);
+  default_internal_enc = rb_default_internal_encoding();
+  original_encoding = rb_enc_get(str);
 #endif
-  unsigned char *inBuf = (unsigned char*)RSTRING_PTR(str);
-  size_t len = RSTRING_LEN(str), new_len = 0;
+  inBuf = (unsigned char*)RSTRING_PTR(str);
+  len = RSTRING_LEN(str), new_len = 0;
 
   // this is the max size the string could be
   // TODO: we should try to be more intelligent about this
-  unsigned char *outBuf = (unsigned char *)malloc(sizeof(unsigned char *)*(len*2));
+  outBuf = (unsigned char *)malloc(sizeof(unsigned char *)*(len*2));
 
   // perform our escape, returning the new string's length
   new_len = escape_javascript(outBuf, inBuf, len);
@@ -400,23 +419,30 @@ static VALUE rb_escape_javascript(VALUE self, VALUE str) {
 }
 
 static VALUE rb_unescape_javascript(VALUE self, VALUE str) {
+  VALUE rb_output_buf;
+#ifdef HAVE_RUBY_ENCODING_H
+  rb_encoding *default_internal_enc;
+  rb_encoding *original_encoding;
+#endif
+  unsigned char *inBuf, *outBuf;
+  size_t len, new_len;
+
   if (str == Qnil) {
     return rb_str_new2("");
   }
 
   Check_Type(str, T_STRING);
 
-  VALUE rb_output_buf;
 #ifdef HAVE_RUBY_ENCODING_H
-  rb_encoding *default_internal_enc = rb_default_internal_encoding();
-  rb_encoding *original_encoding = rb_enc_get(str);
+  default_internal_enc = rb_default_internal_encoding();
+  original_encoding = rb_enc_get(str);
 #endif
-  unsigned char *inBuf = (unsigned char*)RSTRING_PTR(str);
-  size_t len = RSTRING_LEN(str), new_len = 0;
+  inBuf = (unsigned char*)RSTRING_PTR(str);
+  len = RSTRING_LEN(str), new_len = 0;
 
   // this is the max size the string could be
   // TODO: we should try to be more intelligent about this
-  unsigned char *outBuf = (unsigned char *)malloc(sizeof(unsigned char *)*len);
+  outBuf = (unsigned char *)malloc(sizeof(unsigned char *)*len);
 
   // perform our escape, returning the new string's length
   new_len = unescape_javascript(outBuf, inBuf, len);
@@ -439,19 +465,26 @@ static VALUE rb_unescape_javascript(VALUE self, VALUE str) {
 }
 
 static VALUE rb_escape_url(VALUE self, VALUE str) {
+  VALUE rb_output_buf;
+  #ifdef HAVE_RUBY_ENCODING_H
+    rb_encoding *default_internal_enc;
+    rb_encoding *original_encoding;
+  #endif
+  unsigned char *inBuf, *outBuf;
+  size_t len, new_len;
+
   Check_Type(str, T_STRING);
 
-  VALUE rb_output_buf;
 #ifdef HAVE_RUBY_ENCODING_H
-  rb_encoding *default_internal_enc = rb_default_internal_encoding();
-  rb_encoding *original_encoding = rb_enc_get(str);
+  default_internal_enc = rb_default_internal_encoding();
+  original_encoding = rb_enc_get(str);
 #endif
-  unsigned char *inBuf = (unsigned char*)RSTRING_PTR(str);
-  size_t len = RSTRING_LEN(str), new_len = 0;
+  inBuf = (unsigned char*)RSTRING_PTR(str);
+  len = RSTRING_LEN(str), new_len = 0;
 
   // this is the max size the string could be
   // TODO: we should try to be more intelligent about this
-  unsigned char *outBuf = (unsigned char *)malloc(sizeof(unsigned char *)*(len*3));
+  outBuf = (unsigned char *)malloc(sizeof(unsigned char *)*(len*3));
 
   // perform our escape, returning the new string's length
   new_len = escape_url(outBuf, inBuf, len);
