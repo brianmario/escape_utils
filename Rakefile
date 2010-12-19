@@ -18,18 +18,19 @@ rescue LoadError
   puts "Jeweler, or one of its dependencies, is not available. Install it with: sudo gem install jeweler -s http://gems.github.com"
 end
 
-require 'rake'
-require 'spec/rake/spectask'
+begin
+  require 'rspec'
+  require 'rspec/core/rake_task'
 
-desc "Run all examples with RCov"
-Spec::Rake::SpecTask.new('spec:rcov') do |t|
-  t.spec_files = FileList['spec/']
-  t.rcov = true
-  t.rcov_opts = lambda do
-    IO.readlines("spec/rcov.opts").map {|l| l.chomp.split " "}.flatten
+  desc "Run all examples with RCov"
+  RSpec::Core::RakeTask.new('spec:rcov') do |t|
+    t.rcov = true
   end
-end
-Spec::Rake::SpecTask.new('spec') do |t|
-  t.spec_files = FileList['spec/']
-  t.spec_opts << '--options' << 'spec/spec.opts'
+  RSpec::Core::RakeTask.new('spec') do |t|
+    t.verbose = true
+  end
+
+  task :default => :spec
+rescue LoadError
+  puts "rspec, or one of its dependencies, is not available. Install it with: sudo gem install rspec"
 end
