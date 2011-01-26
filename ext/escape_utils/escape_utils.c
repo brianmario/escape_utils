@@ -324,7 +324,7 @@ static VALUE rb_escape_html(int argc, VALUE * argv, VALUE self) {
 
   // this is the max size the string could be
   // TODO: we should try to be more intelligent about this
-  outBuf = (unsigned char *)malloc(sizeof(unsigned char *)*(len*5));
+  outBuf = (unsigned char *)malloc(sizeof(unsigned char)*(len*5));
 
   // perform our escape, returning the new string's length
   new_len = escape_html(outBuf, inBuf, len, secure);
@@ -363,7 +363,7 @@ static VALUE rb_unescape_html(VALUE self, VALUE str) {
 
   // this is the max size the string could be
   // TODO: we should try to be more intelligent about this
-  outBuf = (unsigned char *)malloc(sizeof(unsigned char *)*len);
+  outBuf = (unsigned char *)malloc(sizeof(unsigned char)*len);
 
   // perform our escape, returning the new string's length
   new_len = unescape_html(outBuf, inBuf, len);
@@ -407,7 +407,7 @@ static VALUE rb_escape_javascript(VALUE self, VALUE str) {
 
   // this is the max size the string could be
   // TODO: we should try to be more intelligent about this
-  outBuf = (unsigned char *)malloc(sizeof(unsigned char *)*(len*2));
+  outBuf = (unsigned char *)malloc(sizeof(unsigned char)*(len*2));
 
   // perform our escape, returning the new string's length
   new_len = escape_javascript(outBuf, inBuf, len);
@@ -451,7 +451,7 @@ static VALUE rb_unescape_javascript(VALUE self, VALUE str) {
 
   // this is the max size the string could be
   // TODO: we should try to be more intelligent about this
-  outBuf = (unsigned char *)malloc(sizeof(unsigned char *)*len);
+  outBuf = (unsigned char *)malloc(sizeof(unsigned char)*len);
 
   // perform our escape, returning the new string's length
   new_len = unescape_javascript(outBuf, inBuf, len);
@@ -491,7 +491,7 @@ static VALUE rb_escape_url(VALUE self, VALUE str) {
 
   // this is the max size the string could be
   // TODO: we should try to be more intelligent about this
-  outBuf = (unsigned char *)malloc(sizeof(unsigned char *)*(len*3));
+  outBuf = (unsigned char *)malloc(sizeof(unsigned char)*(len*3));
 
   // perform our escape, returning the new string's length
   new_len = escape_url(outBuf, inBuf, len);
@@ -524,7 +524,7 @@ static VALUE rb_unescape_url(VALUE self, VALUE str) {
 
   // this is the max size the string could be
   // TODO: we should try to be more intelligent about this
-  unsigned char *outBuf = (unsigned char *)malloc(sizeof(unsigned char *)*len);
+  unsigned char *outBuf = (unsigned char *)malloc(sizeof(unsigned char)*len);
 
   // perform our escape, returning the new string's length
   new_len = unescape_url(outBuf, inBuf, len);
@@ -557,7 +557,7 @@ static VALUE rb_escape_uri(VALUE self, VALUE str) {
 
   // this is the max size the string could be
   // TODO: we should try to be more intelligent about this
-  unsigned char *outBuf = (unsigned char *)malloc(sizeof(unsigned char *)*(len*3));
+  unsigned char *outBuf = (unsigned char *)malloc(sizeof(unsigned char)*(len*3));
 
   // perform our escape, returning the new string's length
   new_len = escape_uri(outBuf, inBuf, len);
@@ -590,7 +590,7 @@ static VALUE rb_unescape_uri(VALUE self, VALUE str) {
 
   // this is the max size the string could be
   // TODO: we should try to be more intelligent about this
-  unsigned char *outBuf = (unsigned char *)malloc(sizeof(unsigned char *)*len);
+  unsigned char *outBuf = (unsigned char *)malloc(sizeof(unsigned char)*len);
 
   // perform our escape, returning the new string's length
   new_len = unescape_uri(outBuf, inBuf, len);
