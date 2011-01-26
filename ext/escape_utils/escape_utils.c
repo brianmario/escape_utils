@@ -595,7 +595,7 @@ static VALUE rb_unescape_uri(VALUE self, VALUE str) {
 }
 
 /* Ruby Extension initializer */
-void Init_escape_utils_ext() {
+void Init_escape_utils() {
   mEscapeUtils = rb_define_module("EscapeUtils");
   rb_define_method(mEscapeUtils,           "escape_html",          rb_escape_html,   -1);
   rb_define_module_function(mEscapeUtils,  "escape_html",          rb_escape_html,   -1);

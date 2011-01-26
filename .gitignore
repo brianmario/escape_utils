@@ -4,3 +4,5 @@ Makefile
 pkg/*
 doc/*
 *.rbc
+tmp/
+Gemfile.lock

@@ -1,23 +1,4 @@
-# encoding: UTF-8
-begin
-  require 'jeweler'
-  Jeweler::Tasks.new do |gem|
-    gem.name = "escape_utils"
-    gem.summary = "Faster string escaping routines for your web apps"
-    gem.email = "seniorlopez@gmail.com"
-    gem.homepage = "http://github.com/brianmario/escape_utils"
-    gem.authors = ["Brian Lopez"]
-    gem.require_paths = ["lib", "ext"]
-    gem.extra_rdoc_files = `git ls-files *.rdoc`.split("\n")
-    gem.files = `git ls-files`.split("\n")
-    gem.extensions = ["ext/extconf.rb"]
-    gem.files.include %w(lib/jeweler/templates/.document lib/jeweler/templates/.gitignore)
-    # gem.rubyforge_project = "mysql2"
-  end
-rescue LoadError
-  puts "Jeweler, or one of its dependencies, is not available. Install it with: sudo gem install jeweler -s http://gems.github.com"
-end
-
+# rspec
 begin
   require 'rspec'
   require 'rspec/core/rake_task'
@@ -34,3 +15,18 @@ begin
 rescue LoadError
   puts "rspec, or one of its dependencies, is not available. Install it with: sudo gem install rspec"
 end
+
+# rake-compiler
+require 'rake' unless defined? Rake
+
+gem 'rake-compiler', '>= 0.7.5'
+require "rake/extensiontask"
+
+Rake::ExtensionTask.new('escape_utils') do |ext|
+  ext.cross_compile = true
+  ext.cross_platform = ['x86-mingw32', 'x86-mswin32-60']
+
+  ext.lib_dir = File.join 'lib', 'escape_utils'
+end
+
+Rake::Task[:spec].prerequisites << :compile
