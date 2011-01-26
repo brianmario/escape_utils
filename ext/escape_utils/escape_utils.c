@@ -5,6 +5,7 @@
 
 static VALUE mEscapeUtils;
 static ID rb_html_secure;
+static int html_secure = 1;
 
 #define IS_HEX(c) ((c >= '0' && c <= '9') || (c >= 'A' && c <= 'F') || (c >= 'a' && c <= 'f'))
 #define UNHEX(c) (c >= '0' && c <= '9' ? c - '0' : c >= 'A' && c <= 'F' ? c - 'A' + 10 : c - 'a' + 10)
@@ -17,7 +18,7 @@ static ID rb_html_secure;
 #define RESERVED(c) (c == ';' || c == '/' || c == '?' || c == ':' || c == '@' || c== '&' || c == '=' || c == '+' || c == '$' || c == ',' || c == '[' || c == ']')
 #define URI_SAFE(c) (URL_SAFE(c) || UNRESERVED(c) || RESERVED(c))
 
-static size_t escape_html(unsigned char *out, const unsigned char *in, size_t in_len, unsigned short int secure) {
+static size_t escape_html(unsigned char *out, const unsigned char *in, size_t in_len, int secure) {
   size_t total = 0;
   unsigned char curChar;
 
@@ -294,8 +295,8 @@ static size_t unescape_uri(unsigned char *out, const unsigned char *in, size_t i
 }
 
 static VALUE rb_escape_html(int argc, VALUE * argv, VALUE self) {
-  VALUE str, rb_secure = rb_funcall(mEscapeUtils, rb_html_secure, 0);
-  unsigned short secure = 1;
+  VALUE str, rb_secure;
+  int secure = html_secure;
   VALUE rb_output_buf;
 #ifdef HAVE_RUBY_ENCODING_H
   rb_encoding *default_internal_enc;
@@ -303,9 +304,6 @@ static VALUE rb_escape_html(int argc, VALUE * argv, VALUE self) {
 #endif
   unsigned char *inBuf, *outBuf;
   size_t len, new_len;
-  if (rb_secure == Qfalse) {
-    secure = 0;
-  }
 
   if (rb_scan_args(argc, argv, "11", &str, &rb_secure) == 2) {
     if (rb_secure == Qfalse) {
@@ -621,6 +619,19 @@ static VALUE rb_unescape_uri(VALUE self, VALUE str) {
   return rb_output_buf;
 }
 
+static VALUE rb_s_get_html_secure(VALUE self)
+{
+  return rb_cvar_get(self, rb_html_secure);
+}
+
+static VALUE rb_s_set_html_secure(VALUE self, VALUE val)
+{
+  html_secure = RTEST(val);
+  rb_cvar_set(self, rb_html_secure, val);
+
+  return val;
+}
+
 /* Ruby Extension initializer */
 void Init_escape_utils() {
   mEscapeUtils = rb_define_module("EscapeUtils");
@@ -641,6 +652,9 @@ void Init_escape_utils() {
   rb_define_method(mEscapeUtils,           "unescape_uri",         rb_unescape_uri, 1);
   rb_define_module_function(mEscapeUtils,  "unescape_uri",         rb_unescape_uri, 1);
 
-  rb_html_secure = rb_intern("html_secure");
+  rb_define_singleton_method(mEscapeUtils, "html_secure",          rb_s_get_html_secure, 0);
+  rb_define_singleton_method(mEscapeUtils, "html_secure=",         rb_s_set_html_secure, 1);
+
+  rb_html_secure = rb_intern("@@html_secure");
 }
 

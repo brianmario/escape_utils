@@ -9,12 +9,5 @@ module EscapeUtils
   # This is because quotes around HTML attributes are optional in most/all modern browsers at the time of writing (10/15/2010)
   @@html_secure = true
 
-  def self.html_secure
-    @@html_secure
-  end
-  def self.html_secure=(val)
-    @@html_secure = val
-  end
-
   autoload :HtmlSafety, 'escape_utils/html_safety'
 end
