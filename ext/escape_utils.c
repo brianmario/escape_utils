@@ -1,7 +1,6 @@
 #include <ruby.h>
 #ifdef HAVE_RUBY_ENCODING_H
 #include <ruby/encoding.h>
-static rb_encoding *utf8Encoding;
 #endif
 
 static VALUE mEscapeUtils;
@@ -324,8 +323,6 @@ static VALUE rb_escape_html(int argc, VALUE * argv, VALUE self) {
   rb_enc_associate(rb_output_buf, original_encoding);
   if (default_internal_enc) {
     rb_output_buf = rb_str_export_to_enc(rb_output_buf, default_internal_enc);
-  } else {
-    rb_output_buf = rb_str_export_to_enc(rb_output_buf, utf8Encoding);
   }
 #endif
   return rb_output_buf;
@@ -365,8 +362,6 @@ static VALUE rb_unescape_html(VALUE self, VALUE str) {
   rb_enc_associate(rb_output_buf, original_encoding);
   if (default_internal_enc) {
     rb_output_buf = rb_str_export_to_enc(rb_output_buf, default_internal_enc);
-  } else {
-    rb_output_buf = rb_str_export_to_enc(rb_output_buf, utf8Encoding);
   }
 #endif
   return rb_output_buf;
@@ -411,8 +406,6 @@ static VALUE rb_escape_javascript(VALUE self, VALUE str) {
   rb_enc_associate(rb_output_buf, original_encoding);
   if (default_internal_enc) {
     rb_output_buf = rb_str_export_to_enc(rb_output_buf, default_internal_enc);
-  } else {
-    rb_output_buf = rb_str_export_to_enc(rb_output_buf, utf8Encoding);
   }
 #endif
   return rb_output_buf;
@@ -457,8 +450,6 @@ static VALUE rb_unescape_javascript(VALUE self, VALUE str) {
   rb_enc_associate(rb_output_buf, original_encoding);
   if (default_internal_enc) {
     rb_output_buf = rb_str_export_to_enc(rb_output_buf, default_internal_enc);
-  } else {
-    rb_output_buf = rb_str_export_to_enc(rb_output_buf, utf8Encoding);
   }
 #endif
   return rb_output_buf;
@@ -499,8 +490,6 @@ static VALUE rb_escape_url(VALUE self, VALUE str) {
   rb_enc_associate(rb_output_buf, original_encoding);
   if (default_internal_enc) {
     rb_output_buf = rb_str_export_to_enc(rb_output_buf, default_internal_enc);
-  } else {
-    rb_output_buf = rb_str_export_to_enc(rb_output_buf, utf8Encoding);
   }
 #endif
   return rb_output_buf;
@@ -534,8 +523,6 @@ static VALUE rb_unescape_url(VALUE self, VALUE str) {
   rb_enc_associate(rb_output_buf, original_encoding);
   if (default_internal_enc) {
     rb_output_buf = rb_str_export_to_enc(rb_output_buf, default_internal_enc);
-  } else {
-    rb_output_buf = rb_str_export_to_enc(rb_output_buf, utf8Encoding);
   }
 #endif
   return rb_output_buf;
@@ -569,8 +556,6 @@ static VALUE rb_escape_uri(VALUE self, VALUE str) {
   rb_enc_associate(rb_output_buf, original_encoding);
   if (default_internal_enc) {
     rb_output_buf = rb_str_export_to_enc(rb_output_buf, default_internal_enc);
-  } else {
-    rb_output_buf = rb_str_export_to_enc(rb_output_buf, utf8Encoding);
   }
 #endif
   return rb_output_buf;
@@ -604,8 +589,6 @@ static VALUE rb_unescape_uri(VALUE self, VALUE str) {
   rb_enc_associate(rb_output_buf, original_encoding);
   if (default_internal_enc) {
     rb_output_buf = rb_str_export_to_enc(rb_output_buf, default_internal_enc);
-  } else {
-    rb_output_buf = rb_str_export_to_enc(rb_output_buf, utf8Encoding);
   }
 #endif
   return rb_output_buf;
@@ -630,10 +613,6 @@ void Init_escape_utils_ext() {
   rb_define_module_function(mEscapeUtils,  "escape_uri",           rb_escape_uri, 1);
   rb_define_method(mEscapeUtils,           "unescape_uri",         rb_unescape_uri, 1);
   rb_define_module_function(mEscapeUtils,  "unescape_uri",         rb_unescape_uri, 1);
-
-#ifdef HAVE_RUBY_ENCODING_H
-  utf8Encoding = rb_utf8_encoding();
-#endif
 
   rb_html_secure = rb_intern("html_secure");
 }

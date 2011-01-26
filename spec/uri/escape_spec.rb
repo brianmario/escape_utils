@@ -37,9 +37,11 @@ describe EscapeUtils, "escape_uri" do
   end
 
   if RUBY_VERSION =~ /^1.9/
-    it "should default to utf-8 if Encoding.default_internal is nil" do
+    it "should default to the original string's encoding if Encoding.default_internal is nil" do
       Encoding.default_internal = nil
-      EscapeUtils.escape_uri("http://www.homerun.com/").encoding.should eql(Encoding.find('utf-8'))
+      str = "http://www.homerun.com/"
+      str = str.encode('us-ascii')
+      EscapeUtils.escape_uri(str).encoding.should eql(Encoding.find('us-ascii'))
     end
 
     it "should use Encoding.default_internal" do

@@ -33,9 +33,11 @@ describe EscapeUtils, "escape_html" do
   end
 
   if RUBY_VERSION =~ /^1.9/
-    it "should default to utf-8 if Encoding.default_internal is nil" do
+    it "should default to the original string's encoding if Encoding.default_internal is nil" do
       Encoding.default_internal = nil
-      EscapeUtils.escape_html("<b>Bourbon & Branch</b>").encoding.should eql(Encoding.find('utf-8'))
+      str = "<b>Bourbon & Branch</b>"
+      str = str.encode('us-ascii')
+      EscapeUtils.escape_html(str).encoding.should eql(Encoding.find('us-ascii'))
     end
 
     it "should use Encoding.default_internal" do
