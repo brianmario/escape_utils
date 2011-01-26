@@ -23,6 +23,10 @@ describe EscapeUtils, "unescape_javascript" do
     EscapeUtils.unescape_javascript(%(dont <\\/close> tags)).should eql(%(dont </close> tags))
   end
 
+  it "should pass through standalone '\'" do
+    EscapeUtils.unescape_javascript("\\").should eql("\\")
+  end
+
   if RUBY_VERSION =~ /^1.9/
     it "should default to the original string's encoding if Encoding.default_internal is nil" do
       Encoding.default_internal = nil

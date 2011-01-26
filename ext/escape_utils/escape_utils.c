@@ -86,6 +86,9 @@ static size_t unescape_html(unsigned char *out, const unsigned char *in, size_t 
         total-=5;
         in+=5;
         len-=5;
+      } else {
+        /* incomplete tag, pass it through */
+        *out++ = curChar;
       }
     } else {
       *out++ = curChar;
@@ -171,7 +174,9 @@ static size_t unescape_javascript(unsigned char *out, const unsigned char *in, s
         *out++ = '/';
         total--;
       } else {
+        /* incomplete escape, pass it through */
         *out++ = curChar;
+        continue;
       }
       in++; in_len--;
     } else {
@@ -220,6 +225,9 @@ static size_t unescape_url(unsigned char *out, const unsigned char *in, size_t i
         *out++ = (UNHEX(*in) << 4) + UNHEX(*(in+1));
         in+=2;
         total-=2;
+      } else {
+        /* incomplete escape, pass it through */
+        *out++ = curChar;
       }
     } else if (curChar == '+') {
       *out++ = ' ';
@@ -267,6 +275,9 @@ static size_t unescape_uri(unsigned char *out, const unsigned char *in, size_t i
         *out++ = (UNHEX(*in) << 4) + UNHEX(*(in+1));
         in+=2;
         total-=2;
+      } else {
+        /* incomplete escape, pass it through */
+        *out++ = curChar;
       }
     } else {
       *out++ = curChar;

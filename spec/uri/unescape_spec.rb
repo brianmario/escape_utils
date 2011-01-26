@@ -11,6 +11,14 @@ describe EscapeUtils, "unescape_uri" do
     EscapeUtils.unescape_uri("http://www.homerun.com/").should eql("http://www.homerun.com/")
   end
 
+  it "should not be thrown by a standalone %" do
+    EscapeUtils.unescape_uri("%").should eql("%")
+  end
+
+  it "should not be thrown by a trailing %" do
+    EscapeUtils.unescape_uri("http%").should eql("http%")
+  end
+
   # NOTE: from Rack's test suite
   it "should unescape a url containing tags" do
     EscapeUtils.unescape_uri("fo%3Co%3Ebar").should eql("fo<o>bar")
