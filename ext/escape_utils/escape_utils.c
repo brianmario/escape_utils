@@ -320,20 +320,21 @@ static VALUE rb_escape_html(int argc, VALUE * argv, VALUE self) {
   original_encoding = rb_enc_get(str);
 #endif
   inBuf = (unsigned char*)RSTRING_PTR(str);
-  len = RSTRING_LEN(str), new_len = 0;
+  len = RSTRING_LEN(str);
 
   // this is the max size the string could be
   // TODO: we should try to be more intelligent about this
-  outBuf = (unsigned char *)malloc(sizeof(unsigned char)*(len*5));
+  new_len = sizeof(unsigned char)*(len*5);
+
+  // create our new ruby string
+  rb_output_buf = rb_str_new(NULL, new_len);
+  outBuf = (unsigned char *)RSTRING_PTR(rb_output_buf);
 
   // perform our escape, returning the new string's length
   new_len = escape_html(outBuf, inBuf, len, secure);
 
-  // create our new ruby string
-  rb_output_buf = rb_str_new((char *)outBuf, new_len);
-
-  // free the temporary C string
-  free(outBuf);
+  // shrink our new ruby string
+  rb_str_resize(rb_output_buf, new_len);
 
 #ifdef HAVE_RUBY_ENCODING_H
   rb_enc_associate(rb_output_buf, original_encoding);
@@ -359,20 +360,21 @@ static VALUE rb_unescape_html(VALUE self, VALUE str) {
   original_encoding = rb_enc_get(str);
 #endif
   inBuf = (unsigned char*)RSTRING_PTR(str);
-  len = RSTRING_LEN(str), new_len = 0;
+  len = RSTRING_LEN(str);
 
   // this is the max size the string could be
-  // TODO: we should try to be more intelligent about this
-  outBuf = (unsigned char *)malloc(sizeof(unsigned char)*len);
+  // TODO: we could be more intelligent about this, but probably not
+  new_len = sizeof(unsigned char) * len;
+
+  // create our new ruby string
+  rb_output_buf = rb_str_new(NULL, new_len);
+  outBuf = (unsigned char *)RSTRING_PTR(rb_output_buf);
 
   // perform our escape, returning the new string's length
   new_len = unescape_html(outBuf, inBuf, len);
 
-  // create our new ruby string
-  rb_output_buf = rb_str_new((char *)outBuf, new_len);
-
-  // free the temporary C string
-  free(outBuf);
+  // shrink our new ruby string
+  rb_str_resize(rb_output_buf, new_len);
 
 #ifdef HAVE_RUBY_ENCODING_H
   rb_enc_associate(rb_output_buf, original_encoding);
@@ -403,20 +405,21 @@ static VALUE rb_escape_javascript(VALUE self, VALUE str) {
   original_encoding = rb_enc_get(str);
 #endif
   inBuf = (unsigned char*)RSTRING_PTR(str);
-  len = RSTRING_LEN(str), new_len = 0;
+  len = RSTRING_LEN(str);
 
   // this is the max size the string could be
   // TODO: we should try to be more intelligent about this
-  outBuf = (unsigned char *)malloc(sizeof(unsigned char)*(len*2));
+  new_len = sizeof(unsigned char)*(len*2);
+
+  // create our new ruby string
+  rb_output_buf = rb_str_new(NULL, new_len);
+  outBuf = (unsigned char *)RSTRING_PTR(rb_output_buf);
 
   // perform our escape, returning the new string's length
   new_len = escape_javascript(outBuf, inBuf, len);
 
-  // create our new ruby string
-  rb_output_buf = rb_str_new((char *)outBuf, new_len);
-
-  // free the temporary C string
-  free(outBuf);
+  // shrink our new ruby string
+  rb_str_resize(rb_output_buf, new_len);
 
 #ifdef HAVE_RUBY_ENCODING_H
   rb_enc_associate(rb_output_buf, original_encoding);
@@ -447,20 +450,21 @@ static VALUE rb_unescape_javascript(VALUE self, VALUE str) {
   original_encoding = rb_enc_get(str);
 #endif
   inBuf = (unsigned char*)RSTRING_PTR(str);
-  len = RSTRING_LEN(str), new_len = 0;
+  len = RSTRING_LEN(str);
 
   // this is the max size the string could be
-  // TODO: we should try to be more intelligent about this
-  outBuf = (unsigned char *)malloc(sizeof(unsigned char)*len);
+  // TODO: we could be more intelligent about this, but probably not
+  new_len = sizeof(unsigned char) * len;
+
+  // create our new ruby string
+  rb_output_buf = rb_str_new(NULL, new_len);
+  outBuf = (unsigned char *)RSTRING_PTR(rb_output_buf);
 
   // perform our escape, returning the new string's length
   new_len = unescape_javascript(outBuf, inBuf, len);
 
-  // create our new ruby string
-  rb_output_buf = rb_str_new((char *)outBuf, new_len);
-
-  // free the temporary C string
-  free(outBuf);
+  // shrink our new ruby string
+  rb_str_resize(rb_output_buf, new_len);
 
 #ifdef HAVE_RUBY_ENCODING_H
   rb_enc_associate(rb_output_buf, original_encoding);
@@ -487,20 +491,21 @@ static VALUE rb_escape_url(VALUE self, VALUE str) {
   original_encoding = rb_enc_get(str);
 #endif
   inBuf = (unsigned char*)RSTRING_PTR(str);
-  len = RSTRING_LEN(str), new_len = 0;
+  len = RSTRING_LEN(str);
 
   // this is the max size the string could be
   // TODO: we should try to be more intelligent about this
-  outBuf = (unsigned char *)malloc(sizeof(unsigned char)*(len*3));
+  new_len = sizeof(unsigned char)*(len*3);
+
+  // create our new ruby string
+  rb_output_buf = rb_str_new(NULL, new_len);
+  outBuf = (unsigned char *)RSTRING_PTR(rb_output_buf);
 
   // perform our escape, returning the new string's length
   new_len = escape_url(outBuf, inBuf, len);
 
-  // create our new ruby string
-  rb_output_buf = rb_str_new((char *)outBuf, new_len);
-
-  // free the temporary C string
-  free(outBuf);
+  // shrink our new ruby string
+  rb_str_resize(rb_output_buf, new_len);
 
 #ifdef HAVE_RUBY_ENCODING_H
   rb_enc_associate(rb_output_buf, original_encoding);
@@ -520,20 +525,22 @@ static VALUE rb_unescape_url(VALUE self, VALUE str) {
   rb_encoding *original_encoding = rb_enc_get(str);
 #endif
   unsigned char *inBuf = (unsigned char*)RSTRING_PTR(str);
-  size_t len = RSTRING_LEN(str), new_len = 0;
+  size_t len = RSTRING_LEN(str);
 
   // this is the max size the string could be
-  // TODO: we should try to be more intelligent about this
-  unsigned char *outBuf = (unsigned char *)malloc(sizeof(unsigned char)*len);
-
-  // perform our escape, returning the new string's length
-  new_len = unescape_url(outBuf, inBuf, len);
+  // TODO: we could be more intelligent about this, but probably not
+  size_t new_len = sizeof(unsigned char) * len;
+  unsigned char *outBuf;
 
   // create our new ruby string
-  rb_output_buf = rb_str_new((char *)outBuf, new_len);
+  rb_output_buf = rb_str_new(NULL, new_len);
 
-  // free the temporary C string
-  free(outBuf);
+  // perform our escape, returning the new string's length
+  outBuf = (unsigned char *)RSTRING_PTR(rb_output_buf);
+  new_len = unescape_url(outBuf, inBuf, len);
+
+  // shrink our new ruby string
+  rb_str_resize(rb_output_buf, new_len);
 
 #ifdef HAVE_RUBY_ENCODING_H
   rb_enc_associate(rb_output_buf, original_encoding);
@@ -553,20 +560,22 @@ static VALUE rb_escape_uri(VALUE self, VALUE str) {
   rb_encoding *original_encoding = rb_enc_get(str);
 #endif
   unsigned char *inBuf = (unsigned char*)RSTRING_PTR(str);
-  size_t len = RSTRING_LEN(str), new_len = 0;
+  size_t len = RSTRING_LEN(str);
+  unsigned char *outBuf;
 
   // this is the max size the string could be
   // TODO: we should try to be more intelligent about this
-  unsigned char *outBuf = (unsigned char *)malloc(sizeof(unsigned char)*(len*3));
+  size_t new_len = sizeof(unsigned char)*(len*3);
+
+  // create our new ruby string
+  rb_output_buf = rb_str_new(NULL, new_len);
+  outBuf = (unsigned char *)RSTRING_PTR(rb_output_buf);
 
   // perform our escape, returning the new string's length
   new_len = escape_uri(outBuf, inBuf, len);
 
-  // create our new ruby string
-  rb_output_buf = rb_str_new((char *)outBuf, new_len);
-
-  // free the temporary C string
-  free(outBuf);
+  // shrink our new ruby string
+  rb_str_resize(rb_output_buf, new_len);
 
 #ifdef HAVE_RUBY_ENCODING_H
   rb_enc_associate(rb_output_buf, original_encoding);
@@ -586,20 +595,22 @@ static VALUE rb_unescape_uri(VALUE self, VALUE str) {
   rb_encoding *original_encoding = rb_enc_get(str);
 #endif
   unsigned char *inBuf = (unsigned char*)RSTRING_PTR(str);
-  size_t len = RSTRING_LEN(str), new_len = 0;
+  size_t len = RSTRING_LEN(str);
+  unsigned char *outBuf;
 
   // this is the max size the string could be
   // TODO: we should try to be more intelligent about this
-  unsigned char *outBuf = (unsigned char *)malloc(sizeof(unsigned char)*len);
+  size_t new_len = sizeof(unsigned char)*len;
+
+  // create our new ruby string
+  rb_output_buf = rb_str_new(NULL, new_len);
+  outBuf = (unsigned char *)RSTRING_PTR(rb_output_buf);
 
   // perform our escape, returning the new string's length
   new_len = unescape_uri(outBuf, inBuf, len);
 
-  // create our new ruby string
-  rb_output_buf = rb_str_new((char *)outBuf, new_len);
-
-  // free the temporary C string
-  free(outBuf);
+  // shrink our new ruby string
+  rb_str_resize(rb_output_buf, new_len);
 
 #ifdef HAVE_RUBY_ENCODING_H
   rb_enc_associate(rb_output_buf, original_encoding);
