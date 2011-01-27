@@ -65,32 +65,32 @@ static size_t unescape_html(unsigned char *out, const unsigned char *in, size_t 
   while (len) {
     curChar = *in++;
     if (curChar == '&') {
-      if ((in-start)+2 <= in_len && *in == 'l' && *(in+1) == 't' && *(in+2) == ';') {
+      if (*in == 'l' && *(in+1) == 't' && *(in+2) == ';') {
         *out++ = '<';
         total-=3;
         in+=3;
         len-=3;
-      } else if ((in-start)+2 <= in_len && *in == 'g' && *(in+1) == 't' && *(in+2) == ';') {
+      } else if (*in == 'g' && *(in+1) == 't' && *(in+2) == ';') {
         *out++ = '>';
         total-=3;
         in+=3;
         len-=3;
-      } else if ((in-start)+3 <= in_len && *in == 'a' && *(in+1) == 'm' && *(in+2) == 'p' && *(in+3) == ';') {
+      } else if (*in == 'a' && *(in+1) == 'm' && *(in+2) == 'p' && *(in+3) == ';') {
         *out++ = '&';
         total-=4;
         in+=4;
         len-=4;
-      } else if ((in-start)+3 <= in_len && *in == '#' && *(in+1) == '3' && *(in+2) == '9' && *(in+3) == ';') {
+      } else if (*in == '#' && *(in+1) == '3' && *(in+2) == '9' && *(in+3) == ';') {
         *out++ = '\'';
         total-=4;
         in+=4;
         len-=4;
-      } else if ((in-start)+3 <= in_len && *in == '#' && *(in+1) == '4' && *(in+2) == '7' && *(in+3) == ';') {
+      } else if (*in == '#' && *(in+1) == '4' && *(in+2) == '7' && *(in+3) == ';') {
         *out++ = '/';
         total-=4;
         in+=4;
         len-=4;
-      } else if ((in-start)+4 <= in_len && *in == 'q' && *(in+1) == 'u' && *(in+2) == 'o' && *(in+3) == 't' && *(in+4) == ';') {
+      } else if (*in == 'q' && *(in+1) == 'u' && *(in+2) == 'o' && *(in+3) == 't' && *(in+4) == ';') {
         *out++ = '\"';
         total-=5;
         in+=5;
@@ -230,7 +230,7 @@ static size_t unescape_url(unsigned char *out, const unsigned char *in, size_t i
   while (len) {
     curChar = *in++;
     if (curChar == '%') {
-      if ((in-start)+2 <= in_len && IS_HEX(*in) && IS_HEX(*(in+1))) {
+      if (IS_HEX(*in) && IS_HEX(*(in+1))) {
         *out++ = (UNHEX(*in) << 4) + UNHEX(*(in+1));
         in+=2;
         total-=2;
@@ -280,7 +280,7 @@ static size_t unescape_uri(unsigned char *out, const unsigned char *in, size_t i
   while (len) {
     curChar = *in++;
     if (curChar == '%') {
-      if ((in-start)+2 <= in_len && IS_HEX(*in) && IS_HEX(*(in+1))) {
+      if (IS_HEX(*in) && IS_HEX(*(in+1))) {
         *out++ = (UNHEX(*in) << 4) + UNHEX(*(in+1));
         in+=2;
         total-=2;
