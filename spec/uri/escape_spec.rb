@@ -10,6 +10,10 @@ describe EscapeUtils, "escape_uri" do
     EscapeUtils.escape_uri("http://www.homerun.com/").should eql("http%3A%2F%2Fwww.homerun.com%2F")
   end
 
+  it "should not escape tildes to match URI.escape" do
+    EscapeUtils.escape_uri("~luser").should eql("~luser")
+  end
+
   # NOTE: from Rack's test suite
   it "should escape a url containing tags" do
     EscapeUtils.escape_uri("fo<o>bar").should eql("fo%3Co%3Ebar")
