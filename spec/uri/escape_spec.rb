@@ -1,17 +1,17 @@
 # encoding: UTF-8
 require File.expand_path(File.dirname(__FILE__) + '/../spec_helper.rb')
+require 'uri'
 
 describe EscapeUtils, "escape_uri" do
   it "should respond to escape_uri" do
     EscapeUtils.should respond_to(:escape_uri)
   end
 
-  it "should escape a basic url" do
-    EscapeUtils.escape_uri("http://www.homerun.com/").should eql("http%3A%2F%2Fwww.homerun.com%2F")
-  end
-
-  it "should not escape tildes to match URI.escape" do
-    EscapeUtils.escape_uri("~luser").should eql("~luser")
+  it "should escape each byte exactly like URI.escape" do
+    (0..255).each do |i|
+      c = i.chr
+      EscapeUtils.escape_uri(c).should eql(URI.escape(c))
+    end
   end
 
   # NOTE: from Rack's test suite
@@ -23,11 +23,6 @@ describe EscapeUtils, "escape_uri" do
   it "should escape a url with spaces" do
     EscapeUtils.escape_uri("a space").should eql("a%20space")
     EscapeUtils.escape_uri("a   sp ace ").should eql("a%20%20%20sp%20ace%20")
-  end
-
-  # NOTE: from Rack's test suite
-  it "should escape a string of mixed characters" do
-    EscapeUtils.escape_uri("q1!2\"'w$5&7/z8)?\\").should eql("q1%212%22%27w%245%267%2Fz8%29%3F%5C")
   end
 
   # NOTE: from Rack's test suite

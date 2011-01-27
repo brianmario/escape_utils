@@ -6,11 +6,16 @@
 static VALUE mEscapeUtils;
 static ID rb_html_secure;
 
-#define IS_HEX(c) (c >= 48 || c <= 57) && (c >= 65 || c <= 70) && (c >= 97 || c <= 102)
-#define NOT_HEX(c) (c < 48 || c > 57) && (c < 65 || c > 90) && (c < 97 || c > 122)
+#define IS_HEX(c) ((c >= '0' && c <= '9') || (c >= 'A' && c <= 'F') || (c >= 'a' && c <= 'f'))
 #define UNHEX(c) (c >= '0' && c <= '9' ? c - '0' : c >= 'A' && c <= 'F' ? c - 'A' + 10 : c - 'a' + 10)
-#define URI_SAFE(c) (c >= '0' && c <= '9') || (c >= 'a' && c <= 'z') || (c >= 'A' && c <= 'Z') || c== 45 || c == 46 || c == 95 || c == 126
-//                  ALPHA / DIGIT / "-" / "." / "_" / "~"
+
+#define ALPHANUM(c) ((c >= 'a' && c <= 'z') || (c >= 'A' && c <= 'Z') || (c >= '0' && c <= '9'))
+#define URL_SAFE(c) (ALPHANUM(c) || c == '-' || c == '_' || c == '.')
+
+/* from uri/common.rb */
+#define UNRESERVED(c) (ALPHANUM(c) || c == '-' || c == '_' || c == '.' || c == '!' || c == '~' || c == '*' || c == '\'' || c == '(' || c == ')')
+#define RESERVED(c) (c == ';' || c == '/' || c == '?' || c == ':' || c == '@' || c== '&' || c == '=' || c == '+' || c == '$' || c == ',' || c == '[' || c == ']')
+#define URI_SAFE(c) (URL_SAFE(c) || UNRESERVED(c) || RESERVED(c))
 
 static size_t escape_html(unsigned char *out, const unsigned char *in, size_t in_len, unsigned short int secure) {
   size_t total = 0;
@@ -198,13 +203,13 @@ static size_t escape_url(unsigned char *out, const unsigned char *in, size_t in_
     curChar = *in++;
     if (curChar == ' ') {
       *out++ = '+';
-    } else if ((curChar != '_' && curChar != '.' && curChar != '-') && NOT_HEX(curChar)) {
+    } else if (URL_SAFE(curChar)) {
+      *out++ = curChar;
+    } else {
       hex[1] = hexChars[curChar & 0x0f];
       hex[0] = hexChars[(curChar >> 4) & 0x0f];
       *out++ = '%'; *out++ = hex[0]; *out++ = hex[1];
       total += 2;
-    } else {
-      *out++ = curChar;
     }
     in_len--;
   }

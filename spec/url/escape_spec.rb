@@ -1,5 +1,6 @@
 # encoding: UTF-8
 require File.expand_path(File.dirname(__FILE__) + '/../spec_helper.rb')
+require 'cgi'
 
 describe EscapeUtils, "escape_url" do
   it "should respond to escape_url" do
@@ -10,8 +11,11 @@ describe EscapeUtils, "escape_url" do
     EscapeUtils.escape_url("http://www.homerun.com/").should eql("http%3A%2F%2Fwww.homerun.com%2F")
   end
 
-  it "should escape tildes to match CGI.escape" do
-    EscapeUtils.escape_url("~luser").should eql("%7Eluser")
+  it "should escape each possible byte value exactly like CGI.escape" do
+    (0..255).each do |i|
+      c = i.chr
+      EscapeUtils.escape_url(c).should eql(CGI.escape(c))
+    end
   end
 
   # NOTE: from Rack's test suite
