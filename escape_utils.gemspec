@@ -1,4 +1,4 @@
-require './lib/escape_utils/version'
+require './lib/escape_utils/version' unless defined? EscapeUtils::VERSION
 
 Gem::Specification.new do |s|
   s.name = %q{escape_utils}

@@ -1,5 +1,16 @@
 # Changelog
 
+## 0.2.0 (February 8th, 2011)
+* fixed a couple of compilation warnings on 1.9.3
+* moved to rspec2
+* remove hard-conversion to utf-8 to preserve the string's original encoding
+* moved to rake-compiler, Bundler
+* pass through incompletely escaped data on unescaping
+* added tilde to escape_{uri,url}specs (It's a difference between CGI.escape and URI.escape)
+* escape_uri and escape_url now match their Ruby counterparts
+** escape_uri is used where URI.escape is, and escape_url is used where CGI.escape is used.
+* performance and memory usage optimizations
+
 ## 0.1.9 (October 15th, 2010)
 * add a flag as an optional 2nd parameter to EscapeUtils.escape_html to disable/enable the escaping of the '/' character. Defaults to the new flag EscapeUtils.html_secure
 
