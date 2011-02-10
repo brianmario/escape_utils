@@ -622,13 +622,11 @@ static VALUE rb_unescape_uri(VALUE self, VALUE str) {
   return rb_output_buf;
 }
 
-static VALUE rb_s_get_html_secure(VALUE self)
-{
+static VALUE rb_s_get_html_secure(VALUE self) {
   return rb_cvar_get(self, rb_html_secure);
 }
 
-static VALUE rb_s_set_html_secure(VALUE self, VALUE val)
-{
+static VALUE rb_s_set_html_secure(VALUE self, VALUE val) {
   html_secure = RTEST(val);
   rb_cvar_set(self, rb_html_secure, val);
 
