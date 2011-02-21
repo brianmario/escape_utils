@@ -1,5 +1,8 @@
 # Changelog
 
+## 0.2.1 (February 21st, 2011)
+* fix buffer over read in unescape_url and unescape_uri
+
 ## 0.2.0 (February 8th, 2011)
 * fixed a couple of compilation warnings on 1.9.3
 * moved to rspec2
