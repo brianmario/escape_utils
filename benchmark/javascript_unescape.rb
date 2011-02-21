@@ -14,8 +14,7 @@ escaped_javascript = EscapeUtils.escape_javascript(javascript)
 puts "Escaping #{escaped_javascript.bytesize} bytes of javascript #{times} times, from #{url}"
 
 Benchmark.bmbm do |x|
-  x.report do
-    puts "EscapeUtils.escape_javascript"
+  x.report "EscapeUtils.escape_javascript" do
     times.times do
       EscapeUtils.unescape_javascript(escaped_javascript)
     end

@@ -17,36 +17,31 @@ escaped_url = EscapeUtils.escape_url(url)
 puts "Escaping a #{url.bytesize} byte URL #{times} times"
 
 Benchmark.bmbm do |x|
-  x.report do
-    puts "Rack::Utils.unescape"
+  x.report "Rack::Utils.unescape" do
     times.times do
       Rack::Utils.unescape(escaped_url)
     end
   end
   
-  x.report do
-    puts "CGI.unescape"
+  x.report "CGI.unescape" do
     times.times do
       CGI.unescape(escaped_url)
     end
   end
   
-  x.report do
-    puts "URLEscape#unescape"
+  x.report "URLEscape#unescape" do
     times.times do
       URLEscape.unescape(escaped_url)
     end
   end
 
-  x.report do
-    puts "fast_xs_extra#fast_uxs_cgi"
+  x.report "fast_xs_extra#fast_uxs_cgi" do
     times.times do
       url.fast_uxs_cgi
     end
   end
 
-  x.report do
-    puts "EscapeUtils.unescape_url"
+  x.report "EscapeUtils.unescape_url" do
     times.times do
       EscapeUtils.unescape_url(escaped_url)
     end

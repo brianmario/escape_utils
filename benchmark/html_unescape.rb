@@ -20,15 +20,13 @@ escaped_html = EscapeUtils.escape_html(html)
 puts "Unescaping #{escaped_html.bytesize} bytes of escaped html #{times} times, from #{url}"
 
 Benchmark.bmbm do |x|
-  x.report do
-    puts "CGI.unescapeHTML"
+  x.report "CGI.unescapeHTML" do
     times.times do
       CGI.unescapeHTML(escaped_html)
     end
   end
 
-  x.report do
-    puts "EscapeUtils.unescape_html"
+  x.report "EscapeUtils.unescape_html" do
     times.times do
       EscapeUtils.unescape_html(escaped_html)
     end

@@ -22,43 +22,37 @@ html = `curl -s #{url}`
 puts "Escaping #{html.bytesize} bytes of html #{times} times, from #{url}"
 
 Benchmark.bmbm do |x|
-  x.report do
-    puts "Rack::Utils.escape_html"
+  x.report "Rack::Utils.escape_html" do
     times.times do
       Rack::Utils.escape_html(html)
     end
   end
 
-  x.report do
-    puts "Haml::Helpers.html_escape"
+  x.report "Haml::Helpers.html_escape" do
     times.times do
       HamlBench.html_escape(html)
     end
   end
 
-  x.report do
-    puts "ERB::Util.html_escape"
+  x.report "ERB::Util.html_escape" do
     times.times do
       ERB::Util.html_escape(html)
     end
   end
 
-  x.report do
-    puts "CGI.escapeHTML"
+  x.report "CGI.escapeHTML" do
     times.times do
       CGI.escapeHTML(html)
     end
   end
 
-  x.report do
-    puts "fast_xs_extra#fast_xs_html"
+  x.report "fast_xs_extra#fast_xs_html" do
     times.times do
       html.fast_xs_html
     end
   end
 
-  x.report do
-    puts "EscapeUtils.escape_html"
+  x.report "EscapeUtils.escape_html" do
     times.times do
       EscapeUtils.escape_html(html)
     end

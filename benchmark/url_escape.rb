@@ -17,43 +17,37 @@ url = "https://www.yourmom.com/cgi-bin/session.cgi?sess_args=mYHcEA  dh435dqUs0m
 puts "Escaping a #{url.bytesize} byte URL #{times} times"
 
 Benchmark.bmbm do |x|
-  x.report do
-    puts "ERB::Util.url_encode"
+  x.report "ERB::Util.url_encode" do
     times.times do
       ERB::Util.url_encode(url)
     end
   end
 
-  x.report do
-    puts "Rack::Utils.escape"
+  x.report "Rack::Utils.escape" do
     times.times do
       Rack::Utils.escape(url)
     end
   end
 
-  x.report do
-    puts "CGI.escape"
+  x.report "CGI.escape" do
     times.times do
       CGI.escape(url)
     end
   end
 
-  x.report do
-    puts "URLEscape#escape"
+  x.report "URLEscape#escape" do
     times.times do
       URLEscape.escape(url)
     end
   end
 
-  x.report do
-    puts "fast_xs_extra#fast_xs_url"
+  x.report "fast_xs_extra#fast_xs_url" do
     times.times do
       url.fast_xs_url
     end
   end
 
-  x.report do
-    puts "EscapeUtils.escape_url"
+  x.report "EscapeUtils.escape_url" do
     times.times do
       EscapeUtils.escape_url(url)
     end

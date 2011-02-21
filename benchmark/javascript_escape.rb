@@ -18,15 +18,13 @@ javascript = `curl -s #{url}`
 puts "Escaping #{javascript.bytesize} bytes of javascript #{times} times, from #{url}"
 
 Benchmark.bmbm do |x|
-  x.report do
-    puts "ActionView::Helpers::JavaScriptHelper#escape_javascript"
+  x.report "ActionView::Helpers::JavaScriptHelper#escape_javascript" do
     times.times do
       ActionPackBench.escape_javascript(javascript)
     end
   end
 
-  x.report do
-    puts "EscapeUtils.escape_javascript"
+  x.report "EscapeUtils.escape_javascript" do
     times.times do
       EscapeUtils.escape_javascript(javascript)
     end
