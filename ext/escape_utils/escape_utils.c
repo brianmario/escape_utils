@@ -233,6 +233,7 @@ static size_t unescape_url(unsigned char *out, const unsigned char *in, size_t i
       if (IS_HEX(*in) && IS_HEX(*(in+1))) {
         *out++ = (UNHEX(*in) << 4) + UNHEX(*(in+1));
         in+=2;
+        len-=2;
         total-=2;
       } else {
         /* incomplete escape, pass it through */
@@ -283,6 +284,7 @@ static size_t unescape_uri(unsigned char *out, const unsigned char *in, size_t i
       if (IS_HEX(*in) && IS_HEX(*(in+1))) {
         *out++ = (UNHEX(*in) << 4) + UNHEX(*(in+1));
         in+=2;
+        len-=2;
         total-=2;
       } else {
         /* incomplete escape, pass it through */
