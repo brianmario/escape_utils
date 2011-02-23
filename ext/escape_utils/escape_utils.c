@@ -1,7 +1,7 @@
+#include <ruby.h>
 #if RB_CVAR_SET_ARITY == 4
 #  define rb_cvar_set(a,b,c) rb_cvar_set(a,b,c,0)
 #endif
-#include <ruby.h>
 #ifdef HAVE_RUBY_ENCODING_H
 #include <ruby/encoding.h>
 #endif
