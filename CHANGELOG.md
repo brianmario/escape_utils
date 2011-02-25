@@ -1,5 +1,8 @@
 # Changelog
 
+## 0.2.2 (February 25th, 2011)
+* minor fix for Rubinius compatibility
+
 ## 0.2.1 (February 21st, 2011)
 * fix buffer over read in unescape_url and unescape_uri
 
