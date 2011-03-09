@@ -36,27 +36,18 @@ describe EscapeUtils, "escape_url" do
 
   # NOTE: from Rack's test suite
   it "should escape correctly for multibyte characters" do
-    matz_name = "\xE3\x81\xBE\xE3\x81\xA4\xE3\x82\x82\xE3\x81\xA8".unpack("a*")[0] # Matsumoto
-    matz_name.force_encoding("UTF-8") if matz_name.respond_to? :force_encoding
+    matz_name = "\xE3\x81\xBE\xE3\x81\xA4\xE3\x82\x82\xE3\x81\xA8" # Matsumoto
     EscapeUtils.escape_url(matz_name).should eql('%E3%81%BE%E3%81%A4%E3%82%82%E3%81%A8')
-    matz_name_sep = "\xE3\x81\xBE\xE3\x81\xA4 \xE3\x82\x82\xE3\x81\xA8".unpack("a*")[0] # Matsu moto
-    matz_name_sep.force_encoding("UTF-8") if matz_name_sep.respond_to? :force_encoding
+    matz_name_sep = "\xE3\x81\xBE\xE3\x81\xA4 \xE3\x82\x82\xE3\x81\xA8" # Matsu moto
     EscapeUtils.escape_url(matz_name_sep).should eql('%E3%81%BE%E3%81%A4+%E3%82%82%E3%81%A8')
   end
 
   if RUBY_VERSION =~ /^1.9/
-    it "should default to the original string's encoding if Encoding.default_internal is nil" do
-      Encoding.default_internal = nil
-      str = "http://www.homerun.com/"
-      str = str.encode('us-ascii')
+    it "return value should be in original string's encoding" do
+      str = "http://www.homerun.com/".encode('us-ascii')
       EscapeUtils.escape_url(str).encoding.should eql(Encoding.find('us-ascii'))
-    end
-
-    it "should use Encoding.default_internal" do
-      Encoding.default_internal = Encoding.find('utf-8')
-      EscapeUtils.escape_url("http://www.homerun.com/").encoding.should eql(Encoding.default_internal)
-      Encoding.default_internal = Encoding.find('us-ascii')
-      EscapeUtils.escape_url("http://www.homerun.com/").encoding.should eql(Encoding.default_internal)
+      str = "http://www.homerun.com/".encode('utf-8')
+      EscapeUtils.escape_url(str).encoding.should eql(Encoding.find('utf-8'))
     end
   end
 end
