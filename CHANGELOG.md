@@ -1,5 +1,8 @@
 # Changelog
 
+## 0.2.3 (March 9th, 2011)
+* change encoding strategy to simply return strings in the encoding the input string was in, not taking into account Encoding.default_internal
+
 ## 0.2.2 (February 25th, 2011)
 * minor fix for Rubinius compatibility
 
