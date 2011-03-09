@@ -2,7 +2,7 @@
 
 Being as though we're all html escaping everything these days, why not make it faster?
 
-For character encoding in 1.9, we'll return strings in whatever Encoding.default_internal is set to or utf-8 otherwise.
+For character encoding in 1.9, the output string's encoding is copied from the input string.
 
 It has monkey-patches for Rack::Utils, CGI, URI, ERB::Util and Haml and ActionView so you can drop this in and have your app start escaping fast as balls in no time
 
