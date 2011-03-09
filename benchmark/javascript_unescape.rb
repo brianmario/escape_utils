@@ -10,6 +10,7 @@ require 'escape_utils'
 times = 100
 url = "http://ajax.googleapis.com/ajax/libs/dojo/1.4.3/dojo/dojo.xd.js.uncompressed.js"
 javascript = `curl -s #{url}`
+javascript = javascript.force_encoding('utf-8') if javascript.respond_to?(:force_encoding)
 escaped_javascript = EscapeUtils.escape_javascript(javascript)
 puts "Escaping #{escaped_javascript.bytesize} bytes of javascript #{times} times, from #{url}"
 

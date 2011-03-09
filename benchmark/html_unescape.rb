@@ -16,6 +16,7 @@ end
 times = 100
 url = "http://en.wikipedia.org/wiki/Line_of_succession_to_the_British_throne"
 html = `curl -s #{url}`
+html = html.force_encoding('binary') if html.respond_to?(:force_encoding)
 escaped_html = EscapeUtils.escape_html(html)
 puts "Unescaping #{escaped_html.bytesize} bytes of escaped html #{times} times, from #{url}"
 
