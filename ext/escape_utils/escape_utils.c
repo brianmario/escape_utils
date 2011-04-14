@@ -563,21 +563,13 @@ static VALUE rb_s_set_html_secure(VALUE self, VALUE val) {
 void Init_escape_utils() {
   mEscapeUtils = rb_define_module("EscapeUtils");
   rb_define_method(mEscapeUtils,           "escape_html",          rb_escape_html,   -1);
-  rb_define_module_function(mEscapeUtils,  "escape_html",          rb_escape_html,   -1);
   rb_define_method(mEscapeUtils,           "unescape_html",        rb_unescape_html, 1);
-  rb_define_module_function(mEscapeUtils,  "unescape_html",        rb_unescape_html, 1);
   rb_define_method(mEscapeUtils,           "escape_javascript",    rb_escape_javascript, 1);
-  rb_define_module_function(mEscapeUtils,  "escape_javascript",    rb_escape_javascript, 1);
   rb_define_method(mEscapeUtils,           "unescape_javascript",  rb_unescape_javascript, 1);
-  rb_define_module_function(mEscapeUtils,  "unescape_javascript",  rb_unescape_javascript, 1);
   rb_define_method(mEscapeUtils,           "escape_url",           rb_escape_url, 1);
-  rb_define_module_function(mEscapeUtils,  "escape_url",           rb_escape_url, 1);
   rb_define_method(mEscapeUtils,           "unescape_url",         rb_unescape_url, 1);
-  rb_define_module_function(mEscapeUtils,  "unescape_url",         rb_unescape_url, 1);
   rb_define_method(mEscapeUtils,           "escape_uri",           rb_escape_uri, 1);
-  rb_define_module_function(mEscapeUtils,  "escape_uri",           rb_escape_uri, 1);
   rb_define_method(mEscapeUtils,           "unescape_uri",         rb_unescape_uri, 1);
-  rb_define_module_function(mEscapeUtils,  "unescape_uri",         rb_unescape_uri, 1);
 
   rb_define_singleton_method(mEscapeUtils, "html_secure",          rb_s_get_html_secure, 0);
   rb_define_singleton_method(mEscapeUtils, "html_secure=",         rb_s_set_html_secure, 1);
