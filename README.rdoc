@@ -10,9 +10,9 @@ It supports HTML, URL, URI and Javascript escaping/unescaping.
 
 == Installing
 
-    ``` sh
-    gem install escape_utils
-    ```
+ ``` sh
+ gem install escape_utils
+ ```
 
 == Usage
 
@@ -20,10 +20,10 @@ It supports HTML, URL, URI and Javascript escaping/unescaping.
 
 ==== Escaping
 
-    ``` ruby
-    html = `curl -s http://maps.google.com`
-    escaped_html = EscapeUtils.escape_html(html)
-    ```
+ ``` ruby
+ html = `curl -s http://maps.google.com`
+ escaped_html = EscapeUtils.escape_html(html)
+ ```
 
 By default escape_utils will escape `/` characters with `&#47;`, but you can disable that by setting `EscapeUtils.html_secure = false`
 or per-call by passing `false` as the second parameter to `escape_html` like `EscapeUtils.escape_html(html, false)`
@@ -32,20 +32,20 @@ For more information check out: http://www.owasp.org/index.php/XSS_(Cross_Site_S
 
 ==== Unescaping
 
-    ``` ruby
-    html = `curl -s http://maps.google.com`
-    escaped_html = EscapeUtils.escape_html(html)
-    html = EscapeUtils.unescape_html(escaped_html)
-    ```
+ ``` ruby
+ html = `curl -s http://maps.google.com`
+ escaped_html = EscapeUtils.escape_html(html)
+ html = EscapeUtils.unescape_html(escaped_html)
+ ```
 
 ==== Monkey Patches
 
-    ``` ruby
-    require 'escape_utils/html/rack' # to patch Rack::Utils
-    require 'escape_utils/html/erb' # to patch ERB::Util
-    require 'escape_utils/html/cgi' # to patch CGI
-    require 'escape_utils/html/haml' # to patch Haml::Helpers
-    ```
+ ``` ruby
+ require 'escape_utils/html/rack' # to patch Rack::Utils
+ require 'escape_utils/html/erb' # to patch ERB::Util
+ require 'escape_utils/html/cgi' # to patch CGI
+ require 'escape_utils/html/haml' # to patch Haml::Helpers
+ ```
 
 === URL
 
@@ -55,50 +55,50 @@ Use (un)escape_url to get CGI escaping (where space is +).
 
 ==== Escaping
 
-    ``` ruby
-    url = "https://www.yourmom.com/cgi-bin/session.cgi?sess_args=mcEA~!!#*YH*>@!U"
-    escaped_url = EscapeUtils.escape_url(url)
-    ```
+ ``` ruby
+ url = "https://www.yourmom.com/cgi-bin/session.cgi?sess_args=mcEA~!!#*YH*>@!U"
+ escaped_url = EscapeUtils.escape_url(url)
+ ```
 
 ==== Unescaping
 
-    ``` ruby
-    url = "https://www.yourmom.com/cgi-bin/session.cgi?sess_args=mcEA~!!#*YH*>@!U"
-    escaped_url = EscapeUtils.escape_url(url)
-    EscapeUtils.unescape_url(escaped_url) == url # => true
-    ```
+ ``` ruby
+ url = "https://www.yourmom.com/cgi-bin/session.cgi?sess_args=mcEA~!!#*YH*>@!U"
+ escaped_url = EscapeUtils.escape_url(url)
+ EscapeUtils.unescape_url(escaped_url) == url # => true
+ ```
 
 ==== Monkey Patches
 
-    ``` ruby
-    require 'escape_utils/url/cgi' # to patch Rack::Utils
-    require 'escape_utils/url/erb' # to patch ERB::Util
-    require 'escape_utils/url/rack' # to patch CGI
-    require 'escape_utils/url/uri' # to patch Haml::Helpers
-    ```
+ ``` ruby
+ require 'escape_utils/url/cgi' # to patch Rack::Utils
+ require 'escape_utils/url/erb' # to patch ERB::Util
+ require 'escape_utils/url/rack' # to patch CGI
+ require 'escape_utils/url/uri' # to patch Haml::Helpers
+ ```
 
 === Javascript
 
 ==== Escaping
 
-    ``` ruby
-    javascript = `curl -s http://code.jquery.com/jquery-1.4.2.js`
-    escaped_javascript = EscapeUtils.escape_javascript(javascript)
-    ```
+ ``` ruby
+ javascript = `curl -s http://code.jquery.com/jquery-1.4.2.js`
+ escaped_javascript = EscapeUtils.escape_javascript(javascript)
+ ```
 
 ==== Unescaping
 
-    ``` ruby
-    javascript = `curl -s http://code.jquery.com/jquery-1.4.2.js`
-    escaped_javascript = EscapeUtils.escape_javascript(javascript)
-    EscapeUtils.unescape_javascript(escaped_javascript) == javascript # => true
-    ```
+ ``` ruby
+ javascript = `curl -s http://code.jquery.com/jquery-1.4.2.js`
+ escaped_javascript = EscapeUtils.escape_javascript(javascript)
+ EscapeUtils.unescape_javascript(escaped_javascript) == javascript # => true
+ ```
 
 ==== Monkey Patches
 
-    ``` ruby
-    require 'escape_utils/javascript/action_view' # to patch ActionView::Helpers::JavaScriptHelper
-    ```
+ ``` ruby
+ require 'escape_utils/javascript/action_view' # to patch ActionView::Helpers::JavaScriptHelper
+ ```
 
 == Benchmarks
 
