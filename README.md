@@ -142,10 +142,12 @@ EscapeUtils.unescape_html
 
 #### Escaping
 
- ActionView::Helpers::JavaScriptHelper#escape_javascript
-  3.810000   0.100000   3.910000 (  3.925557)
- EscapeUtils.escape_javascript
-  0.200000   0.040000   0.240000 (  0.236692)
+```
+ActionView::Helpers::JavaScriptHelper#escape_javascript
+ 3.810000   0.100000   3.910000 (  3.925557)
+EscapeUtils.escape_javascript
+ 0.200000   0.040000   0.240000 (  0.236692)
+```
 
 #### Unescaping
 
