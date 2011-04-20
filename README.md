@@ -112,27 +112,31 @@ This output is from my laptop using the benchmark scripts in the benchmarks fold
 
 #### Escaping
 
- Rack::Utils.escape_html
-  9.650000   0.090000   9.740000 (  9.750756)
- Haml::Helpers.html_escape
-  9.310000   0.110000   9.420000 (  9.417317)
- ERB::Util.html_escape
-  5.330000   0.390000   5.720000 (  5.748394)
- CGI.escapeHTML
-  5.370000   0.380000   5.750000 (  5.791344)
- FasterHTMLEscape.html_escape
-  0.520000   0.010000   0.530000 (  0.539485)
- fast_xs_extra#fast_xs_html
-  0.310000   0.030000   0.340000 (  0.336734)
- EscapeUtils.escape_html
-  0.200000   0.050000   0.250000 (  0.258839)
+```
+Rack::Utils.escape_html
+ 9.650000   0.090000   9.740000 (  9.750756)
+Haml::Helpers.html_escape
+ 9.310000   0.110000   9.420000 (  9.417317)
+ERB::Util.html_escape
+ 5.330000   0.390000   5.720000 (  5.748394)
+CGI.escapeHTML
+ 5.370000   0.380000   5.750000 (  5.791344)
+FasterHTMLEscape.html_escape
+ 0.520000   0.010000   0.530000 (  0.539485)
+fast_xs_extra#fast_xs_html
+ 0.310000   0.030000   0.340000 (  0.336734)
+EscapeUtils.escape_html
+ 0.200000   0.050000   0.250000 (  0.258839)
+```
 
 #### Unescaping
 
- CGI.unescapeHTML
-  16.520000   0.080000  16.600000 ( 16.853888)
- EscapeUtils.unescape_html
-  0.120000   0.040000   0.160000  (  0.162696)
+```
+CGI.unescapeHTML
+ 16.520000   0.080000  16.600000 ( 16.853888)
+EscapeUtils.unescape_html
+ 0.120000   0.040000   0.160000  (  0.162696)
+```
 
 ### Javascript
 
@@ -151,28 +155,32 @@ I didn't look that hard, but I'm not aware of another ruby library that does Jav
 
 #### Escaping
 
- ERB::Util.url_encode
-  0.520000   0.010000   0.530000 (  0.529277)
- Rack::Utils.escape
-  0.460000   0.010000   0.470000 (  0.466962)
- CGI.escape
-  0.440000   0.000000   0.440000 (  0.443017)
- URLEscape#escape
-  0.040000   0.000000   0.040000 (  0.045661)
- fast_xs_extra#fast_xs_url
-  0.010000   0.000000   0.010000 (  0.015429)
- EscapeUtils.escape_url
-  0.010000   0.000000   0.010000 (  0.010843)
+```
+ERB::Util.url_encode
+ 0.520000   0.010000   0.530000 (  0.529277)
+Rack::Utils.escape
+ 0.460000   0.010000   0.470000 (  0.466962)
+CGI.escape
+ 0.440000   0.000000   0.440000 (  0.443017)
+URLEscape#escape
+ 0.040000   0.000000   0.040000 (  0.045661)
+fast_xs_extra#fast_xs_url
+ 0.010000   0.000000   0.010000 (  0.015429)
+EscapeUtils.escape_url
+ 0.010000   0.000000   0.010000 (  0.010843)
+```
 
 #### Unescaping
 
- Rack::Utils.unescape
-  0.250000   0.010000   0.260000 (  0.257558)
- CGI.unescape
-  0.250000   0.000000   0.250000 (  0.257837)
- URLEscape#unescape
-  0.040000   0.000000   0.040000 (  0.031548)
- fast_xs_extra#fast_uxs_cgi
-  0.010000   0.000000   0.010000 (  0.006062)
- EscapeUtils.unescape_url
-  0.000000   0.000000   0.000000 (  0.005679)
+```
+Rack::Utils.unescape
+ 0.250000   0.010000   0.260000 (  0.257558)
+CGI.unescape
+ 0.250000   0.000000   0.250000 (  0.257837)
+URLEscape#unescape
+ 0.040000   0.000000   0.040000 (  0.031548)
+fast_xs_extra#fast_uxs_cgi
+ 0.010000   0.000000   0.010000 (  0.006062)
+EscapeUtils.unescape_url
+ 0.000000   0.000000   0.000000 (  0.005679)
+```
