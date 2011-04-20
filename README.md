@@ -1,4 +1,4 @@
-= escape_utils
+# escape_utils
 
 Being as though we're all html escaping everything these days, why not make it faster?
 
@@ -8,79 +8,99 @@ It has monkey-patches for Rack::Utils, CGI, URI, ERB::Util and Haml and ActionVi
 
 It supports HTML, URL, URI and Javascript escaping/unescaping.
 
-== Installing
+## Installing
 
- gem install escape_utils
+``` sh
+gem install escape_utils
+```
 
-== Usage
+## Usage
 
-=== HTML
+### HTML
 
-==== Escaping
+#### Escaping
 
- html = `curl -s http://maps.google.com`
- escaped_html = EscapeUtils.escape_html(html)
+``` ruby
+html = `curl -s http://maps.google.com`
+escaped_html = EscapeUtils.escape_html(html)
+```
 
 By default escape_utils will escape `/` characters with `&#47;`, but you can disable that by setting `EscapeUtils.html_secure = false`
 or per-call by passing `false` as the second parameter to `escape_html` like `EscapeUtils.escape_html(html, false)`
 
 For more information check out: http://www.owasp.org/index.php/XSS_(Cross_Site_Scripting)_Prevention_Cheat_Sheet#RULE_.231_-_HTML_Escape_Before_Inserting_Untrusted_Data_into_HTML_Element_Content
 
-==== Unescaping
+#### Unescaping
 
- html = `curl -s http://maps.google.com`
- escaped_html = EscapeUtils.escape_html(html)
- html = EscapeUtils.unescape_html(escaped_html)
+``` ruby
+html = `curl -s http://maps.google.com`
+escaped_html = EscapeUtils.escape_html(html)
+html = EscapeUtils.unescape_html(escaped_html)
+```
 
-==== Monkey Patches
+#### Monkey Patches
 
- require 'escape_utils/html/rack' # to patch Rack::Utils
- require 'escape_utils/html/erb' # to patch ERB::Util
- require 'escape_utils/html/cgi' # to patch CGI
- require 'escape_utils/html/haml' # to patch Haml::Helpers
+``` ruby
+require 'escape_utils/html/rack' # to patch Rack::Utils
+require 'escape_utils/html/erb' # to patch ERB::Util
+require 'escape_utils/html/cgi' # to patch CGI
+require 'escape_utils/html/haml' # to patch Haml::Helpers
+```
 
-=== URL
+### URL
 
 Use (un)escape_uri to get RFC-compliant escaping (like PHP rawurlencode).
 
 Use (un)escape_url to get CGI escaping (where space is +).
 
-==== Escaping
+#### Escaping
 
- url = "https://www.yourmom.com/cgi-bin/session.cgi?sess_args=mcEA~!!#*YH*>@!U"
- escaped_url = EscapeUtils.escape_url(url)
+``` ruby
+url = "https://www.yourmom.com/cgi-bin/session.cgi?sess_args=mcEA~!!#*YH*>@!U"
+escaped_url = EscapeUtils.escape_url(url)
+```
 
-==== Unescaping
+#### Unescaping
 
- url = "https://www.yourmom.com/cgi-bin/session.cgi?sess_args=mcEA~!!#*YH*>@!U"
- escaped_url = EscapeUtils.escape_url(url)
- EscapeUtils.unescape_url(escaped_url) == url # => true
+``` ruby
+url = "https://www.yourmom.com/cgi-bin/session.cgi?sess_args=mcEA~!!#*YH*>@!U"
+escaped_url = EscapeUtils.escape_url(url)
+EscapeUtils.unescape_url(escaped_url) == url # => true
+```
 
-==== Monkey Patches
+#### Monkey Patches
 
- require 'escape_utils/url/cgi' # to patch Rack::Utils
- require 'escape_utils/url/erb' # to patch ERB::Util
- require 'escape_utils/url/rack' # to patch CGI
- require 'escape_utils/url/uri' # to patch Haml::Helpers
+``` ruby
+require 'escape_utils/url/cgi' # to patch Rack::Utils
+require 'escape_utils/url/erb' # to patch ERB::Util
+require 'escape_utils/url/rack' # to patch CGI
+require 'escape_utils/url/uri' # to patch Haml::Helpers
+```
 
-=== Javascript
+### Javascript
 
-==== Escaping
+#### Escaping
 
- javascript = `curl -s http://code.jquery.com/jquery-1.4.2.js`
- escaped_javascript = EscapeUtils.escape_javascript(javascript)
+``` ruby
+javascript = `curl -s http://code.jquery.com/jquery-1.4.2.js`
+escaped_javascript = EscapeUtils.escape_javascript(javascript)
+```
 
-==== Unescaping
+#### Unescaping
 
- javascript = `curl -s http://code.jquery.com/jquery-1.4.2.js`
- escaped_javascript = EscapeUtils.escape_javascript(javascript)
- EscapeUtils.unescape_javascript(escaped_javascript) == javascript # => true
+``` ruby
+javascript = `curl -s http://code.jquery.com/jquery-1.4.2.js`
+escaped_javascript = EscapeUtils.escape_javascript(javascript)
+EscapeUtils.unescape_javascript(escaped_javascript) == javascript # => true
+```
 
-==== Monkey Patches
+#### Monkey Patches
 
- require 'escape_utils/javascript/action_view' # to patch ActionView::Helpers::JavaScriptHelper
+``` ruby
+require 'escape_utils/javascript/action_view' # to patch ActionView::Helpers::JavaScriptHelper
+```
 
-== Benchmarks
+## Benchmarks
 
 In my testing, escaping html is around 10-30x faster than the pure ruby implementations in wide use today.
 While unescaping html is around 40-100x faster than CGI.unescapeHTML which is also pure ruby.
@@ -88,9 +108,9 @@ Escaping Javascript is around 16-30x faster.
 
 This output is from my laptop using the benchmark scripts in the benchmarks folder.
 
-=== HTML
+### HTML
 
-==== Escaping
+#### Escaping
 
  Rack::Utils.escape_html
   9.650000   0.090000   9.740000 (  9.750756)
@@ -107,29 +127,29 @@ This output is from my laptop using the benchmark scripts in the benchmarks fold
  EscapeUtils.escape_html
   0.200000   0.050000   0.250000 (  0.258839)
 
-==== Unescaping
+#### Unescaping
 
  CGI.unescapeHTML
   16.520000   0.080000  16.600000 ( 16.853888)
  EscapeUtils.unescape_html
   0.120000   0.040000   0.160000  (  0.162696)
 
-=== Javascript
+### Javascript
 
-==== Escaping
+#### Escaping
 
  ActionView::Helpers::JavaScriptHelper#escape_javascript
   3.810000   0.100000   3.910000 (  3.925557)
  EscapeUtils.escape_javascript
   0.200000   0.040000   0.240000 (  0.236692)
 
-==== Unescaping
+#### Unescaping
 
 I didn't look that hard, but I'm not aware of another ruby library that does Javascript unescaping to benchmark against. Anyone know of any?
 
-=== URL
+### URL
 
-==== Escaping
+#### Escaping
 
  ERB::Util.url_encode
   0.520000   0.010000   0.530000 (  0.529277)
@@ -144,7 +164,7 @@ I didn't look that hard, but I'm not aware of another ruby library that does Jav
  EscapeUtils.escape_url
   0.010000   0.000000   0.010000 (  0.010843)
 
-==== Unescaping
+#### Unescaping
 
  Rack::Utils.unescape
   0.250000   0.010000   0.260000 (  0.257558)
