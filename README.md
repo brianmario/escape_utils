@@ -74,7 +74,7 @@ EscapeUtils.unescape_url(escaped_url) == url # => true
 require 'escape_utils/url/cgi' # to patch Rack::Utils
 require 'escape_utils/url/erb' # to patch ERB::Util
 require 'escape_utils/url/rack' # to patch CGI
-require 'escape_utils/url/uri' # to patch Haml::Helpers
+require 'escape_utils/url/uri' # to patch URI
 ```
 
 ### Javascript
