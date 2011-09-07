@@ -14,7 +14,7 @@ It supports HTML, URL, URI and Javascript escaping/unescaping.
 gem install escape_utils
 ```
 
-## Warning
+## Warning: UTF-8 only
 
 escape_utils assumes all input is encoded as valid UTF-8. If you are dealing with other encodings do your best to transcode the string into a UTF-8 byte stream before handing it to escape_utils.
 
