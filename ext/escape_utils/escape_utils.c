@@ -101,21 +101,24 @@ static size_t unescape_javascript(unsigned char *out, const unsigned char *in, s
   return total;
 }
 
-static VALUE rb_escape_html(VALUE self, VALUE str) {
-  VALUE rb_out_buf;
-  const char *in_buf;
-  size_t in_len;
+static VALUE rb_escape_html(int argc, VALUE *argv, VALUE self) {
+  VALUE rb_out_buf, str, rb_secure;
   struct buf *out_buf;
+  int secure = html_secure;
+
+  if (rb_scan_args(argc, argv, "11", &str, &rb_secure) == 2) {
+    if (rb_secure == Qfalse) {
+      secure = 0;
+    }
+  }
 
   Check_Type(str, T_STRING);
-  in_buf = RSTRING_PTR(str);
-  in_len = RSTRING_LEN(str);
+  out_buf = bufnew(128);
 
-  out_buf = bufnew(in_len);
+  houdini_escape_html(out_buf, (uint8_t *)RSTRING_PTR(str), RSTRING_LEN(str), secure);
 
-  houdini_escape_html(out_buf, in_buf, in_len);
-
-  rb_out_buf = rb_str_new(out_buf->data, out_buf->size);
+  rb_out_buf = rb_str_new((char *)out_buf->data, out_buf->size);
+  bufrelease(out_buf);
 
 #ifdef HAVE_RUBY_ENCODING_H
   rb_enc_copy(rb_out_buf, str);
@@ -126,19 +129,14 @@ static VALUE rb_escape_html(VALUE self, VALUE str) {
 
 static VALUE rb_unescape_html(VALUE self, VALUE str) {
   VALUE rb_out_buf;
-  const char *in_buf;
-  size_t in_len;
   struct buf *out_buf;
 
   Check_Type(str, T_STRING);
-  in_buf = RSTRING_PTR(str);
-  in_len = RSTRING_LEN(str);
+  out_buf = bufnew(128);
 
-  out_buf = bufnew(in_len);
-
-  houdini_unescape_html(out_buf, in_buf, in_len);
-
-  rb_out_buf = rb_str_new(out_buf->data, out_buf->size);
+  houdini_unescape_html(out_buf, (uint8_t *)RSTRING_PTR(str), RSTRING_LEN(str));
+  rb_out_buf = rb_str_new((char *)out_buf->data, out_buf->size);
+  bufrelease(out_buf);
 
 #ifdef HAVE_RUBY_ENCODING_H
   rb_enc_copy(rb_out_buf, str);
@@ -217,19 +215,14 @@ static VALUE rb_unescape_javascript(VALUE self, VALUE str) {
 
 static VALUE rb_escape_url(VALUE self, VALUE str) {
   VALUE rb_out_buf;
-  const char *in_buf;
-  size_t in_len;
   struct buf *out_buf;
 
   Check_Type(str, T_STRING);
-  in_buf = RSTRING_PTR(str);
-  in_len = RSTRING_LEN(str);
+  out_buf = bufnew(32);
 
-  out_buf = bufnew(in_len);
-
-  houdini_escape_url(out_buf, in_buf, in_len);
-
-  rb_out_buf = rb_str_new(out_buf->data, out_buf->size);
+  houdini_escape_url(out_buf, (uint8_t *)RSTRING_PTR(str), RSTRING_LEN(str));
+  rb_out_buf = rb_str_new((char *)out_buf->data, out_buf->size);
+  bufrelease(out_buf);
 
 #ifdef HAVE_RUBY_ENCODING_H
   rb_enc_copy(rb_out_buf, str);
@@ -240,19 +233,14 @@ static VALUE rb_escape_url(VALUE self, VALUE str) {
 
 static VALUE rb_unescape_url(VALUE self, VALUE str) {
   VALUE rb_out_buf;
-  const char *in_buf;
-  size_t in_len;
   struct buf *out_buf;
 
   Check_Type(str, T_STRING);
-  in_buf = RSTRING_PTR(str);
-  in_len = RSTRING_LEN(str);
+  out_buf = bufnew(32);
 
-  out_buf = bufnew(in_len);
-
-  houdini_unescape_url(out_buf, in_buf, in_len);
-
-  rb_out_buf = rb_str_new(out_buf->data, out_buf->size);
+  houdini_unescape_url(out_buf, (uint8_t *)RSTRING_PTR(str), RSTRING_LEN(str));
+  rb_out_buf = rb_str_new((char *)out_buf->data, out_buf->size);
+  bufrelease(out_buf);
 
 #ifdef HAVE_RUBY_ENCODING_H
   rb_enc_copy(rb_out_buf, str);
@@ -263,19 +251,14 @@ static VALUE rb_unescape_url(VALUE self, VALUE str) {
 
 static VALUE rb_escape_uri(VALUE self, VALUE str) {
   VALUE rb_out_buf;
-  const char *in_buf;
-  size_t in_len;
   struct buf *out_buf;
 
   Check_Type(str, T_STRING);
-  in_buf = RSTRING_PTR(str);
-  in_len = RSTRING_LEN(str);
+  out_buf = bufnew(32);
 
-  out_buf = bufnew(in_len);
-
-  houdini_escape_uri(out_buf, in_buf, in_len);
-
-  rb_out_buf = rb_str_new(out_buf->data, out_buf->size);
+  houdini_escape_uri(out_buf, (uint8_t *)RSTRING_PTR(str), RSTRING_LEN(str));
+  rb_out_buf = rb_str_new((char *)out_buf->data, out_buf->size);
+  bufrelease(out_buf);
 
 #ifdef HAVE_RUBY_ENCODING_H
   rb_enc_copy(rb_out_buf, str);
@@ -286,19 +269,14 @@ static VALUE rb_escape_uri(VALUE self, VALUE str) {
 
 static VALUE rb_unescape_uri(VALUE self, VALUE str) {
   VALUE rb_out_buf;
-  const char *in_buf;
-  size_t in_len;
   struct buf *out_buf;
 
   Check_Type(str, T_STRING);
-  in_buf = RSTRING_PTR(str);
-  in_len = RSTRING_LEN(str);
+  out_buf = bufnew(32);
 
-  out_buf = bufnew(in_len);
-
-  houdini_unescape_uri(out_buf, in_buf, in_len);
-
-  rb_out_buf = rb_str_new(out_buf->data, out_buf->size);
+  houdini_unescape_uri(out_buf, (uint8_t *)RSTRING_PTR(str), RSTRING_LEN(str));
+  rb_out_buf = rb_str_new((char *)out_buf->data, out_buf->size);
+  bufrelease(out_buf);
 
 #ifdef HAVE_RUBY_ENCODING_H
   rb_enc_copy(rb_out_buf, str);
@@ -321,7 +299,7 @@ static VALUE rb_s_set_html_secure(VALUE self, VALUE val) {
 /* Ruby Extension initializer */
 void Init_escape_utils() {
   mEscapeUtils = rb_define_module("EscapeUtils");
-  rb_define_method(mEscapeUtils, "escape_html", rb_escape_html, 1);
+  rb_define_method(mEscapeUtils, "escape_html", rb_escape_html, -1);
   rb_define_method(mEscapeUtils, "unescape_html", rb_unescape_html, 1);
   rb_define_method(mEscapeUtils, "escape_javascript", rb_escape_javascript, 1);
   rb_define_method(mEscapeUtils, "unescape_javascript", rb_unescape_javascript, 1);
