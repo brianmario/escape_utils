@@ -7,9 +7,6 @@ Gem::Specification.new do |s|
   s.date = Time.now.utc.strftime("%Y-%m-%d")
   s.email = %q{seniorlopez@gmail.com}
   s.extensions = ["ext/escape_utils/extconf.rb"]
-  s.extra_rdoc_files = [
-    "README.rdoc"
-  ]
   s.files = `git ls-files`.split("\n")
   s.homepage = %q{http://github.com/brianmario/escape_utils}
   s.rdoc_options = ["--charset=UTF-8"]
