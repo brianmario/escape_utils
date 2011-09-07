@@ -1,3 +1,8 @@
+// tell rbx not to use it's caching compat layer
+// by doing this we're making a promize to RBX that
+// we'll never modify the pointers we get back from RSTRING_PTR
+#define RSTRING_NOT_MODIFIED
+
 #include <ruby.h>
 #if RB_CVAR_SET_ARITY == 4
 #  define rb_cvar_set(a,b,c) rb_cvar_set(a,b,c,0)
