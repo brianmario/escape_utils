@@ -1,4 +1,3 @@
-# encoding: utf-8
 require 'escape_utils/escape_utils'
 require 'escape_utils/version' unless defined? EscapeUtils::VERSION
 

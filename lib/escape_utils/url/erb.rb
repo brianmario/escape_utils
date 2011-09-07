@@ -1,5 +1,3 @@
-# encoding: utf-8
-
 class ERB
   module Util
     def url_encode(s)

@@ -1,5 +1,3 @@
-# encoding: utf-8
-
 module EscapeUtils
   module HtmlSafety
     if "".respond_to? :html_safe?

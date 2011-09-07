@@ -1,5 +1,3 @@
-# encoding: utf-8
-
 class CGI
   extend ::EscapeUtils::HtmlSafety
 

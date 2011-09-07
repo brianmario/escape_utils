@@ -1,5 +1,3 @@
-# encoding: utf-8
-
 module Haml
   module Helpers
     include ::EscapeUtils::HtmlSafety
