@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.2.4 (September 7th, 2011)
+* swap out custom escaping routines for houdini - https://github.com/tanoku/houdini
+* add RSTRING_NOT_MODIFIED define for a Rubinius speedup
+
 ## 0.2.3 (March 9th, 2011)
 * change encoding strategy to simply return strings in the encoding the input string was in, not taking into account Encoding.default_internal
 
