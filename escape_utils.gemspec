@@ -10,7 +10,7 @@ Gem::Specification.new do |s|
   s.files = `git ls-files`.split("\n")
   s.homepage = %q{http://github.com/brianmario/escape_utils}
   s.rdoc_options = ["--charset=UTF-8"]
-  s.require_paths = ["lib", "ext"]
+  s.require_paths = ["lib"]
   s.rubygems_version = %q{1.4.2}
   s.summary = %q{Faster string escaping routines for your web apps}
   s.test_files = `git ls-files spec`.split("\n")

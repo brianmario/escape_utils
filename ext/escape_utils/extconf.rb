@@ -14,4 +14,4 @@ else
   $CFLAGS << " -DRB_CVAR_SET_ARITY=4 "
 end
 
-create_makefile("escape_utils")
+create_makefile("escape_utils/escape_utils")
