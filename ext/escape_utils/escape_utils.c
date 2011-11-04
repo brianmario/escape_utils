@@ -103,6 +103,15 @@ static VALUE rb_eu_unescape_html(VALUE self, VALUE str)
 
 
 /**
+ * XML methods
+ */
+static VALUE rb_eu_escape_xml(VALUE self, VALUE str)
+{
+	return rb_eu__generic(self, str, &houdini_escape_xml, 128);
+}
+
+
+/**
  * JavaScript methods
  */
 static VALUE rb_eu_escape_js(VALUE self, VALUE str)
@@ -152,6 +161,7 @@ void Init_escape_utils()
 	rb_mEscapeUtils = rb_define_module("EscapeUtils");
 	rb_define_method(rb_mEscapeUtils, "escape_html", rb_eu_escape_html, -1);
 	rb_define_method(rb_mEscapeUtils, "unescape_html", rb_eu_unescape_html, 1);
+	rb_define_method(rb_mEscapeUtils, "escape_xml", rb_eu_escape_xml, 1);
 	rb_define_method(rb_mEscapeUtils, "escape_javascript", rb_eu_escape_js, 1);
 	rb_define_method(rb_mEscapeUtils, "unescape_javascript", rb_eu_unescape_js, 1);
 	rb_define_method(rb_mEscapeUtils, "escape_url", rb_eu_escape_url, 1);
