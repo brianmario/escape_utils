@@ -40,10 +40,7 @@ static VALUE rb_eu_set_html_secure(VALUE self, VALUE val)
  * Generic template
  */
 static VALUE
-rb_eu__generic(
-	VALUE self, VALUE str,
-	houdini_cb callback,
-	size_t chunk_size)
+rb_eu__generic(VALUE str, houdini_cb callback, size_t chunk_size)
 {
 	VALUE result;
 	struct buf *out_buf;
@@ -84,7 +81,7 @@ static VALUE rb_eu_escape_html(int argc, VALUE *argv, VALUE self)
 	Check_Type(str, T_STRING);
 	out_buf = bufnew(128);
 
-	houdini_escape_html(out_buf, (uint8_t *)RSTRING_PTR(str), RSTRING_LEN(str), secure);
+	houdini_escape_html0(out_buf, (uint8_t *)RSTRING_PTR(str), RSTRING_LEN(str), secure);
 
 	rb_out_buf = rb_str_new((char *)out_buf->data, out_buf->size);
 	bufrelease(out_buf);
@@ -98,7 +95,7 @@ static VALUE rb_eu_escape_html(int argc, VALUE *argv, VALUE self)
 
 static VALUE rb_eu_unescape_html(VALUE self, VALUE str)
 {
-	return rb_eu__generic(self, str, &houdini_unescape_html, 128);
+	return rb_eu__generic(str, &houdini_unescape_html, 128);
 }
 
 
@@ -107,7 +104,7 @@ static VALUE rb_eu_unescape_html(VALUE self, VALUE str)
  */
 static VALUE rb_eu_escape_xml(VALUE self, VALUE str)
 {
-	return rb_eu__generic(self, str, &houdini_escape_xml, 128);
+	return rb_eu__generic(str, &houdini_escape_xml, 128);
 }
 
 
@@ -116,12 +113,12 @@ static VALUE rb_eu_escape_xml(VALUE self, VALUE str)
  */
 static VALUE rb_eu_escape_js(VALUE self, VALUE str)
 {
-	return rb_eu__generic(self, str, &houdini_escape_js, 128);
+	return rb_eu__generic(str, &houdini_escape_js, 128);
 }
 
 static VALUE rb_eu_unescape_js(VALUE self, VALUE str)
 {
-	return rb_eu__generic(self, str, &houdini_unescape_js, 128);
+	return rb_eu__generic(str, &houdini_unescape_js, 128);
 }
 
 
@@ -130,12 +127,12 @@ static VALUE rb_eu_unescape_js(VALUE self, VALUE str)
  */
 static VALUE rb_eu_escape_url(VALUE self, VALUE str)
 {
-	return rb_eu__generic(self, str, &houdini_escape_url, 32);
+	return rb_eu__generic(str, &houdini_escape_url, 32);
 }
 
 static VALUE rb_eu_unescape_url(VALUE self, VALUE str)
 {
-	return rb_eu__generic(self, str, &houdini_unescape_url, 32);
+	return rb_eu__generic(str, &houdini_unescape_url, 32);
 }
 
 
@@ -144,12 +141,12 @@ static VALUE rb_eu_unescape_url(VALUE self, VALUE str)
  */
 static VALUE rb_eu_escape_uri(VALUE self, VALUE str)
 {
-	return rb_eu__generic(self, str, &houdini_escape_uri, 32);
+	return rb_eu__generic(str, &houdini_escape_uri, 32);
 }
 
 static VALUE rb_eu_unescape_uri(VALUE self, VALUE str)
 {
-	return rb_eu__generic(self, str, &houdini_unescape_uri, 32);
+	return rb_eu__generic(str, &houdini_unescape_uri, 32);
 }
 
 
