@@ -4,7 +4,6 @@ Gem::Specification.new do |s|
   s.name = %q{escape_utils}
   s.version = EscapeUtils::VERSION
   s.authors = ["Brian Lopez"]
-  s.date = Time.now.utc.strftime("%Y-%m-%d")
   s.email = %q{seniorlopez@gmail.com}
   s.extensions = ["ext/escape_utils/extconf.rb"]
   s.files = `git ls-files`.split("\n")
