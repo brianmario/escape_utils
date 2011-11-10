@@ -1,3 +1,4 @@
+# encoding: UTF-8
 require File.expand_path(File.dirname(__FILE__) + '/../spec_helper.rb')
 
 describe EscapeUtils, "escape_javascript" do
@@ -23,11 +24,23 @@ describe EscapeUtils, "escape_javascript" do
   end
 
   if RUBY_VERSION =~ /^1.9/
-    it "return value should be in original string's encoding" do
-      str = "dont </close> tags".encode('us-ascii')
-      EscapeUtils.escape_javascript(str).encoding.should eql(Encoding.find('us-ascii'))
-      str = "dont </close> tags".encode('utf-8')
-      EscapeUtils.escape_javascript(str).encoding.should eql(Encoding.find('utf-8'))
+    it "input must be UTF-8 or US-ASCII" do
+      str = "dont </close> tags"
+
+      str.force_encoding 'ISO-8859-1'
+      lambda {
+        EscapeUtils.escape_javascript(str)
+      }.should raise_error(Encoding::CompatibilityError)
+
+      str.force_encoding 'UTF-8'
+      lambda {
+        EscapeUtils.escape_javascript(str)
+      }.should_not raise_error(Encoding::CompatibilityError)
+    end
+
+    it "return value should be in UTF-8" do
+      str = "dont </close> tags"
+      EscapeUtils.escape_javascript(str).encoding.should eql(Encoding.find('UTF-8'))
     end
   end
 end

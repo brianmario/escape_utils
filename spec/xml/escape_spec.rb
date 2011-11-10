@@ -1,3 +1,4 @@
+# encoding: UTF-8
 require File.expand_path(File.dirname(__FILE__) + '/../spec_helper.rb')
 
 describe EscapeUtils, "escape_xml" do
@@ -45,11 +46,23 @@ describe EscapeUtils, "escape_xml" do
   end
 
   if RUBY_VERSION =~ /^1.9/
-    it "return value should be in original string's encoding" do
-      str = "<b>Bourbon & Branch</b>".encode('us-ascii')
-      EscapeUtils.escape_xml(str).encoding.should eql(Encoding.find('us-ascii'))
-      str = "<b>Bourbon & Branch</b>".encode('utf-8')
-      EscapeUtils.escape_xml(str).encoding.should eql(Encoding.find('utf-8'))
+    it "input must be UTF-8 or US-ASCII" do
+      str = "<some_tag/>"
+
+      str.force_encoding 'ISO-8859-1'
+      lambda {
+        EscapeUtils.escape_xml(str)
+      }.should raise_error(Encoding::CompatibilityError)
+
+      str.force_encoding 'UTF-8'
+      lambda {
+        EscapeUtils.escape_xml(str)
+      }.should_not raise_error(Encoding::CompatibilityError)
+    end
+
+    it "return value should be in UTF-8" do
+      str = "<some_tag/>"
+      EscapeUtils.escape_xml(str).encoding.should eql(Encoding.find('UTF-8'))
     end
   end
 end

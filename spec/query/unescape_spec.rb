@@ -1,5 +1,4 @@
 # encoding: UTF-8
-
 require File.expand_path(File.dirname(__FILE__) + '/../spec_helper.rb')
 
 describe EscapeUtils, "unescape_url" do
@@ -36,11 +35,24 @@ describe EscapeUtils, "unescape_url" do
   end
 
   if RUBY_VERSION =~ /^1.9/
-    it "return value should be in original string's encoding" do
-      str = "http%3A%2F%2Fwww.homerun.com%2F".encode('us-ascii')
-      EscapeUtils.unescape_url(str).encoding.should eql(Encoding.find('us-ascii'))
-      str = "http%3A%2F%2Fwww.homerun.com%2F".encode('utf-8')
-      EscapeUtils.unescape_url(str).encoding.should eql(Encoding.find('utf-8'))
+    it "input must be UTF-8 or US-ASCII" do
+      escaped = EscapeUtils.unescape_url("a+space")
+
+      escaped.force_encoding 'ISO-8859-1'
+      lambda {
+        EscapeUtils.unescape_url(escaped)
+      }.should raise_error(Encoding::CompatibilityError)
+
+      escaped.force_encoding 'UTF-8'
+      lambda {
+        EscapeUtils.unescape_url(escaped)
+      }.should_not raise_error(Encoding::CompatibilityError)
+    end
+
+    it "return value should be in UTF-8" do
+      escaped = EscapeUtils.escape_url("a space")
+
+      EscapeUtils.unescape_url(escaped).encoding.should eql(Encoding.find('UTF-8'))
     end
   end
 end

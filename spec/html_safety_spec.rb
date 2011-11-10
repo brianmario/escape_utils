@@ -1,3 +1,4 @@
+# encoding: UTF-8
 require File.expand_path(File.dirname(__FILE__) + '/spec_helper.rb')
 
 class Object
@@ -26,9 +27,9 @@ class String
   end
 end
 
-include EscapeUtils::HtmlSafety
-
 describe EscapeUtils::HtmlSafety do
+
+  include EscapeUtils::HtmlSafety
 
   it "should escape unsafe strings and make them safe" do
     escaped = _escape_html("<strong>unsafe</strong>")

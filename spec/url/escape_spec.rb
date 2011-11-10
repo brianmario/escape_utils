@@ -1,3 +1,4 @@
+# encoding: UTF-8
 require File.expand_path(File.dirname(__FILE__) + '/../spec_helper.rb')
 require 'cgi'
 
@@ -11,7 +12,7 @@ describe EscapeUtils, "escape_url" do
   end
 
   it "should escape each possible byte value exactly like CGI.escape" do
-    (0..255).each do |i|
+    (0..127).each do |i|
       c = i.chr
       EscapeUtils.escape_url(c).should eql(CGI.escape(c))
     end
@@ -42,11 +43,23 @@ describe EscapeUtils, "escape_url" do
   end
 
   if RUBY_VERSION =~ /^1.9/
-    it "return value should be in original string's encoding" do
-      str = "http://www.homerun.com/".encode('us-ascii')
-      EscapeUtils.escape_url(str).encoding.should eql(Encoding.find('us-ascii'))
-      str = "http://www.homerun.com/".encode('utf-8')
-      EscapeUtils.escape_url(str).encoding.should eql(Encoding.find('utf-8'))
+    it "input must be UTF-8 or US-ASCII" do
+      str = "fo<o>bar"
+
+      str.force_encoding 'ISO-8859-1'
+      lambda {
+        EscapeUtils.escape_url(str)
+      }.should raise_error(Encoding::CompatibilityError)
+
+      str.force_encoding 'UTF-8'
+      lambda {
+        EscapeUtils.escape_url(str)
+      }.should_not raise_error(Encoding::CompatibilityError)
+    end
+
+    it "return value should be in UTF-8" do
+      str = "fo<o>bar"
+      EscapeUtils.escape_url(str).encoding.should eql(Encoding.find('UTF-8'))
     end
   end
 end

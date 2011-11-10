@@ -9,7 +9,26 @@
 #endif
 #ifdef HAVE_RUBY_ENCODING_H
 #include <ruby/encoding.h>
+static VALUE rb_eEncodingCompatibilityError;
+static VALUE eu_new_str(const char *str, size_t len) {
+	return rb_enc_str_new(str, len, rb_utf8_encoding());
+}
+#else
+static VALUE eu_new_str(const char *str, size_t len) {
+	return rb_str_new(str, len);
+}
 #endif
+
+static void check_utf8_encoding(VALUE str) {
+#ifdef HAVE_RUBY_ENCODING_H
+	rb_encoding *enc;
+
+	enc = rb_enc_get(str);
+	if (enc != rb_utf8_encoding() && enc != rb_usascii_encoding()) {
+		rb_raise(rb_eEncodingCompatibilityError, "Input must be UTF-8 or US-ASCII, %s given", rb_enc_name(enc));
+	}
+#endif
+}
 
 #include "houdini.h"
 
@@ -35,7 +54,6 @@ static VALUE rb_eu_set_html_secure(VALUE self, VALUE val)
 	return val;
 }
 
-
 /**
  * Generic template
  */
@@ -46,18 +64,17 @@ rb_eu__generic(VALUE str, houdini_cb callback, size_t chunk_size)
 	struct buf *out_buf;
 
 	if (NIL_P(str))
-		return rb_str_new2("");
+		return eu_new_str("", 0);
 
 	Check_Type(str, T_STRING);
+
+	check_utf8_encoding(str);
+
 	out_buf = bufnew(chunk_size);
 
 	callback(out_buf, (uint8_t *)RSTRING_PTR(str), RSTRING_LEN(str));
-	result = rb_str_new((char *)out_buf->data, out_buf->size);
+	result = eu_new_str((const char *)out_buf->data, out_buf->size);
 	bufrelease(out_buf);
-
-#ifdef HAVE_RUBY_ENCODING_H
-	rb_enc_copy(result, str);
-#endif
 
 	return result;
 }
@@ -79,16 +96,15 @@ static VALUE rb_eu_escape_html(int argc, VALUE *argv, VALUE self)
 	}
 
 	Check_Type(str, T_STRING);
+
+	check_utf8_encoding(str);
+
 	out_buf = bufnew(128);
 
 	houdini_escape_html0(out_buf, (uint8_t *)RSTRING_PTR(str), RSTRING_LEN(str), secure);
 
-	rb_out_buf = rb_str_new((char *)out_buf->data, out_buf->size);
+	rb_out_buf = eu_new_str((const char *)out_buf->data, out_buf->size);
 	bufrelease(out_buf);
-
-#ifdef HAVE_RUBY_ENCODING_H
-	rb_enc_copy(rb_out_buf, str);
-#endif
 
 	return rb_out_buf;
 }
@@ -156,6 +172,12 @@ static VALUE rb_eu_unescape_uri(VALUE self, VALUE str)
 void Init_escape_utils()
 {
 	rb_mEscapeUtils = rb_define_module("EscapeUtils");
+
+#ifdef HAVE_RUBY_ENCODING_H
+	VALUE rb_cEncoding = rb_const_get(rb_cObject, rb_intern("Encoding"));
+	rb_eEncodingCompatibilityError = rb_const_get(rb_cEncoding, rb_intern("CompatibilityError"));
+#endif
+
 	rb_define_method(rb_mEscapeUtils, "escape_html", rb_eu_escape_html, -1);
 	rb_define_method(rb_mEscapeUtils, "unescape_html", rb_eu_unescape_html, 1);
 	rb_define_method(rb_mEscapeUtils, "escape_xml", rb_eu_escape_xml, 1);
