@@ -61,20 +61,19 @@ static inline VALUE
 rb_eu__generic(VALUE str, houdini_cb callback, size_t chunk_size)
 {
 	VALUE result;
-	struct buf *out_buf;
+	struct buf out_buf;
 
 	if (NIL_P(str))
 		return eu_new_str("", 0);
 
 	Check_Type(str, T_STRING);
-
 	check_utf8_encoding(str);
 
-	out_buf = bufnew(chunk_size);
+	bufinit(&out_buf, chunk_size);
 
-	callback(out_buf, (uint8_t *)RSTRING_PTR(str), RSTRING_LEN(str));
-	result = eu_new_str((const char *)out_buf->data, out_buf->size);
-	bufrelease(out_buf);
+	callback(&out_buf, (uint8_t *)RSTRING_PTR(str), RSTRING_LEN(str));
+	result = eu_new_str((const char *)out_buf.data, out_buf.size);
+	bufrelease(&out_buf);
 
 	return result;
 }
@@ -86,7 +85,7 @@ rb_eu__generic(VALUE str, houdini_cb callback, size_t chunk_size)
 static VALUE rb_eu_escape_html(int argc, VALUE *argv, VALUE self)
 {
 	VALUE rb_out_buf, str, rb_secure;
-	struct buf *out_buf;
+	struct buf out_buf;
 	int secure = g_html_secure;
 
 	if (rb_scan_args(argc, argv, "11", &str, &rb_secure) == 2) {
@@ -96,15 +95,15 @@ static VALUE rb_eu_escape_html(int argc, VALUE *argv, VALUE self)
 	}
 
 	Check_Type(str, T_STRING);
-
 	check_utf8_encoding(str);
 
-	out_buf = bufnew(128);
+	bufinit(&out_buf, 128);
 
-	houdini_escape_html0(out_buf, (uint8_t *)RSTRING_PTR(str), RSTRING_LEN(str), secure);
+	houdini_escape_html0(&out_buf, (uint8_t *)RSTRING_PTR(str), RSTRING_LEN(str), secure);
 
-	rb_out_buf = eu_new_str((const char *)out_buf->data, out_buf->size);
-	bufrelease(out_buf);
+	rb_out_buf = eu_new_str((const char *)out_buf.data, out_buf.size);
+
+	bufrelease(&out_buf);
 
 	return rb_out_buf;
 }

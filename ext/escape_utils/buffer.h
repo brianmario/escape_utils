@@ -38,6 +38,7 @@ struct buf {
 	size_t size;	/* size of the string */
 	size_t asize;	/* allocated size (0 = volatile buffer) */
 	size_t unit;	/* reallocation unit size (0 = read-only buffer) */
+	uint8_t owned;	/* release in bufrelease? (1 = allocated by bufnew) */
 };
 
 /* CONST_BUF: global buffer from a string litteral */
@@ -57,6 +58,9 @@ int bufgrow(struct buf *, size_t);
 
 /* bufnew: allocation of a new buffer */
 struct buf *bufnew(size_t) __attribute__ ((malloc));
+
+/* bufinit: initialize stack allocated buffer */
+struct buf *bufinit(struct buf *, size_t);
 
 /* bufnullterm: NUL-termination of the string array (making a C-string) */
 const char *bufcstr(struct buf *);
