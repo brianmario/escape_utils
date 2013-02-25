@@ -14,11 +14,13 @@
 #include <ruby/encoding.h>
 static VALUE rb_eEncodingCompatibilityError;
 
-static VALUE eu_new_str(const char *str, size_t len) {
+static VALUE eu_new_str(const char *str, size_t len)
+{
 	return rb_enc_str_new(str, len, rb_utf8_encoding());
 }
 
-static void check_utf8_encoding(VALUE str) {
+static void check_utf8_encoding(VALUE str)
+{
 	rb_encoding *enc;
 
 	enc = rb_enc_get(str);
@@ -27,10 +29,9 @@ static void check_utf8_encoding(VALUE str) {
 			"Input must be UTF-8 or US-ASCII, %s given", rb_enc_name(enc));
 	}
 }
-
 #else
-
-static VALUE eu_new_str(const char *str, size_t len) {
+static VALUE eu_new_str(const char *str, size_t len)
+{
 	return rb_str_new(str, len);
 }
 
