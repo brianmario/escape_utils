@@ -19,7 +19,9 @@ static VALUE eu_new_str(const char *str, size_t len) {
 }
 #endif
 
+#ifdef HAVE_RUBY_ENCODING_H
 static rb_encoding *utf8, *usascii, *ascii8bit;
+#endif
 
 static inline void check_utf8_encoding(VALUE str) {
 #ifdef HAVE_RUBY_ENCODING_H
