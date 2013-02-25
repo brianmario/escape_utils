@@ -19,12 +19,17 @@ static VALUE eu_new_str(const char *str, size_t len) {
 }
 #endif
 
+static rb_encoding *utf8, *usascii, *ascii8bit;
+
 static inline void check_utf8_encoding(VALUE str) {
 #ifdef HAVE_RUBY_ENCODING_H
+	if (!utf8) utf8 = rb_utf8_encoding();
+	if (!usascii) usascii = rb_usascii_encoding();
+	if (!ascii8bit) ascii8bit = rb_ascii8bit_encoding();
 	rb_encoding *enc;
 
 	enc = rb_enc_get(str);
-	if (enc != rb_utf8_encoding() && enc != rb_usascii_encoding()) {
+	if (enc != utf8 && enc != usascii && enc != ascii8bit) {
 		rb_raise(rb_eEncodingCompatibilityError, "Input must be UTF-8 or US-ASCII, %s given", rb_enc_name(enc));
 	}
 #endif
