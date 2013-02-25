@@ -47,6 +47,13 @@ Benchmark.bmbm do |x|
     end
   end
 
+  x.report "String#gsub" do
+    html_escape = { '&' => '&amp;',  '>' => '&gt;',   '<' => '&lt;', '"' => '&quot;', "'" => '&#39;' }
+    times.times do
+      html.gsub(/[&"'><]/, html_escape)
+    end
+  end
+
   x.report "fast_xs_extra#fast_xs_html" do
     times.times do
       html.fast_xs_html
