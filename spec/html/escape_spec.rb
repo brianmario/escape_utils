@@ -32,6 +32,11 @@ describe EscapeUtils, "escape_html" do
     EscapeUtils.escape_html("<b>Bourbon & Branch</b>").should eql("&lt;b&gt;Bourbon &amp; Branch&lt;&#47;b&gt;")
   end
 
+  it "should return original string when nothing is escaped" do
+    str = 'foobar'
+    EscapeUtils.escape_html(str).object_id.should eql(str.object_id)
+  end
+
   if RUBY_VERSION =~ /^1.9/
     it "input must be UTF-8 or US-ASCII" do
       str = "<b>Bourbon & Branch</b>"

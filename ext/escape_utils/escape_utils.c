@@ -19,12 +19,19 @@ static VALUE eu_new_str(const char *str, size_t len) {
 }
 #endif
 
-static void check_utf8_encoding(VALUE str) {
 #ifdef HAVE_RUBY_ENCODING_H
+static rb_encoding *utf8, *usascii, *ascii8bit;
+#endif
+
+static inline void check_utf8_encoding(VALUE str) {
+#ifdef HAVE_RUBY_ENCODING_H
+	if (!utf8) utf8 = rb_utf8_encoding();
+	if (!usascii) usascii = rb_usascii_encoding();
+	if (!ascii8bit) ascii8bit = rb_ascii8bit_encoding();
 	rb_encoding *enc;
 
 	enc = rb_enc_get(str);
-	if (enc != rb_utf8_encoding() && enc != rb_usascii_encoding()) {
+	if (enc != utf8 && enc != usascii && enc != ascii8bit) {
 		rb_raise(rb_eEncodingCompatibilityError, "Input must be UTF-8 or US-ASCII, %s given", rb_enc_name(enc));
 	}
 #endif
@@ -57,24 +64,23 @@ static VALUE rb_eu_set_html_secure(VALUE self, VALUE val)
 /**
  * Generic template
  */
-static VALUE
+static inline VALUE
 rb_eu__generic(VALUE str, houdini_cb callback, size_t chunk_size)
 {
 	VALUE result;
-	struct buf *out_buf;
+	struct buf out_buf;
 
 	if (NIL_P(str))
 		return eu_new_str("", 0);
 
 	Check_Type(str, T_STRING);
-
 	check_utf8_encoding(str);
 
-	out_buf = bufnew(chunk_size);
+	bufinit(&out_buf, chunk_size);
 
-	callback(out_buf, (uint8_t *)RSTRING_PTR(str), RSTRING_LEN(str));
-	result = eu_new_str((const char *)out_buf->data, out_buf->size);
-	bufrelease(out_buf);
+	callback(&out_buf, (uint8_t *)RSTRING_PTR(str), RSTRING_LEN(str));
+	result = eu_new_str((const char *)out_buf.data, out_buf.size);
+	bufrelease(&out_buf);
 
 	return result;
 }
@@ -86,8 +92,9 @@ rb_eu__generic(VALUE str, houdini_cb callback, size_t chunk_size)
 static VALUE rb_eu_escape_html(int argc, VALUE *argv, VALUE self)
 {
 	VALUE rb_out_buf, str, rb_secure;
-	struct buf *out_buf;
+	struct buf out_buf;
 	int secure = g_html_secure;
+	size_t num_escaped;
 
 	if (rb_scan_args(argc, argv, "11", &str, &rb_secure) == 2) {
 		if (rb_secure == Qfalse) {
@@ -96,15 +103,18 @@ static VALUE rb_eu_escape_html(int argc, VALUE *argv, VALUE self)
 	}
 
 	Check_Type(str, T_STRING);
-
 	check_utf8_encoding(str);
 
-	out_buf = bufnew(128);
+	bufinit(&out_buf, RSTRING_LEN(str) < 256 ? 16 : 256);
 
-	houdini_escape_html0(out_buf, (uint8_t *)RSTRING_PTR(str), RSTRING_LEN(str), secure);
+	num_escaped = houdini_escape_html0(&out_buf, (uint8_t *)RSTRING_PTR(str), RSTRING_LEN(str), secure, 1);
 
-	rb_out_buf = eu_new_str((const char *)out_buf->data, out_buf->size);
-	bufrelease(out_buf);
+	if (num_escaped == 0)
+		rb_out_buf = str;
+	else
+		rb_out_buf = eu_new_str((const char *)out_buf.data, out_buf.size);
+
+	bufrelease(&out_buf);
 
 	return rb_out_buf;
 }

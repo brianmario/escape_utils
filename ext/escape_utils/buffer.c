@@ -71,6 +71,18 @@ bufgrow(struct buf *buf, size_t neosz)
 	return BUF_OK;
 }
 
+/* bufinit: initialize new buffer */
+struct buf *
+bufinit(struct buf *ret, size_t unit)
+{
+	if (ret) {
+		ret->data = 0;
+		ret->size = ret->asize = 0;
+		ret->unit = unit;
+		ret->owned = 0;
+	}
+	return ret;
+}
 
 /* bufnew: allocation of a new buffer */
 struct buf *
@@ -80,10 +92,10 @@ bufnew(size_t unit)
 	ret = malloc(sizeof (struct buf));
 
 	if (ret) {
-		ret->data = 0;
-		ret->size = ret->asize = 0;
-		ret->unit = unit;
+		bufinit(ret, unit);
+		ret->owned = 1;
 	}
+
 	return ret;
 }
 
@@ -162,7 +174,8 @@ bufrelease(struct buf *buf)
 		return;
 
 	free(buf->data);
-	free(buf);
+	if (buf->owned)
+		free(buf);
 }
 
 

@@ -15,7 +15,7 @@
 #endif
 
 extern void houdini_escape_html(struct buf *ob, const uint8_t *src, size_t size);
-extern void houdini_escape_html0(struct buf *ob, const uint8_t *src, size_t size, int secure);
+extern size_t houdini_escape_html0(struct buf *ob, const uint8_t *src, size_t size, int secure, int leave_buffer_empty);
 extern void houdini_unescape_html(struct buf *ob, const uint8_t *src, size_t size);
 extern void houdini_escape_xml(struct buf *ob, const uint8_t *src, size_t size);
 extern void houdini_escape_uri(struct buf *ob, const uint8_t *src, size_t size);

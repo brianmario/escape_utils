@@ -46,22 +46,28 @@ static const char *HTML_ESCAPES[] = {
         "&gt;"
 };
 
-void
-houdini_escape_html0(struct buf *ob, const uint8_t *src, size_t size, int secure)
+size_t
+houdini_escape_html0(struct buf *ob, const uint8_t *src, size_t size, int secure, int leave_buffer_empty)
 {
-	size_t  i = 0, org, esc;
+	size_t  i = 0, org, esc, num_escaped = 0;
 
-	bufgrow(ob, ESCAPE_GROW_FACTOR(size));
 
 	while (i < size) {
 		org = i;
 		while (i < size && (esc = HTML_ESCAPE_TABLE[src[i]]) == 0)
 			i++;
 
-		if (i > org)
-			bufput(ob, src + org, i - org);
+		/* avoid buffer manipulation when input did not change */
+		if (i >= size && num_escaped == 0 && leave_buffer_empty)
+			break;
 
-		/* escaping */
+		if (i > org) {
+			if (ob->size == 0)
+				bufgrow(ob, ESCAPE_GROW_FACTOR(size));
+			bufput(ob, src + org, i - org);
+		}
+
+		/* all done */
 		if (i >= size)
 			break;
 
@@ -70,15 +76,18 @@ houdini_escape_html0(struct buf *ob, const uint8_t *src, size_t size, int secure
 			bufputc(ob, '/');
 		} else {
 			bufputs(ob, HTML_ESCAPES[esc]);
+			num_escaped++;
 		}
 
 		i++;
 	}
+
+	return num_escaped;
 }
 
 void
 houdini_escape_html(struct buf *ob, const uint8_t *src, size_t size)
 {
-	houdini_escape_html0(ob, src, size, 1);
+	houdini_escape_html0(ob, src, size, 1, 0);
 }
 
