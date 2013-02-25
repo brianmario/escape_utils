@@ -19,7 +19,7 @@ static VALUE eu_new_str(const char *str, size_t len) {
 }
 #endif
 
-static void check_utf8_encoding(VALUE str) {
+static inline void check_utf8_encoding(VALUE str) {
 #ifdef HAVE_RUBY_ENCODING_H
 	rb_encoding *enc;
 
@@ -57,7 +57,7 @@ static VALUE rb_eu_set_html_secure(VALUE self, VALUE val)
 /**
  * Generic template
  */
-static VALUE
+static inline VALUE
 rb_eu__generic(VALUE str, houdini_cb callback, size_t chunk_size)
 {
 	VALUE result;
