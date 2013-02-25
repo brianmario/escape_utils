@@ -87,6 +87,7 @@ static VALUE rb_eu_escape_html(int argc, VALUE *argv, VALUE self)
 	VALUE rb_out_buf, str, rb_secure;
 	struct buf out_buf;
 	int secure = g_html_secure;
+	size_t num_escaped;
 
 	if (rb_scan_args(argc, argv, "11", &str, &rb_secure) == 2) {
 		if (rb_secure == Qfalse) {
@@ -97,11 +98,14 @@ static VALUE rb_eu_escape_html(int argc, VALUE *argv, VALUE self)
 	Check_Type(str, T_STRING);
 	check_utf8_encoding(str);
 
-	bufinit(&out_buf, 128);
+	bufinit(&out_buf, RSTRING_LEN(str) < 256 ? 16 : 256);
 
-	houdini_escape_html0(&out_buf, (uint8_t *)RSTRING_PTR(str), RSTRING_LEN(str), secure);
+	num_escaped = houdini_escape_html0(&out_buf, (uint8_t *)RSTRING_PTR(str), RSTRING_LEN(str), secure, 1);
 
-	rb_out_buf = eu_new_str((const char *)out_buf.data, out_buf.size);
+	if (num_escaped == 0)
+		rb_out_buf = str;
+	else
+		rb_out_buf = eu_new_str((const char *)out_buf.data, out_buf.size);
 
 	bufrelease(&out_buf);
 
