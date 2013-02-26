@@ -31,12 +31,12 @@ class UriEscapeTest < MiniTest::Unit::TestCase
 
       str.force_encoding 'ISO-8859-1'
       assert_raises Encoding::CompatibilityError do
-        EscapeUtils.escape_url(str)
+        EscapeUtils.escape_uri(str)
       end
 
       str.force_encoding 'UTF-8'
       begin
-        EscapeUtils.escape_url(str)
+        EscapeUtils.escape_uri(str)
       rescue Encoding::CompatibilityError => e
         assert_nil e, "#{e.class.name} raised, expected not to"
       end
@@ -44,7 +44,7 @@ class UriEscapeTest < MiniTest::Unit::TestCase
 
     def test_return_value_is_tagged_as_utf8
       str = "fo<o>bar"
-      assert_equal Encoding.find('UTF-8'), EscapeUtils.escape_url(str).encoding
+      assert_equal Encoding.find('UTF-8'), EscapeUtils.escape_uri(str).encoding
     end
   end
 end
