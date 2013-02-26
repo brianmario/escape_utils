@@ -19,9 +19,11 @@ class QueryUnescapeTest < MiniTest::Unit::TestCase
   end
 
   def test_url_containing_multibyte_characters
-    matz_name = "\xE3\x81\xBE\xE3\x81\xA4\xE3\x82\x82\xE3\x81\xA8".force_encoding('UTF-8') # Matsumoto
+    matz_name = "\xE3\x81\xBE\xE3\x81\xA4\xE3\x82\x82\xE3\x81\xA8" # Matsumoto
+    matz_name.force_encoding('UTF-8') if matz_name.respond_to?(:force_enoding)
     assert_equal matz_name, EscapeUtils.unescape_url('%E3%81%BE%E3%81%A4%E3%82%82%E3%81%A8')
-    matz_name_sep = "\xE3\x81\xBE\xE3\x81\xA4 \xE3\x82\x82\xE3\x81\xA8".force_encoding('UTF-8') # Matsu moto
+    matz_name_sep = "\xE3\x81\xBE\xE3\x81\xA4 \xE3\x82\x82\xE3\x81\xA8" # Matsu moto
+    matz_name_sep.force_encoding('UTF-8') if matz_name_sep.respond_to?(:force_enoding)
     assert_equal matz_name_sep, EscapeUtils.unescape_url('%E3%81%BE%E3%81%A4+%E3%82%82%E3%81%A8')
   end
 
