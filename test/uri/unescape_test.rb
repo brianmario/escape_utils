@@ -32,7 +32,7 @@ class UriUnescapeTest < MiniTest::Unit::TestCase
 
   if RUBY_VERSION =~ /^1.9/
     def test_input_must_be_valid_utf8_or_ascii
-      escaped = EscapeUtils.escape_uri("fo%3Co%3Ebar")
+      escaped = EscapeUtils.escape_uri("fo<o>bar")
 
       escaped.force_encoding 'ISO-8859-1'
       assert_raises Encoding::CompatibilityError do
