@@ -15,3 +15,5 @@ Rake::ExtensionTask.new('escape_utils') do |ext|
 
   ext.lib_dir = File.join 'lib', 'escape_utils'
 end
+
+Rake::Task[:test].prerequisites << :compile
