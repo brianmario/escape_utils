@@ -48,6 +48,7 @@ static void check_utf8_encoding(VALUE str) {}
 typedef int (*houdini_cb)(gh_buf *, const uint8_t *, size_t);
 
 static VALUE rb_mEscapeUtils;
+static ID ID_at_html_safe;
 
 /**
  * html_secure instance variable
@@ -94,6 +95,29 @@ rb_eu__generic(VALUE str, houdini_cb do_escape)
 /**
  * HTML methods
  */
+static VALUE rb_eu_escape_html_as_html_safe(VALUE self, VALUE str, VALUE klass, VALUE set_ivar)
+{
+	VALUE result;
+	int secure = g_html_secure;
+	gh_buf buf = GH_BUF_INIT;
+
+	Check_Type(str, T_STRING);
+	check_utf8_encoding(str);
+
+	if (houdini_escape_html0(&buf, (const uint8_t *)RSTRING_PTR(str), RSTRING_LEN(str), secure)) {
+		result = eu_new_str(buf.ptr, buf.size);
+		gh_buf_free(&buf);
+	} else {
+		result = rb_str_dup(str);
+	}
+
+	RBASIC(result)->klass = klass;
+	if (RTEST(set_ivar))
+		rb_ivar_set(result, ID_at_html_safe, Qtrue);
+
+	return result;
+}
+
 static VALUE rb_eu_escape_html(int argc, VALUE *argv, VALUE self)
 {
 	VALUE str, rb_secure;
@@ -185,8 +209,10 @@ void Init_escape_utils()
 	rb_eEncodingCompatibilityError = rb_const_get(rb_cEncoding, rb_intern("CompatibilityError"));
 #endif
 
+	ID_at_html_safe = rb_intern("@html_safe");
 	rb_mEscapeUtils = rb_define_module("EscapeUtils");
 
+	rb_define_method(rb_mEscapeUtils, "escape_html_as_html_safe", rb_eu_escape_html_as_html_safe, 3);
 	rb_define_method(rb_mEscapeUtils, "escape_html", rb_eu_escape_html, -1);
 	rb_define_method(rb_mEscapeUtils, "unescape_html", rb_eu_unescape_html, 1);
 	rb_define_method(rb_mEscapeUtils, "escape_xml", rb_eu_escape_xml, 1);

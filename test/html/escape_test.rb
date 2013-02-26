@@ -1,5 +1,8 @@
 require File.expand_path("../../helper", __FILE__)
 
+class MyCustomHtmlSafeString < String
+end
+
 class HtmlEscapeTest < MiniTest::Unit::TestCase
   def test_escape_basic_html_with_secure
     assert_equal "&lt;some_tag&#47;&gt;", EscapeUtils.escape_html("<some_tag/>")
@@ -34,6 +37,18 @@ class HtmlEscapeTest < MiniTest::Unit::TestCase
   def test_returns_original_if_not_escaped
     str = 'foobar'
     assert_equal str.object_id, EscapeUtils.escape_html(str).object_id
+  end
+
+  def test_returns_custom_string_class
+    str = EscapeUtils.escape_html_as_html_safe('foobar', MyCustomHtmlSafeString, false)
+    assert_equal 'foobar', str
+    assert_equal MyCustomHtmlSafeString, str.class
+    assert_equal nil, str.instance_variable_get(:@html_safe)
+
+    str = EscapeUtils.escape_html_as_html_safe('foobar', MyCustomHtmlSafeString, true)
+    assert_equal 'foobar', str
+    assert_equal MyCustomHtmlSafeString, str.class
+    assert_equal true, str.instance_variable_get(:@html_safe)
   end
 
   if RUBY_VERSION =~ /^1.9/
