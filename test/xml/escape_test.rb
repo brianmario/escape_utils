@@ -48,12 +48,12 @@ class XmlEscapeTest < MiniTest::Unit::TestCase
 
       str.force_encoding 'ISO-8859-1'
       assert_raises Encoding::CompatibilityError do
-        EscapeUtils.escape_url(str)
+        EscapeUtils.escape_xml(str)
       end
 
       str.force_encoding 'UTF-8'
       begin
-        EscapeUtils.escape_url(str)
+        EscapeUtils.escape_xml(str)
       rescue Encoding::CompatibilityError => e
         assert_nil e, "#{e.class.name} raised, expected not to"
       end
