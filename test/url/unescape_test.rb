@@ -1,7 +1,6 @@
-# encoding: UTF-8
-require File.expand_path(File.dirname(__FILE__) + '/../spec_helper.rb')
+require File.expand_path("../../helper", __FILE__)
 
-describe EscapeUtils, "unescape_url" do
+class UriUnescapeTest < MiniTest::Unit::TestCase
   def test_basic_url
     assert_equal "http://www.homerun.com/", EscapeUtils.unescape_url("http%3A%2F%2Fwww.homerun.com%2F")
     assert_equal "http://www.homerun.com/", EscapeUtils.unescape_url("http://www.homerun.com/")
