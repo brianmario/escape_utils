@@ -4,35 +4,48 @@
 #define RSTRING_NOT_MODIFIED
 
 #include <ruby.h>
+#include "houdini.h"
+
 #if RB_CVAR_SET_ARITY == 4
 #  define rb_cvar_set(a,b,c) rb_cvar_set(a,b,c,0)
 #endif
+
 #ifdef HAVE_RUBY_ENCODING_H
 #include <ruby/encoding.h>
 static VALUE rb_eEncodingCompatibilityError;
-static VALUE eu_new_str(const char *str, size_t len) {
+
+static VALUE eu_new_str(const char *str, size_t len)
+{
 	return rb_enc_str_new(str, len, rb_utf8_encoding());
 }
-#else
-static VALUE eu_new_str(const char *str, size_t len) {
-	return rb_str_new(str, len);
-}
-#endif
 
-static void check_utf8_encoding(VALUE str) {
-#ifdef HAVE_RUBY_ENCODING_H
+static void check_utf8_encoding(VALUE str)
+{
+	static rb_encoding *_cached[3] = {NULL, NULL, NULL};
 	rb_encoding *enc;
 
-	enc = rb_enc_get(str);
-	if (enc != rb_utf8_encoding() && enc != rb_usascii_encoding()) {
-		rb_raise(rb_eEncodingCompatibilityError, "Input must be UTF-8 or US-ASCII, %s given", rb_enc_name(enc));
+	if (_cached[0] == NULL) {
+		_cached[0] = rb_utf8_encoding();
+		_cached[1] = rb_usascii_encoding();
+		_cached[2] = rb_ascii8bit_encoding();
 	}
-#endif
+
+	enc = rb_enc_get(str);
+	if (enc != _cached[0] && enc != _cached[1] && enc != _cached[2]) {
+		rb_raise(rb_eEncodingCompatibilityError,
+			"Input must be UTF-8 or US-ASCII, %s given", rb_enc_name(enc));
+	}
+}
+#else
+static VALUE eu_new_str(const char *str, size_t len)
+{
+	return rb_str_new(str, len);
 }
 
-#include "houdini.h"
+static void check_utf8_encoding(VALUE str) {}
+#endif
 
-typedef void (*houdini_cb)(struct buf *, const uint8_t *, size_t);
+typedef int (*houdini_cb)(gh_buf *, const uint8_t *, size_t);
 
 static VALUE rb_mEscapeUtils;
 
@@ -58,25 +71,23 @@ static VALUE rb_eu_set_html_secure(VALUE self, VALUE val)
  * Generic template
  */
 static VALUE
-rb_eu__generic(VALUE str, houdini_cb callback, size_t chunk_size)
+rb_eu__generic(VALUE str, houdini_cb do_escape)
 {
-	VALUE result;
-	struct buf *out_buf;
+	gh_buf buf = GH_BUF_INIT;
 
 	if (NIL_P(str))
 		return eu_new_str("", 0);
 
 	Check_Type(str, T_STRING);
-
 	check_utf8_encoding(str);
 
-	out_buf = bufnew(chunk_size);
+	if (do_escape(&buf, (const uint8_t *)RSTRING_PTR(str), RSTRING_LEN(str))) {
+		VALUE result = eu_new_str(buf.ptr, buf.size);
+		gh_buf_free(&buf);
+		return result;
+	}
 
-	callback(out_buf, (uint8_t *)RSTRING_PTR(str), RSTRING_LEN(str));
-	result = eu_new_str((const char *)out_buf->data, out_buf->size);
-	bufrelease(out_buf);
-
-	return result;
+	return str;
 }
 
 
@@ -85,8 +96,8 @@ rb_eu__generic(VALUE str, houdini_cb callback, size_t chunk_size)
  */
 static VALUE rb_eu_escape_html(int argc, VALUE *argv, VALUE self)
 {
-	VALUE rb_out_buf, str, rb_secure;
-	struct buf *out_buf;
+	VALUE str, rb_secure;
+	gh_buf buf = GH_BUF_INIT;
 	int secure = g_html_secure;
 
 	if (rb_scan_args(argc, argv, "11", &str, &rb_secure) == 2) {
@@ -96,22 +107,20 @@ static VALUE rb_eu_escape_html(int argc, VALUE *argv, VALUE self)
 	}
 
 	Check_Type(str, T_STRING);
-
 	check_utf8_encoding(str);
 
-	out_buf = bufnew(128);
+	if (houdini_escape_html0(&buf, (const uint8_t *)RSTRING_PTR(str), RSTRING_LEN(str), secure)) {
+		VALUE result = eu_new_str(buf.ptr, buf.size);
+		gh_buf_free(&buf);
+		return result;
+	}
 
-	houdini_escape_html0(out_buf, (uint8_t *)RSTRING_PTR(str), RSTRING_LEN(str), secure);
-
-	rb_out_buf = eu_new_str((const char *)out_buf->data, out_buf->size);
-	bufrelease(out_buf);
-
-	return rb_out_buf;
+	return str;
 }
 
 static VALUE rb_eu_unescape_html(VALUE self, VALUE str)
 {
-	return rb_eu__generic(str, &houdini_unescape_html, 128);
+	return rb_eu__generic(str, &houdini_unescape_html);
 }
 
 
@@ -120,7 +129,7 @@ static VALUE rb_eu_unescape_html(VALUE self, VALUE str)
  */
 static VALUE rb_eu_escape_xml(VALUE self, VALUE str)
 {
-	return rb_eu__generic(str, &houdini_escape_xml, 128);
+	return rb_eu__generic(str, &houdini_escape_xml);
 }
 
 
@@ -129,12 +138,12 @@ static VALUE rb_eu_escape_xml(VALUE self, VALUE str)
  */
 static VALUE rb_eu_escape_js(VALUE self, VALUE str)
 {
-	return rb_eu__generic(str, &houdini_escape_js, 128);
+	return rb_eu__generic(str, &houdini_escape_js);
 }
 
 static VALUE rb_eu_unescape_js(VALUE self, VALUE str)
 {
-	return rb_eu__generic(str, &houdini_unescape_js, 128);
+	return rb_eu__generic(str, &houdini_unescape_js);
 }
 
 
@@ -143,12 +152,12 @@ static VALUE rb_eu_unescape_js(VALUE self, VALUE str)
  */
 static VALUE rb_eu_escape_url(VALUE self, VALUE str)
 {
-	return rb_eu__generic(str, &houdini_escape_url, 32);
+	return rb_eu__generic(str, &houdini_escape_url);
 }
 
 static VALUE rb_eu_unescape_url(VALUE self, VALUE str)
 {
-	return rb_eu__generic(str, &houdini_unescape_url, 32);
+	return rb_eu__generic(str, &houdini_unescape_url);
 }
 
 
@@ -157,12 +166,12 @@ static VALUE rb_eu_unescape_url(VALUE self, VALUE str)
  */
 static VALUE rb_eu_escape_uri(VALUE self, VALUE str)
 {
-	return rb_eu__generic(str, &houdini_escape_uri, 32);
+	return rb_eu__generic(str, &houdini_escape_uri);
 }
 
 static VALUE rb_eu_unescape_uri(VALUE self, VALUE str)
 {
-	return rb_eu__generic(str, &houdini_unescape_uri, 32);
+	return rb_eu__generic(str, &houdini_unescape_uri);
 }
 
 
@@ -171,12 +180,12 @@ static VALUE rb_eu_unescape_uri(VALUE self, VALUE str)
  */
 void Init_escape_utils()
 {
-	rb_mEscapeUtils = rb_define_module("EscapeUtils");
-
 #ifdef HAVE_RUBY_ENCODING_H
 	VALUE rb_cEncoding = rb_const_get(rb_cObject, rb_intern("Encoding"));
 	rb_eEncodingCompatibilityError = rb_const_get(rb_cEncoding, rb_intern("CompatibilityError"));
 #endif
+
+	rb_mEscapeUtils = rb_define_module("EscapeUtils");
 
 	rb_define_method(rb_mEscapeUtils, "escape_html", rb_eu_escape_html, -1);
 	rb_define_method(rb_mEscapeUtils, "unescape_html", rb_eu_unescape_html, 1);
