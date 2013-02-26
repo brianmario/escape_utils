@@ -1,5 +1,12 @@
 # Changelog
 
+## 0.3.0 (February 26th, 2013)
+* add xml escaping support
+* in Ruby 1.9 - escape_utils now requires the input string be UTF-8
+* update upstream houdini to pull in some speed optimizations
+* a couple of other perf tweaks
+* switched to minitest
+
 ## 0.2.4 (September 7th, 2011)
 * swap out custom escaping routines for houdini - https://github.com/tanoku/houdini
 * add RSTRING_NOT_MODIFIED define for a Rubinius speedup
