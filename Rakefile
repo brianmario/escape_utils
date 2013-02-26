@@ -1,5 +1,10 @@
-# rake-compiler
-require 'rake' unless defined? Rake
+require 'rake/testtask'
+
+Rake::TestTask.new do |t|
+  t.pattern = "test/**/*_test.rb"
+end
+
+task :default => :test
 
 gem 'rake-compiler', '>= 0.7.5'
 require "rake/extensiontask"
