@@ -21,10 +21,17 @@ static VALUE eu_new_str(const char *str, size_t len)
 
 static void check_utf8_encoding(VALUE str)
 {
+	static rb_encoding *_cached[3] = {NULL, NULL, NULL};
 	rb_encoding *enc;
 
+	if (_cached[0] == NULL) {
+		_cached[0] = rb_utf8_encoding();
+		_cached[1] = rb_usascii_encoding();
+		_cached[2] = rb_ascii8bit_encoding();
+	}
+
 	enc = rb_enc_get(str);
-	if (enc != rb_utf8_encoding() && enc != rb_usascii_encoding()) {
+	if (enc != _cached[0] && enc != _cached[1] && enc != _cached[2]) {
 		rb_raise(rb_eEncodingCompatibilityError,
 			"Input must be UTF-8 or US-ASCII, %s given", rb_enc_name(enc));
 	}
