@@ -1,5 +1,8 @@
 # Changelog
 
+## 0.3.1 (February 26th, 2013)
+* fixed compilation on Windows
+
 ## 0.3.0 (February 26th, 2013)
 * add xml escaping support
 * in Ruby 1.9 - escape_utils now requires the input string be UTF-8
