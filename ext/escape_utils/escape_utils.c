@@ -53,20 +53,18 @@ static ID ID_at_html_safe;
 /**
  * html_secure instance variable
  */
-static ID rb_html_secure;
 static int g_html_secure = 1;
 
 static VALUE rb_eu_set_html_secure(VALUE self, VALUE val)
 {
 	g_html_secure = RTEST(val);
-	rb_cvar_set(self, rb_html_secure, val);
+	rb_cvar_set(self, rb_intern("@@html_secure"), val);
 	return val;
 }
 
 /**
 * html_string_class instance variable
 */
-static ID ID_at_html_string_class;
 static VALUE rb_html_string_class;
 
 static VALUE rb_eu_set_html_string_class(VALUE self, VALUE val)
@@ -77,7 +75,7 @@ static VALUE rb_eu_set_html_string_class(VALUE self, VALUE val)
 		rb_raise(rb_eArgError, "%s must be a descendent of String", rb_class2name(val));
 
 	rb_html_string_class = val;
-	rb_cvar_set(self, ID_at_html_string_class, val);
+	rb_cvar_set(self, rb_intern("@@html_string_class"), val);
 	return val;
 }
 
@@ -238,8 +236,5 @@ void Init_escape_utils()
 
 	rb_define_singleton_method(rb_mEscapeUtils, "html_secure=", rb_eu_set_html_secure, 1);
 	rb_define_singleton_method(rb_mEscapeUtils, "html_string_class=", rb_eu_set_html_string_class, 1);
-
-	rb_html_secure = rb_intern("@@html_secure");
-	ID_at_html_string_class = rb_intern("@@html_string_class");
 }
 
