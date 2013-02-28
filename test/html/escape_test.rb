@@ -1,5 +1,8 @@
 require File.expand_path("../../helper", __FILE__)
 
+class MyCustomHtmlSafeString < String
+end
+
 class HtmlEscapeTest < MiniTest::Unit::TestCase
   def test_escape_basic_html_with_secure
     assert_equal "&lt;some_tag&#47;&gt;", EscapeUtils.escape_html("<some_tag/>")
@@ -34,6 +37,36 @@ class HtmlEscapeTest < MiniTest::Unit::TestCase
   def test_returns_original_if_not_escaped
     str = 'foobar'
     assert_equal str.object_id, EscapeUtils.escape_html(str).object_id
+  end
+
+  def test_html_safe_escape_default_works
+    str = EscapeUtils.escape_html_as_html_safe('foobar')
+    assert_equal 'foobar', str
+  end
+
+  def test_returns_custom_string_class
+    klass_before = EscapeUtils.html_safe_string_class
+    EscapeUtils.html_safe_string_class = MyCustomHtmlSafeString
+
+    str = EscapeUtils.escape_html_as_html_safe('foobar')
+    assert_equal 'foobar', str
+    assert_equal MyCustomHtmlSafeString, str.class
+    assert_equal true, str.instance_variable_get(:@html_safe)
+  ensure
+    EscapeUtils.html_safe_string_class = klass_before
+  end
+
+  def test_html_safe_string_class_descends_string
+    assert_raises ArgumentError do
+      EscapeUtils.html_safe_string_class = Hash
+    end
+
+    begin
+      EscapeUtils.html_safe_string_class = String
+      EscapeUtils.html_safe_string_class = MyCustomHtmlSafeString
+    rescue ArgumentError => e
+      assert_nil e, "#{e.class.name} raised, expected nothing"
+    end
   end
 
   if RUBY_VERSION =~ /^1.9/
