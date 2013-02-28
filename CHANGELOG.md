@@ -1,5 +1,10 @@
 # Changelog
 
+## 0.3.2 (February 28th, 2013)
+* fix rbx compatibility
+* add EscapeUtils.html_safe_string_class
+* add EscapeUtils.escape_html_as_html_safe
+
 ## 0.3.1 (February 26th, 2013)
 * fixed compilation on Windows
 
