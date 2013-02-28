@@ -119,7 +119,11 @@ static VALUE rb_eu_escape_html_as_html_safe(VALUE self, VALUE str)
 		result = eu_new_str(buf.ptr, buf.size);
 		gh_buf_free(&buf);
 	} else {
+#ifdef RBASIC
 		result = rb_str_dup(str);
+#else
+		result = str;
+#endif
 	}
 
 #ifdef RBASIC
