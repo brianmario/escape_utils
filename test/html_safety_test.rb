@@ -21,10 +21,6 @@ class TestSafeBuffer < String
 end
 
 class String
-  def html_safe?
-    @html_safe
-  end
-
   def html_safe
     TestSafeBuffer.new(self)
   end
