@@ -40,7 +40,7 @@ class HtmlEscapeTest < MiniTest::Unit::TestCase
   end
 
   def test_html_safe_escape_default_works
-    str = EscapeUtils.escape_html_as_html_safe('foobar', false)
+    str = EscapeUtils.escape_html_as_html_safe('foobar')
     assert_equal 'foobar', str
   end
 
