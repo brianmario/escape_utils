@@ -6,10 +6,6 @@
 #include <ruby.h>
 #include "houdini.h"
 
-#if RB_CVAR_SET_ARITY == 4
-#  define rb_cvar_set(a,b,c) rb_cvar_set(a,b,c,0)
-#endif
-
 #ifdef HAVE_RUBY_ENCODING_H
 #include <ruby/encoding.h>
 static VALUE rb_eEncodingCompatibilityError;
@@ -58,7 +54,7 @@ static int g_html_secure = 1;
 static VALUE rb_eu_set_html_secure(VALUE self, VALUE val)
 {
 	g_html_secure = RTEST(val);
-	rb_cvar_set(self, rb_intern("@@html_secure"), val);
+	rb_ivar_set(self, rb_intern("@html_secure"), val);
 	return val;
 }
 
@@ -75,7 +71,7 @@ static VALUE rb_eu_set_html_string_class(VALUE self, VALUE val)
 		rb_raise(rb_eArgError, "%s must be a descendent of String", rb_class2name(val));
 
 	rb_html_string_class = val;
-	rb_cvar_set(self, rb_intern("@@html_string_class"), val);
+	rb_ivar_set(self, rb_intern("@html_string_class"), val);
 	return val;
 }
 
