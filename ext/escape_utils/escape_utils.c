@@ -106,7 +106,7 @@ rb_eu__generic(VALUE str, houdini_cb do_escape)
 /**
  * HTML methods
  */
-static VALUE rb_eu_escape_html_as_html_safe(VALUE self, VALUE str, VALUE set_ivar)
+static VALUE rb_eu_escape_html_as_html_safe(VALUE self, VALUE str)
 {
 	VALUE result;
 	int secure = g_html_secure;
@@ -123,8 +123,7 @@ static VALUE rb_eu_escape_html_as_html_safe(VALUE self, VALUE str, VALUE set_iva
 	}
 
 	RBASIC(result)->klass = rb_html_string_class;
-	if (RTEST(set_ivar))
-		rb_ivar_set(result, ID_at_html_safe, Qtrue);
+	rb_ivar_set(result, ID_at_html_safe, Qtrue);
 
 	return result;
 }
@@ -223,7 +222,7 @@ void Init_escape_utils()
 	ID_at_html_safe = rb_intern("@html_safe");
 	rb_mEscapeUtils = rb_define_module("EscapeUtils");
 
-	rb_define_method(rb_mEscapeUtils, "escape_html_as_html_safe", rb_eu_escape_html_as_html_safe, 2);
+	rb_define_method(rb_mEscapeUtils, "escape_html_as_html_safe", rb_eu_escape_html_as_html_safe, 1);
 	rb_define_method(rb_mEscapeUtils, "escape_html", rb_eu_escape_html, -1);
 	rb_define_method(rb_mEscapeUtils, "unescape_html", rb_eu_unescape_html, 1);
 	rb_define_method(rb_mEscapeUtils, "escape_xml", rb_eu_escape_xml, 1);

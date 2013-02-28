@@ -48,16 +48,11 @@ class HtmlEscapeTest < MiniTest::Unit::TestCase
     klass_before = EscapeUtils.html_string_class
     EscapeUtils.html_string_class = MyCustomHtmlSafeString
 
-    str = EscapeUtils.escape_html_as_html_safe('foobar', false)
-    assert_equal 'foobar', str
-    assert_equal MyCustomHtmlSafeString, str.class
-    assert_equal nil, str.instance_variable_get(:@html_safe)
-
-    str = EscapeUtils.escape_html_as_html_safe('foobar', true)
+    str = EscapeUtils.escape_html_as_html_safe('foobar')
     assert_equal 'foobar', str
     assert_equal MyCustomHtmlSafeString, str.class
     assert_equal true, str.instance_variable_get(:@html_safe)
-
+  ensure
     EscapeUtils.html_string_class = klass_before
   end
 
