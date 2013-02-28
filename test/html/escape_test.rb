@@ -40,15 +40,34 @@ class HtmlEscapeTest < MiniTest::Unit::TestCase
   end
 
   def test_returns_custom_string_class
-    str = EscapeUtils.escape_html_as_html_safe('foobar', MyCustomHtmlSafeString, false)
+    klass_before = EscapeUtils.html_string_class
+    EscapeUtils.html_string_class = MyCustomHtmlSafeString
+
+    str = EscapeUtils.escape_html_as_html_safe('foobar', false)
     assert_equal 'foobar', str
     assert_equal MyCustomHtmlSafeString, str.class
     assert_equal nil, str.instance_variable_get(:@html_safe)
 
-    str = EscapeUtils.escape_html_as_html_safe('foobar', MyCustomHtmlSafeString, true)
+    str = EscapeUtils.escape_html_as_html_safe('foobar', true)
     assert_equal 'foobar', str
     assert_equal MyCustomHtmlSafeString, str.class
     assert_equal true, str.instance_variable_get(:@html_safe)
+
+    EscapeUtils.html_string_class = klass_before
+  end
+
+  def test_html_string_class_descends_string
+    assert_raises ArgumentError do
+      EscapeUtils.html_string_class = Hash
+      p EscapeUtils.html_string_class
+    end
+
+    begin
+      EscapeUtils.html_string_class = String
+      EscapeUtils.html_string_class = MyCustomHtmlSafeString
+    rescue ArgumentError => e
+      assert_nil e, "#{e.class.name} raised, expected nothing"
+    end
   end
 
   if RUBY_VERSION =~ /^1.9/

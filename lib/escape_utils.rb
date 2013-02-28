@@ -9,5 +9,8 @@ module EscapeUtils
   # This is because quotes around HTML attributes are optional in most/all modern browsers at the time of writing (10/15/2010)
   @@html_secure = true
 
+  # Default String class to return from HTML escaping
+  @@html_string_class = String
+
   autoload :HtmlSafety, 'escape_utils/html_safety'
 end

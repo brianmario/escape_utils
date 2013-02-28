@@ -69,6 +69,29 @@ static VALUE rb_eu_set_html_secure(VALUE self, VALUE val)
 }
 
 /**
+* html_string_class instance variable
+*/
+static ID ID_at_html_string_class;
+static VALUE rb_html_string_class;
+
+static VALUE rb_eu_get_html_string_class(VALUE self)
+{
+	return rb_cvar_get(self, ID_at_html_string_class);
+}
+
+static VALUE rb_eu_set_html_string_class(VALUE self, VALUE val)
+{
+	Check_Type(val, T_CLASS);
+
+	if (rb_funcall(val, rb_intern("<="), 1, rb_cString) == Qnil)
+		rb_raise(rb_eArgError, "%s must be a descendent of String", rb_class2name(val));
+
+	rb_html_string_class = val;
+	rb_cvar_set(self, ID_at_html_string_class, val);
+	return val;
+}
+
+/**
  * Generic template
  */
 static VALUE
@@ -95,7 +118,7 @@ rb_eu__generic(VALUE str, houdini_cb do_escape)
 /**
  * HTML methods
  */
-static VALUE rb_eu_escape_html_as_html_safe(VALUE self, VALUE str, VALUE klass, VALUE set_ivar)
+static VALUE rb_eu_escape_html_as_html_safe(VALUE self, VALUE str, VALUE set_ivar)
 {
 	VALUE result;
 	int secure = g_html_secure;
@@ -111,7 +134,7 @@ static VALUE rb_eu_escape_html_as_html_safe(VALUE self, VALUE str, VALUE klass, 
 		result = rb_str_dup(str);
 	}
 
-	RBASIC(result)->klass = klass;
+	RBASIC(result)->klass = rb_html_string_class;
 	if (RTEST(set_ivar))
 		rb_ivar_set(result, ID_at_html_safe, Qtrue);
 
@@ -212,7 +235,7 @@ void Init_escape_utils()
 	ID_at_html_safe = rb_intern("@html_safe");
 	rb_mEscapeUtils = rb_define_module("EscapeUtils");
 
-	rb_define_method(rb_mEscapeUtils, "escape_html_as_html_safe", rb_eu_escape_html_as_html_safe, 3);
+	rb_define_method(rb_mEscapeUtils, "escape_html_as_html_safe", rb_eu_escape_html_as_html_safe, 2);
 	rb_define_method(rb_mEscapeUtils, "escape_html", rb_eu_escape_html, -1);
 	rb_define_method(rb_mEscapeUtils, "unescape_html", rb_eu_unescape_html, 1);
 	rb_define_method(rb_mEscapeUtils, "escape_xml", rb_eu_escape_xml, 1);
@@ -226,6 +249,10 @@ void Init_escape_utils()
 	rb_define_singleton_method(rb_mEscapeUtils, "html_secure", rb_eu_get_html_secure, 0);
 	rb_define_singleton_method(rb_mEscapeUtils, "html_secure=", rb_eu_set_html_secure, 1);
 
+	rb_define_singleton_method(rb_mEscapeUtils, "html_string_class", rb_eu_get_html_string_class, 0);
+	rb_define_singleton_method(rb_mEscapeUtils, "html_string_class=", rb_eu_set_html_string_class, 1);
+
 	rb_html_secure = rb_intern("@@html_secure");
+	ID_at_html_string_class = rb_intern("@@html_string_class");
 }
 
