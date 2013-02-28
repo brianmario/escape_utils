@@ -56,11 +56,6 @@ static ID ID_at_html_safe;
 static ID rb_html_secure;
 static int g_html_secure = 1;
 
-static VALUE rb_eu_get_html_secure(VALUE self)
-{
-	return rb_cvar_get(self, rb_html_secure);
-}
-
 static VALUE rb_eu_set_html_secure(VALUE self, VALUE val)
 {
 	g_html_secure = RTEST(val);
@@ -73,11 +68,6 @@ static VALUE rb_eu_set_html_secure(VALUE self, VALUE val)
 */
 static ID ID_at_html_string_class;
 static VALUE rb_html_string_class;
-
-static VALUE rb_eu_get_html_string_class(VALUE self)
-{
-	return rb_cvar_get(self, ID_at_html_string_class);
-}
 
 static VALUE rb_eu_set_html_string_class(VALUE self, VALUE val)
 {
@@ -246,10 +236,7 @@ void Init_escape_utils()
 	rb_define_method(rb_mEscapeUtils, "escape_uri", rb_eu_escape_uri, 1);
 	rb_define_method(rb_mEscapeUtils, "unescape_uri", rb_eu_unescape_uri, 1);
 
-	rb_define_singleton_method(rb_mEscapeUtils, "html_secure", rb_eu_get_html_secure, 0);
 	rb_define_singleton_method(rb_mEscapeUtils, "html_secure=", rb_eu_set_html_secure, 1);
-
-	rb_define_singleton_method(rb_mEscapeUtils, "html_string_class", rb_eu_get_html_string_class, 0);
 	rb_define_singleton_method(rb_mEscapeUtils, "html_string_class=", rb_eu_set_html_string_class, 1);
 
 	rb_html_secure = rb_intern("@@html_secure");

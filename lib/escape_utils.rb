@@ -8,9 +8,15 @@ module EscapeUtils
   # Escaping '/' is recommended by the OWASP - http://www.owasp.org/index.php/XSS_(Cross_Site_Scripting)_Prevention_Cheat_Sheet#RULE_.231_-_HTML_Escape_Before_Inserting_Untrusted_Data_into_HTML_Element_Content
   # This is because quotes around HTML attributes are optional in most/all modern browsers at the time of writing (10/15/2010)
   @@html_secure = true
+  def self.html_secure
+    @@html_secure
+  end
 
   # Default String class to return from HTML escaping
   @@html_string_class = String
+  def self.html_string_class
+    @@html_string_class
+  end
 
   autoload :HtmlSafety, 'escape_utils/html_safety'
 end
