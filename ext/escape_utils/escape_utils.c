@@ -220,7 +220,8 @@ static VALUE rb_eu_unescape_uri(VALUE self, VALUE str)
 void Init_escape_utils()
 {
 #ifdef HAVE_RUBY_ENCODING_H
-	VALUE rb_cEncoding = rb_const_get(rb_cObject, rb_intern("Encoding"));
+	VALUE rb_cEncoding;
+	rb_cEncoding = rb_const_get(rb_cObject, rb_intern("Encoding"));
 	rb_eEncodingCompatibilityError = rb_const_get(rb_cEncoding, rb_intern("CompatibilityError"));
 #endif
 
