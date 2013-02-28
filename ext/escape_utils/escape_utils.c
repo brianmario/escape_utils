@@ -6,10 +6,6 @@
 #include <ruby.h>
 #include "houdini.h"
 
-#if RB_CVAR_SET_ARITY == 4
-#  define rb_cvar_set(a,b,c) rb_cvar_set(a,b,c,0)
-#endif
-
 #ifdef HAVE_RUBY_ENCODING_H
 #include <ruby/encoding.h>
 static VALUE rb_eEncodingCompatibilityError;
@@ -48,22 +44,34 @@ static void check_utf8_encoding(VALUE str) {}
 typedef int (*houdini_cb)(gh_buf *, const uint8_t *, size_t);
 
 static VALUE rb_mEscapeUtils;
+static ID ID_at_html_safe, ID_new;
 
 /**
  * html_secure instance variable
  */
-static ID rb_html_secure;
 static int g_html_secure = 1;
-
-static VALUE rb_eu_get_html_secure(VALUE self)
-{
-	return rb_cvar_get(self, rb_html_secure);
-}
 
 static VALUE rb_eu_set_html_secure(VALUE self, VALUE val)
 {
 	g_html_secure = RTEST(val);
-	rb_cvar_set(self, rb_html_secure, val);
+	rb_ivar_set(self, rb_intern("@html_secure"), val);
+	return val;
+}
+
+/**
+* html_safe_string_class instance variable
+*/
+static VALUE rb_html_safe_string_class;
+
+static VALUE rb_eu_set_html_safe_string_class(VALUE self, VALUE val)
+{
+	Check_Type(val, T_CLASS);
+
+	if (rb_funcall(val, rb_intern("<="), 1, rb_cString) == Qnil)
+		rb_raise(rb_eArgError, "%s must be a descendent of String", rb_class2name(val));
+
+	rb_html_safe_string_class = val;
+	rb_ivar_set(self, rb_intern("@html_safe_string_class"), val);
 	return val;
 }
 
@@ -94,6 +102,37 @@ rb_eu__generic(VALUE str, houdini_cb do_escape)
 /**
  * HTML methods
  */
+static VALUE rb_eu_escape_html_as_html_safe(VALUE self, VALUE str)
+{
+	VALUE result;
+	int secure = g_html_secure;
+	gh_buf buf = GH_BUF_INIT;
+
+	Check_Type(str, T_STRING);
+	check_utf8_encoding(str);
+
+	if (houdini_escape_html0(&buf, (const uint8_t *)RSTRING_PTR(str), RSTRING_LEN(str), secure)) {
+		result = eu_new_str(buf.ptr, buf.size);
+		gh_buf_free(&buf);
+	} else {
+#ifdef RBASIC
+		result = rb_str_dup(str);
+#else
+		result = str;
+#endif
+	}
+
+#ifdef RBASIC
+	RBASIC(result)->klass = rb_html_safe_string_class;
+#else
+	result = rb_funcall(rb_html_safe_string_class, ID_new, 1, result);
+#endif
+
+	rb_ivar_set(result, ID_at_html_safe, Qtrue);
+
+	return result;
+}
+
 static VALUE rb_eu_escape_html(int argc, VALUE *argv, VALUE self)
 {
 	VALUE str, rb_secure;
@@ -181,12 +220,14 @@ static VALUE rb_eu_unescape_uri(VALUE self, VALUE str)
 void Init_escape_utils()
 {
 #ifdef HAVE_RUBY_ENCODING_H
-	VALUE rb_cEncoding = rb_const_get(rb_cObject, rb_intern("Encoding"));
 	rb_eEncodingCompatibilityError = rb_const_get(rb_cEncoding, rb_intern("CompatibilityError"));
 #endif
 
+	ID_new = rb_intern("new");
+	ID_at_html_safe = rb_intern("@html_safe");
 	rb_mEscapeUtils = rb_define_module("EscapeUtils");
 
+	rb_define_method(rb_mEscapeUtils, "escape_html_as_html_safe", rb_eu_escape_html_as_html_safe, 1);
 	rb_define_method(rb_mEscapeUtils, "escape_html", rb_eu_escape_html, -1);
 	rb_define_method(rb_mEscapeUtils, "unescape_html", rb_eu_unescape_html, 1);
 	rb_define_method(rb_mEscapeUtils, "escape_xml", rb_eu_escape_xml, 1);
@@ -197,9 +238,7 @@ void Init_escape_utils()
 	rb_define_method(rb_mEscapeUtils, "escape_uri", rb_eu_escape_uri, 1);
 	rb_define_method(rb_mEscapeUtils, "unescape_uri", rb_eu_unescape_uri, 1);
 
-	rb_define_singleton_method(rb_mEscapeUtils, "html_secure", rb_eu_get_html_secure, 0);
 	rb_define_singleton_method(rb_mEscapeUtils, "html_secure=", rb_eu_set_html_secure, 1);
-
-	rb_html_secure = rb_intern("@@html_secure");
+	rb_define_singleton_method(rb_mEscapeUtils, "html_safe_string_class=", rb_eu_set_html_safe_string_class, 1);
 }
 
