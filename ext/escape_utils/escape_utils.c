@@ -48,7 +48,7 @@ static void check_utf8_encoding(VALUE str) {}
 typedef int (*houdini_cb)(gh_buf *, const uint8_t *, size_t);
 
 static VALUE rb_mEscapeUtils;
-static ID ID_at_html_safe;
+static ID ID_at_html_safe, ID_new;
 
 /**
  * html_secure instance variable
@@ -122,7 +122,12 @@ static VALUE rb_eu_escape_html_as_html_safe(VALUE self, VALUE str)
 		result = rb_str_dup(str);
 	}
 
+#ifdef RBASIC
 	RBASIC(result)->klass = rb_html_string_class;
+#else
+	result = rb_funcall(rb_html_string_class, ID_new, 1, result);
+#endif
+
 	rb_ivar_set(result, ID_at_html_safe, Qtrue);
 
 	return result;
@@ -219,6 +224,7 @@ void Init_escape_utils()
 	rb_eEncodingCompatibilityError = rb_const_get(rb_cEncoding, rb_intern("CompatibilityError"));
 #endif
 
+	ID_new = rb_intern("new");
 	ID_at_html_safe = rb_intern("@html_safe");
 	rb_mEscapeUtils = rb_define_module("EscapeUtils");
 
