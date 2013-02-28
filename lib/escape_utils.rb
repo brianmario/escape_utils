@@ -13,10 +13,10 @@ module EscapeUtils
   self.html_secure = true
 
   # Default String class to return from HTML escaping
-  def self.html_string_class
-    @html_string_class
+  def self.html_safe_string_class
+    @html_safe_string_class
   end
-  self.html_string_class = String
+  self.html_safe_string_class = String
 
   autoload :HtmlSafety, 'escape_utils/html_safety'
 end

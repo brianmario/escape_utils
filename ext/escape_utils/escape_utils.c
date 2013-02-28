@@ -59,19 +59,19 @@ static VALUE rb_eu_set_html_secure(VALUE self, VALUE val)
 }
 
 /**
-* html_string_class instance variable
+* html_safe_string_class instance variable
 */
-static VALUE rb_html_string_class;
+static VALUE rb_html_safe_string_class;
 
-static VALUE rb_eu_set_html_string_class(VALUE self, VALUE val)
+static VALUE rb_eu_set_html_safe_string_class(VALUE self, VALUE val)
 {
 	Check_Type(val, T_CLASS);
 
 	if (rb_funcall(val, rb_intern("<="), 1, rb_cString) == Qnil)
 		rb_raise(rb_eArgError, "%s must be a descendent of String", rb_class2name(val));
 
-	rb_html_string_class = val;
-	rb_ivar_set(self, rb_intern("@html_string_class"), val);
+	rb_html_safe_string_class = val;
+	rb_ivar_set(self, rb_intern("@html_safe_string_class"), val);
 	return val;
 }
 
@@ -123,9 +123,9 @@ static VALUE rb_eu_escape_html_as_html_safe(VALUE self, VALUE str)
 	}
 
 #ifdef RBASIC
-	RBASIC(result)->klass = rb_html_string_class;
+	RBASIC(result)->klass = rb_html_safe_string_class;
 #else
-	result = rb_funcall(rb_html_string_class, ID_new, 1, result);
+	result = rb_funcall(rb_html_safe_string_class, ID_new, 1, result);
 #endif
 
 	rb_ivar_set(result, ID_at_html_safe, Qtrue);
@@ -240,6 +240,6 @@ void Init_escape_utils()
 	rb_define_method(rb_mEscapeUtils, "unescape_uri", rb_eu_unescape_uri, 1);
 
 	rb_define_singleton_method(rb_mEscapeUtils, "html_secure=", rb_eu_set_html_secure, 1);
-	rb_define_singleton_method(rb_mEscapeUtils, "html_string_class=", rb_eu_set_html_string_class, 1);
+	rb_define_singleton_method(rb_mEscapeUtils, "html_safe_string_class=", rb_eu_set_html_safe_string_class, 1);
 }
 
