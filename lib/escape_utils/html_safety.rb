@@ -5,7 +5,7 @@ module EscapeUtils
         if s.html_safe?
           s.to_s.html_safe
         else
-          EscapeUtils.escape_html(s.to_s).html_safe
+          EscapeUtils.escape_html_as_html_safe(s.to_s)
         end
       end
     else
