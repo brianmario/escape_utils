@@ -217,6 +217,7 @@ static VALUE rb_eu_unescape_uri(VALUE self, VALUE str)
 /**
  * Ruby Extension initializer
  */
+__attribute__((visibility("default")))
 void Init_escape_utils()
 {
 #ifdef HAVE_RUBY_ENCODING_H
