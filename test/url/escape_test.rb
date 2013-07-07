@@ -1,7 +1,7 @@
 require File.expand_path("../../helper", __FILE__)
 require 'cgi'
 
-class UriEscapeTest < MiniTest::Unit::TestCase
+class UriEscapeTest < Minitest::Test
   def test_basic_url
     assert_equal "http%3A%2F%2Fwww.homerun.com%2F", EscapeUtils.escape_url("http://www.homerun.com/")
   end

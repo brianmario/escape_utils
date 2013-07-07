@@ -1,6 +1,6 @@
 require File.expand_path("../../helper", __FILE__)
 
-class XmlEscapeTest < MiniTest::Unit::TestCase
+class XmlEscapeTest < Minitest::Test
   def test_basic_xml
     assert_equal "&lt;some_tag/&gt;", EscapeUtils.escape_xml("<some_tag/>")
   end

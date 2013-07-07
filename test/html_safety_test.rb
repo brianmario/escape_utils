@@ -26,7 +26,7 @@ class String
   end
 end
 
-class HtmlEscapeTest < MiniTest::Unit::TestCase
+class HtmlEscapeTest < Minitest::Test
   include EscapeUtils::HtmlSafety
 
   def test_marks_escaped_strings_safe

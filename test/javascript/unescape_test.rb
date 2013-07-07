@@ -1,6 +1,6 @@
 require File.expand_path("../../helper", __FILE__)
 
-class JavascriptUnescapeTest < MiniTest::Unit::TestCase
+class JavascriptUnescapeTest < Minitest::Test
   def test_returns_empty_string_if_nil_passed
     assert_equal "", EscapeUtils.unescape_javascript(nil)
   end
