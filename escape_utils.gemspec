@@ -16,7 +16,7 @@ Gem::Specification.new do |s|
 
   # tests
   s.add_development_dependency 'rake-compiler', ">= 0.7.5"
-  s.add_development_dependency 'minitest'
+  s.add_development_dependency 'minitest', ">= 5.0.0"
   # benchmarks
   s.add_development_dependency 'rack'
   s.add_development_dependency 'haml'
