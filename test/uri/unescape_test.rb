@@ -1,6 +1,6 @@
 require File.expand_path("../../helper", __FILE__)
 
-class UriUnescapeTest < MiniTest::Unit::TestCase
+class UriUnescapeTest < Minitest::Test
   def test_doesnt_unescape_an_incomplete_escape
     assert_equal "%", EscapeUtils.unescape_uri("%")
     assert_equal "http%", EscapeUtils.unescape_uri("http%")

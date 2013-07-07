@@ -1,7 +1,7 @@
 # encoding: utf-8
 require File.expand_path("../../helper", __FILE__)
 
-class HtmlUnescapeTest < MiniTest::Unit::TestCase
+class HtmlUnescapeTest < Minitest::Test
   def test_basic_html
     assert_equal "<some_tag/>", EscapeUtils.unescape_html("&lt;some_tag&#47;&gt;")
   end

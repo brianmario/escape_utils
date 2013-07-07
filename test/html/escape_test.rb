@@ -3,7 +3,7 @@ require File.expand_path("../../helper", __FILE__)
 class MyCustomHtmlSafeString < String
 end
 
-class HtmlEscapeTest < MiniTest::Unit::TestCase
+class HtmlEscapeTest < Minitest::Test
   def test_escape_basic_html_with_secure
     assert_equal "&lt;some_tag&#47;&gt;", EscapeUtils.escape_html("<some_tag/>")
 
