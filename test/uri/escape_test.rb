@@ -1,7 +1,7 @@
 require File.expand_path("../../helper", __FILE__)
 require 'uri'
 
-class UriEscapeTest < MiniTest::Unit::TestCase
+class UriEscapeTest < Minitest::Test
   def test_uri_stdlib_compatibility
     (0..127).each do |i|
       c = i.chr

@@ -1,6 +1,6 @@
 require File.expand_path("../../helper", __FILE__)
 
-class QueryUnescapeTest < MiniTest::Unit::TestCase
+class QueryUnescapeTest < Minitest::Test
   def test_basic_url
     assert_equal "http://www.homerun.com/", EscapeUtils.unescape_url("http%3A%2F%2Fwww.homerun.com%2F")
   end
