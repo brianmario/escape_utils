@@ -21,6 +21,10 @@ class UriUnescapeTest < Minitest::Test
     assert_equal "a space", EscapeUtils.unescape_url("a+space")
   end
 
+  def test_url_containing_plus_sign
+    assert_equal "plus+sign", EscapeUtils.unescape_url("plus%2Bsign")
+  end
+
   def test_url_containing_mixed_characters
     assert_equal "q1!2\"'w$5&7/z8)?\\", EscapeUtils.unescape_url("q1%212%22%27w%245%267%2Fz8%29%3F%5C")
     assert_equal "q1!2\"'w$5&7/z8)?\\", EscapeUtils.unescape_url("q1!2%22'w$5&7/z8)?%5C")
