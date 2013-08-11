@@ -115,18 +115,10 @@ static VALUE rb_eu_escape_html_as_html_safe(VALUE self, VALUE str)
 		result = eu_new_str(buf.ptr, buf.size);
 		gh_buf_free(&buf);
 	} else {
-#ifdef RBASIC
-		result = rb_str_dup(str);
-#else
 		result = str;
-#endif
 	}
 
-#ifdef RBASIC
-	RBASIC(result)->klass = rb_html_safe_string_class;
-#else
 	result = rb_funcall(rb_html_safe_string_class, ID_new, 1, result);
-#endif
 
 	rb_ivar_set(result, ID_at_html_safe, Qtrue);
 
