@@ -62,6 +62,7 @@ static VALUE rb_eu_set_html_secure(VALUE self, VALUE val)
 * html_safe_string_class instance variable
 */
 static VALUE rb_html_safe_string_class;
+static VALUE rb_html_safe_string_template_object;
 
 static VALUE rb_eu_set_html_safe_string_class(VALUE self, VALUE val)
 {
@@ -71,6 +72,8 @@ static VALUE rb_eu_set_html_safe_string_class(VALUE self, VALUE val)
 		rb_raise(rb_eArgError, "%s must be a descendent of String", rb_class2name(val));
 
 	rb_html_safe_string_class = val;
+	rb_html_safe_string_template_object = rb_class_new_instance(0, NULL, rb_html_safe_string_class);
+	OBJ_FREEZE(rb_html_safe_string_template_object);
 	rb_ivar_set(self, rb_intern("@html_safe_string_class"), val);
 	return val;
 }
@@ -115,18 +118,13 @@ static VALUE rb_eu_escape_html_as_html_safe(VALUE self, VALUE str)
 		result = eu_new_str(buf.ptr, buf.size);
 		gh_buf_free(&buf);
 	} else {
-#ifdef RBASIC
-		result = rb_str_dup(str);
+#ifdef HAVE_RB_STR_NEW_WITH_CLASS
+		result = rb_str_new_with_class(rb_html_safe_string_template_object,
+			RSTRING_PTR(str), RSTRING_LEN(str));
 #else
-		result = str;
+		result = rb_funcall(rb_html_safe_string_class, ID_new, 1, str);
 #endif
 	}
-
-#ifdef RBASIC
-	RBASIC(result)->klass = rb_html_safe_string_class;
-#else
-	result = rb_funcall(rb_html_safe_string_class, ID_new, 1, result);
-#endif
 
 	rb_ivar_set(result, ID_at_html_safe, Qtrue);
 
