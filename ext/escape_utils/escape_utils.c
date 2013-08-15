@@ -4,10 +4,9 @@
 #define RSTRING_NOT_MODIFIED
 
 #include <ruby.h>
+#include <ruby/encoding.h>
 #include "houdini.h"
 
-#ifdef HAVE_RUBY_ENCODING_H
-#include <ruby/encoding.h>
 static VALUE rb_eEncodingCompatibilityError;
 
 static VALUE eu_new_str(const char *str, size_t len)
@@ -32,14 +31,6 @@ static void check_utf8_encoding(VALUE str)
 			"Input must be UTF-8 or US-ASCII, %s given", rb_enc_name(enc));
 	}
 }
-#else
-static VALUE eu_new_str(const char *str, size_t len)
-{
-	return rb_str_new(str, len);
-}
-
-static void check_utf8_encoding(VALUE str) {}
-#endif
 
 typedef int (*houdini_cb)(gh_buf *, const uint8_t *, size_t);
 
@@ -118,12 +109,8 @@ static VALUE rb_eu_escape_html_as_html_safe(VALUE self, VALUE str)
 		result = eu_new_str(buf.ptr, buf.size);
 		gh_buf_free(&buf);
 	} else {
-#ifdef HAVE_RB_STR_NEW_WITH_CLASS
 		result = rb_str_new_with_class(rb_html_safe_string_template_object,
 			RSTRING_PTR(str), RSTRING_LEN(str));
-#else
-		result = rb_funcall(rb_html_safe_string_class, ID_new, 1, str);
-#endif
 	}
 
 	rb_ivar_set(result, ID_at_html_safe, Qtrue);
@@ -218,9 +205,7 @@ static VALUE rb_eu_unescape_uri(VALUE self, VALUE str)
 __attribute__((visibility("default")))
 void Init_escape_utils()
 {
-#ifdef HAVE_RUBY_ENCODING_H
 	rb_eEncodingCompatibilityError = rb_const_get(rb_cEncoding, rb_intern("CompatibilityError"));
-#endif
 
 	ID_new = rb_intern("new");
 	ID_at_html_safe = rb_intern("@html_safe");

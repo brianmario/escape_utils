@@ -14,6 +14,8 @@ Gem::Specification.new do |s|
   s.summary = %q{Faster string escaping routines for your web apps}
   s.test_files = `git ls-files test`.split("\n")
 
+  s.required_ruby_version = "> 1.9.3"
+
   # tests
   s.add_development_dependency 'rake-compiler', ">= 0.7.5"
   s.add_development_dependency 'minitest', ">= 5.0.0"
