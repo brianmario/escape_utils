@@ -209,8 +209,10 @@ void Init_escape_utils()
 
 	ID_new = rb_intern("new");
 	ID_at_html_safe = rb_intern("@html_safe");
-	rb_mEscapeUtils = rb_define_module("EscapeUtils");
+	rb_global_variable(&rb_html_safe_string_class);
+	rb_global_variable(&rb_html_safe_string_template_object);
 
+	rb_mEscapeUtils = rb_define_module("EscapeUtils");
 	rb_define_method(rb_mEscapeUtils, "escape_html_as_html_safe", rb_eu_escape_html_as_html_safe, 1);
 	rb_define_method(rb_mEscapeUtils, "escape_html", rb_eu_escape_html, -1);
 	rb_define_method(rb_mEscapeUtils, "unescape_html", rb_eu_unescape_html, 1);
