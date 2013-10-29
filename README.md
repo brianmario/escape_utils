@@ -10,6 +10,8 @@ It supports HTML, URL, URI and Javascript escaping/unescaping.
 
 ## Installing
 
+Compatible with Ruby 1.9.3+
+
 ``` sh
 gem install escape_utils
 ```
@@ -18,18 +20,9 @@ gem install escape_utils
 
 escape_utils assumes all input is encoded as valid UTF-8. If you are dealing with other encodings do your best to transcode the string into a UTF-8 byte stream before handing it to escape_utils.
 
-On Ruby 1.9 this is as easy as:
 
 ``` ruby
 utf8_string = non_utf8_string.encode('UTF-8')
-```
-
-If you're on Ruby 1.8 you can use [charlock_holmes](https://github.com/brianmario/charlock_holmes) to transcode like so:
-
-``` ruby
-# NOTE: we're assuming you know the encoding of `non_utf8_string` here.
-# if you don't, you can use the detection API of charlock_holmes
-utf8_string = CharlockHolmes::Converter.convert(non_utf8_string, other_encoding, 'UTF-8')
 ```
 
 ## Usage
