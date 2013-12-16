@@ -8,6 +8,7 @@ Gem::Specification.new do |s|
   s.extensions = ["ext/escape_utils/extconf.rb"]
   s.files = `git ls-files`.split("\n")
   s.homepage = %q{http://github.com/brianmario/escape_utils}
+  s.license = %q{MIT}
   s.rdoc_options = ["--charset=UTF-8"]
   s.require_paths = ["lib"]
   s.rubygems_version = %q{1.4.2}
