@@ -7,7 +7,7 @@ Gem::Specification.new do |s|
   s.email = %q{seniorlopez@gmail.com}
   s.extensions = ["ext/escape_utils/extconf.rb"]
   s.files = `git ls-files`.split("\n")
-  s.homepage = %q{http://github.com/brianmario/escape_utils}
+  s.homepage = %q{https://github.com/brianmario/escape_utils}
   s.license = %q{MIT}
   s.rdoc_options = ["--charset=UTF-8"]
   s.require_paths = ["lib"]
