@@ -13,6 +13,7 @@ Gem::Specification.new do |s|
   s.require_paths = ["lib"]
   s.rubygems_version = %q{1.4.2}
   s.summary = %q{Faster string escaping routines for your web apps}
+  s.description = %q{Quickly perform HTML, URL, URI and Javascript escaping/unescaping}
   s.test_files = `git ls-files test`.split("\n")
 
   s.required_ruby_version = ">= 1.9.3"
