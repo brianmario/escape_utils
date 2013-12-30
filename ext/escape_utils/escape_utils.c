@@ -96,6 +96,11 @@ rb_eu__generic(VALUE str, houdini_cb do_escape)
 /**
  * HTML methods
  */
+static VALUE new_html_safe_string(const char* ptr, size_t len)
+{
+	return rb_str_new_with_class(rb_html_safe_string_template_object, ptr, len);
+}
+
 static VALUE rb_eu_escape_html_as_html_safe(VALUE self, VALUE str)
 {
 	VALUE result;
@@ -106,11 +111,10 @@ static VALUE rb_eu_escape_html_as_html_safe(VALUE self, VALUE str)
 	check_utf8_encoding(str);
 
 	if (houdini_escape_html0(&buf, (const uint8_t *)RSTRING_PTR(str), RSTRING_LEN(str), secure)) {
-		result = eu_new_str(buf.ptr, buf.size);
+		result = new_html_safe_string(buf.ptr, buf.size);
 		gh_buf_free(&buf);
 	} else {
-		result = rb_str_new_with_class(rb_html_safe_string_template_object,
-			RSTRING_PTR(str), RSTRING_LEN(str));
+		result = new_html_safe_string(RSTRING_PTR(str), RSTRING_LEN(str));
 	}
 
 	rb_ivar_set(result, ID_at_html_safe, Qtrue);
