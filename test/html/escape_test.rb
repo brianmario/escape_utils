@@ -56,6 +56,18 @@ class HtmlEscapeTest < Minitest::Test
     EscapeUtils.html_safe_string_class = klass_before
   end
 
+  def test_returns_custom_string_class_when_string_requires_escaping
+    klass_before = EscapeUtils.html_safe_string_class
+    EscapeUtils.html_safe_string_class = MyCustomHtmlSafeString
+
+    str = EscapeUtils.escape_html_as_html_safe("<script>")
+    assert_equal "&lt;script&gt;", str
+    assert_equal MyCustomHtmlSafeString, str.class
+    assert_equal true, str.instance_variable_get(:@html_safe)
+  ensure
+    EscapeUtils.html_safe_string_class = klass_before
+  end
+
   def test_html_safe_string_class_descends_string
     assert_raises ArgumentError do
       EscapeUtils.html_safe_string_class = Hash
