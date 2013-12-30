@@ -96,7 +96,7 @@ rb_eu__generic(VALUE str, houdini_cb do_escape)
 /**
  * HTML methods
  */
-static VALUE new_html_safe_string(const char* ptr, size_t len)
+static VALUE new_html_safe_string(const char *ptr, size_t len)
 {
 	return rb_str_new_with_class(rb_html_safe_string_template_object, ptr, len);
 }
