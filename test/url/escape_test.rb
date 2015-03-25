@@ -1,7 +1,7 @@
 require File.expand_path("../../helper", __FILE__)
 require 'cgi'
 
-class UriEscapeTest < Minitest::Test
+class UrlEscapeTest < Minitest::Test
   def test_basic_url
     assert_equal "http%3A%2F%2Fwww.homerun.com%2F", EscapeUtils.escape_url("http://www.homerun.com/")
   end
@@ -31,6 +31,14 @@ class UriEscapeTest < Minitest::Test
     assert_equal '%E3%81%BE%E3%81%A4%E3%82%82%E3%81%A8', EscapeUtils.escape_url(matz_name)
     matz_name_sep = "\xE3\x81\xBE\xE3\x81\xA4 \xE3\x82\x82\xE3\x81\xA8" # Matsu moto
     assert_equal '%E3%81%BE%E3%81%A4+%E3%82%82%E3%81%A8', EscapeUtils.escape_url(matz_name_sep)
+  end
+
+  def test_url_containing_pluses
+    assert_equal "a%2Bplus", EscapeUtils.escape_url("a+plus")
+  end
+
+  def test_url_containing_slashes
+    assert_equal "a%2Fslash", EscapeUtils.escape_url("a/slash")
   end
 
   if RUBY_VERSION =~ /^1.9/

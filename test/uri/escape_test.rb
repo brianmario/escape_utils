@@ -25,6 +25,14 @@ class UriEscapeTest < Minitest::Test
     assert_equal '%E3%81%BE%E3%81%A4%20%E3%82%82%E3%81%A8', EscapeUtils.escape_uri(matz_name_sep)
   end
 
+  def test_uri_containing_pluses
+    assert_equal "a+plus", EscapeUtils.escape_uri("a+plus")
+  end
+
+  def test_uri_containing_slashes
+    assert_equal "a/slash", EscapeUtils.escape_uri("a/slash")
+  end
+
   if RUBY_VERSION =~ /^1.9/
     def test_input_must_be_utf8_or_ascii
       str = "fo<o>bar"

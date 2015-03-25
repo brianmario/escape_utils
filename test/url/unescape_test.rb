@@ -1,6 +1,6 @@
 require File.expand_path("../../helper", __FILE__)
 
-class UriUnescapeTest < Minitest::Test
+class UrlUnescapeTest < Minitest::Test
   def test_basic_url
     assert_equal "http://www.homerun.com/", EscapeUtils.unescape_url("http%3A%2F%2Fwww.homerun.com%2F")
     assert_equal "http://www.homerun.com/", EscapeUtils.unescape_url("http://www.homerun.com/")
@@ -35,9 +35,20 @@ class UriUnescapeTest < Minitest::Test
     assert_equal matz_name_sep, EscapeUtils.unescape_url('%E3%81%BE%E3%81%A4%20%E3%82%82%E3%81%A8')
   end
 
+  def test_url_containing_pluses
+    assert_equal "a+plus", EscapeUtils.unescape_url("a%2Bplus")
+  end
+
+  def test_escape_unescape_roundtrip
+    (0..127).each do |index|
+      char = index.chr
+      assert_equal char, EscapeUtils.unescape_url(EscapeUtils.escape_url(char))
+    end
+  end
+
   if RUBY_VERSION =~ /^1.9/
     def test_input_must_be_valid_utf8_or_ascii
-      escaped = EscapeUtils.escape_uri("fo<o>bar")
+      escaped = EscapeUtils.escape_url("fo<o>bar")
 
       escaped.force_encoding 'ISO-8859-1'
       assert_raises Encoding::CompatibilityError do
@@ -53,7 +64,7 @@ class UriUnescapeTest < Minitest::Test
     end
 
     def test_return_value_is_tagged_as_utf8
-      escaped = EscapeUtils.escape_uri("fo<o>bar")
+      escaped = EscapeUtils.escape_url("fo<o>bar")
       assert_equal Encoding.find('UTF-8'), EscapeUtils.unescape_url(escaped).encoding
     end
   end
