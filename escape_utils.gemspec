@@ -22,10 +22,10 @@ Gem::Specification.new do |s|
   s.add_development_dependency 'rake-compiler', ">= 0.7.5"
   s.add_development_dependency 'minitest', ">= 5.0.0"
   # benchmarks
+  s.add_development_dependency 'benchmark-ips'
   s.add_development_dependency 'rack'
   s.add_development_dependency 'haml'
   s.add_development_dependency 'fast_xs'
   s.add_development_dependency 'actionpack'
   s.add_development_dependency 'url_escape'
 end
-
