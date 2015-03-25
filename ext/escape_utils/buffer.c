@@ -242,7 +242,7 @@ void gh_buf_attach(gh_buf *buf, char *ptr, size_t asize)
 
 int gh_buf_cmp(const gh_buf *a, const gh_buf *b)
 {
-	int result = memcmp(a->ptr, b->ptr, (a->size < b->size) ? a->size : b->size);
+	int result = memcmp(a->ptr, b->ptr, MIN(a->size, b->size));
 	return (result != 0) ? result :
 		(a->size < b->size) ? -1 : (a->size > b->size) ? 1 : 0;
 }
