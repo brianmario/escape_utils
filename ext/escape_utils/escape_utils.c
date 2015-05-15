@@ -188,6 +188,13 @@ static VALUE rb_eu_unescape_url(VALUE self, VALUE str)
 	return rb_eu__generic(str, &houdini_unescape_url);
 }
 
+/**
+ * HREF methods
+ */
+static VALUE rb_eu_escape_href(VALUE self, VALUE str)
+{
+	return rb_eu__generic(str, &houdini_escape_href);
+}
 
 /**
  * URI methods
@@ -236,6 +243,7 @@ void Init_escape_utils()
 	rb_define_method(rb_mEscapeUtils, "escape_xml", rb_eu_escape_xml, 1);
 	rb_define_method(rb_mEscapeUtils, "escape_javascript", rb_eu_escape_js, 1);
 	rb_define_method(rb_mEscapeUtils, "unescape_javascript", rb_eu_unescape_js, 1);
+	rb_define_method(rb_mEscapeUtils, "escape_href", rb_eu_escape_href, 1);
 	rb_define_method(rb_mEscapeUtils, "escape_url", rb_eu_escape_url, 1);
 	rb_define_method(rb_mEscapeUtils, "unescape_url", rb_eu_unescape_url, 1);
 	rb_define_method(rb_mEscapeUtils, "escape_uri", rb_eu_escape_uri, 1);
