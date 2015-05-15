@@ -2,20 +2,20 @@ require File.expand_path("../../helper", __FILE__)
 require 'cgi'
 
 class HrefEscapeTest < Minitest::Test
-  def test_basic_url
+  def test_basic_href
     assert_equal "http://www.homerun.com/", EscapeUtils.escape_href("http://www.homerun.com/")
   end
 
-  def test_url_containing_tags
+  def test_href_containing_tags
     assert_equal "fo%3Co%3Ebar", EscapeUtils.escape_href("fo<o>bar")
   end
 
-  def test_url_containing_spaces
+  def test_href_containing_spaces
     assert_equal "a%20space", EscapeUtils.escape_href("a space")
     assert_equal "a%20%20%20sp%20ace%20", EscapeUtils.escape_href("a   sp ace ")
   end
 
-  def test_url_containing_mixed_characters
+  def test_href_containing_mixed_characters
     assert_equal "q1!2%22&#x27;w$5&amp;7/z8)?%5C", EscapeUtils.escape_href("q1!2\"'w$5&7/z8)?\\")
   end
 
@@ -26,11 +26,11 @@ class HrefEscapeTest < Minitest::Test
     assert_equal '%E3%81%BE%E3%81%A4%20%E3%82%82%E3%81%A8', EscapeUtils.escape_href(matz_name_sep)
   end
 
-  def test_url_containing_pluses
+  def test_href_containing_pluses
     assert_equal "a+plus", EscapeUtils.escape_href("a+plus")
   end
 
-  def test_url_containing_slashes
+  def test_href_containing_slashes
     assert_equal "a/slash", EscapeUtils.escape_href("a/slash")
   end
 
