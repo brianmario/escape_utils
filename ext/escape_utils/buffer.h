@@ -110,4 +110,10 @@ extern void gh_buf_clear(gh_buf *buf);
 
 #define gh_buf_PUTS(buf, str) gh_buf_put(buf, str, sizeof(str) - 1)
 
+/* support for environments where MIN is not provided */
+
+#ifndef MIN
+#define	MIN(a,b) (((a)<(b))?(a):(b))
+#endif
+
 #endif
