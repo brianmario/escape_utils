@@ -15,7 +15,7 @@ module HamlBench
   extend Haml::Helpers
 end
 
-url = "http://en.wikipedia.org/wiki/Line_of_succession_to_the_British_throne"
+url = "https://en.wikipedia.org/wiki/Succession_to_the_British_throne"
 html = `curl -s #{url}`
 html = html.force_encoding('utf-8') if html.respond_to?(:force_encoding)
 puts "Escaping #{html.bytesize} bytes of html from #{url}"
