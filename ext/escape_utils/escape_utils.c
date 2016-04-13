@@ -118,6 +118,7 @@ static VALUE rb_eu_escape_html_as_html_safe(VALUE self, VALUE str)
 	}
 
 	rb_ivar_set(result, ID_at_html_safe, Qtrue);
+	rb_enc_associate(result, rb_enc_get(str));
 
 	return result;
 }
