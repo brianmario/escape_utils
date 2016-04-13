@@ -4,6 +4,30 @@ class MyCustomHtmlSafeString < String
 end
 
 class HtmlEscapeTest < Minitest::Test
+  def test_escape_source_encoding_is_maintained
+    source = 'foobar'
+    str = EscapeUtils.escape_html_as_html_safe(source)
+    assert_equal source.encoding, str.encoding
+  end
+
+  def test_escape_binary_encoding_is_maintained
+    source = 'foobar'.b
+    str = EscapeUtils.escape_html_as_html_safe(source)
+    assert_equal source.encoding, str.encoding
+  end
+
+  def test_escape_uft8_encoding_is_maintained
+    source = 'foobar'.encode 'UTF-8'
+    str = EscapeUtils.escape_html_as_html_safe(source)
+    assert_equal source.encoding, str.encoding
+  end
+
+  def test_escape_us_ascii_encoding_is_maintained
+    source = 'foobar'.encode 'US-ASCII'
+    str = EscapeUtils.escape_html_as_html_safe(source)
+    assert_equal source.encoding, str.encoding
+  end
+
   def test_escape_basic_html_with_secure
     assert_equal "&lt;some_tag&#47;&gt;", EscapeUtils.escape_html("<some_tag/>")
 
