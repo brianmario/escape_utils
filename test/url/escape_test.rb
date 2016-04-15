@@ -22,6 +22,10 @@ class UrlEscapeTest < Minitest::Test
     assert_equal "a+++sp+ace+", EscapeUtils.escape_url("a   sp ace ")
   end
 
+  def test_url_containing_plus_sign
+    assert_equal "a%2Bplus", EscapeUtils.escape_url("a+plus")
+  end
+
   def test_url_containing_mixed_characters
     assert_equal "q1%212%22%27w%245%267%2Fz8%29%3F%5C", EscapeUtils.escape_url("q1!2\"'w$5&7/z8)?\\")
   end
