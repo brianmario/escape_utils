@@ -8,3 +8,6 @@ tmp/
 Gemfile.lock
 vendor/*
 bin/
+*.gem
+*.def
+*.so

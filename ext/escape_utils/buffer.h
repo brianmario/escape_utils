@@ -21,6 +21,8 @@ typedef struct {
 extern char gh_buf__initbuf[];
 extern char gh_buf__oom[];
 
+#define MIN(X,Y) ((X) < (Y) ? (X) : (Y))
+
 #define GH_BUF_INIT { gh_buf__initbuf, 0, 0 }
 
 /**
