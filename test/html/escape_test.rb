@@ -63,6 +63,30 @@ class HtmlEscapeTest < Minitest::Test
     assert_equal str.object_id, EscapeUtils.escape_html(str).object_id
   end
 
+  def test_escape_html_once
+    {
+      '&<' => '&amp;&lt;',
+      '&amp;&lt;&x;' => '&amp;&lt;&x;',
+      '&amp' => '&amp;amp',
+      '&!;' => '&amp;!;',
+      '&#0;' => '&#0;',
+      '&#10;' => '&#10;',
+      '&#10' => '&amp;#10',
+      '&#10000000000;' => '&#10000000000;',
+      '&#x0;' => '&#x0;',
+      '&#xf0;' => '&#xf0;',
+      '&#xf0' => '&amp;#xf0',
+      '&#x;' => '&amp;#x;',
+      '&#xfoo;' => '&amp;#xfoo;',
+      '&#;' => '&amp;#;',
+      '&#foo;' => '&amp;#foo;',
+      'foo&amp;bar' => 'foo&amp;bar',
+    }.each do |(input, output)|
+      assert_equal output, EscapeUtils.escape_html_once(input)
+      assert_equal output, EscapeUtils.escape_html_once_as_html_safe(input)
+    end
+  end
+
   def test_html_safe_escape_default_works
     str = EscapeUtils.escape_html_as_html_safe('foobar')
     assert_equal 'foobar', str
