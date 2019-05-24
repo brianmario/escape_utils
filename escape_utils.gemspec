@@ -27,5 +27,6 @@ Gem::Specification.new do |s|
   s.add_development_dependency 'haml'
   s.add_development_dependency 'fast_xs'
   s.add_development_dependency 'actionpack'
+  s.add_development_dependency 'activesupport'
   s.add_development_dependency 'url_escape'
 end

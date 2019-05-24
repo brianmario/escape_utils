@@ -44,15 +44,47 @@ static const char *HTML_ESCAPES[] = {
         "&gt;"
 };
 
+static int
+is_entity(const uint8_t *src, size_t size)
+{
+	size_t i = 0;
+
+	if (size == 0 || src[0] != '&')
+		return false;
+
+	if (size > 16)
+		size = 16;
+
+	if (size >= 4 && src[1] == '#') {
+		if (_isdigit(src[2])) {
+			for (i = 3; i < size && _isdigit(src[i]); ++i);
+		}
+		else if ((src[2] == 'x' || src[2] == 'X') && _isxdigit(src[3])) {
+			for (i = 4; i < size && _isxdigit(src[i]); ++i);
+		}
+		else return false;
+	}
+	else {
+		for (i = 1; i < size && _isasciialpha(src[i]); ++i);
+		if (i == 1) return false;
+	}
+
+	return i < size && src[i] == ';';
+}
+
 int
-houdini_escape_html0(gh_buf *ob, const uint8_t *src, size_t size, int secure)
+houdini_escape_html0(gh_buf *ob, const uint8_t *src, size_t size, int secure, int escape_once)
 {
 	size_t  i = 0, org, esc = 0;
 
 	while (i < size) {
 		org = i;
-		while (i < size && (esc = HTML_ESCAPE_TABLE[src[i]]) == 0)
+		while (i < size) {
+			esc = HTML_ESCAPE_TABLE[src[i]];
+			if (unlikely(esc != 0) && (!escape_once || !is_entity(src + i, size - i)))
+				break;
 			i++;
+		}
 
 		if (i > org) {
 			if (unlikely(org == 0)) {
@@ -85,6 +117,6 @@ houdini_escape_html0(gh_buf *ob, const uint8_t *src, size_t size, int secure)
 int
 houdini_escape_html(gh_buf *ob, const uint8_t *src, size_t size)
 {
-	return houdini_escape_html0(ob, src, size, 1);
+	return houdini_escape_html0(ob, src, size, 1, 0);
 }
 

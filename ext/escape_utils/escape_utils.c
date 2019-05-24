@@ -101,7 +101,7 @@ static VALUE new_html_safe_string(const char *ptr, size_t len)
 	return rb_str_new_with_class(rb_html_safe_string_template_object, ptr, len);
 }
 
-static VALUE rb_eu_escape_html_as_html_safe(VALUE self, VALUE str)
+static VALUE rb_eu_escape_html_as_html_safe0(VALUE self, VALUE str, int escape_once)
 {
 	VALUE result;
 	int secure = g_html_secure;
@@ -110,7 +110,7 @@ static VALUE rb_eu_escape_html_as_html_safe(VALUE self, VALUE str)
 	Check_Type(str, T_STRING);
 	check_utf8_encoding(str);
 
-	if (houdini_escape_html0(&buf, (const uint8_t *)RSTRING_PTR(str), RSTRING_LEN(str), secure)) {
+	if (houdini_escape_html0(&buf, (const uint8_t *)RSTRING_PTR(str), RSTRING_LEN(str), secure, escape_once)) {
 		result = new_html_safe_string(buf.ptr, buf.size);
 		gh_buf_free(&buf);
 	} else {
@@ -123,7 +123,17 @@ static VALUE rb_eu_escape_html_as_html_safe(VALUE self, VALUE str)
 	return result;
 }
 
-static VALUE rb_eu_escape_html(int argc, VALUE *argv, VALUE self)
+static VALUE rb_eu_escape_html_as_html_safe(VALUE self, VALUE str)
+{
+	return rb_eu_escape_html_as_html_safe0(self, str, 0);
+}
+
+static VALUE rb_eu_escape_html_once_as_html_safe(VALUE self, VALUE str)
+{
+	return rb_eu_escape_html_as_html_safe0(self, str, 1);
+}
+
+static VALUE rb_eu_escape_html0(int argc, VALUE *argv, VALUE self, int escape_once)
 {
 	VALUE str, rb_secure;
 	gh_buf buf = GH_BUF_INIT;
@@ -138,13 +148,23 @@ static VALUE rb_eu_escape_html(int argc, VALUE *argv, VALUE self)
 	Check_Type(str, T_STRING);
 	check_utf8_encoding(str);
 
-	if (houdini_escape_html0(&buf, (const uint8_t *)RSTRING_PTR(str), RSTRING_LEN(str), secure)) {
+	if (houdini_escape_html0(&buf, (const uint8_t *)RSTRING_PTR(str), RSTRING_LEN(str), secure, escape_once)) {
 		VALUE result = eu_new_str(buf.ptr, buf.size);
 		gh_buf_free(&buf);
 		return result;
 	}
 
 	return str;
+}
+
+static VALUE rb_eu_escape_html(int argc, VALUE *argv, VALUE self)
+{
+	return rb_eu_escape_html0(argc, argv, self, 0);
+}
+
+static VALUE rb_eu_escape_html_once(int argc, VALUE *argv, VALUE self)
+{
+	return rb_eu_escape_html0(argc, argv, self, 1);
 }
 
 static VALUE rb_eu_unescape_html(VALUE self, VALUE str)
@@ -232,7 +252,9 @@ void Init_escape_utils()
 
 	rb_mEscapeUtils = rb_define_module("EscapeUtils");
 	rb_define_method(rb_mEscapeUtils, "escape_html_as_html_safe", rb_eu_escape_html_as_html_safe, 1);
+	rb_define_method(rb_mEscapeUtils, "escape_html_once_as_html_safe", rb_eu_escape_html_once_as_html_safe, 1);
 	rb_define_method(rb_mEscapeUtils, "escape_html", rb_eu_escape_html, -1);
+	rb_define_method(rb_mEscapeUtils, "escape_html_once", rb_eu_escape_html_once, -1);
 	rb_define_method(rb_mEscapeUtils, "unescape_html", rb_eu_unescape_html, 1);
 	rb_define_method(rb_mEscapeUtils, "escape_xml", rb_eu_escape_xml, 1);
 	rb_define_method(rb_mEscapeUtils, "escape_javascript", rb_eu_escape_js, 1);

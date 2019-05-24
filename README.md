@@ -41,6 +41,8 @@ or per-call by passing `false` as the second parameter to `escape_html` like `Es
 
 For more information check out: http://www.owasp.org/index.php/XSS_(Cross_Site_Scripting)_Prevention_Cheat_Sheet#RULE_.231_-_HTML_Escape_Before_Inserting_Untrusted_Data_into_HTML_Element_Content
 
+To avoid double-escaping HTML entities, use `EscapeUtils.escape_html_once`.
+
 #### Unescaping
 
 ``` ruby
