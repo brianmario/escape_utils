@@ -3,6 +3,7 @@
 require 'rubygems'
 require 'bundler/setup'
 require 'benchmark/ips'
+require 'active_support/core_ext/string/output_safety'
 
 require 'rack'
 require 'erb'
@@ -39,6 +40,12 @@ Benchmark.ips do |x|
     end
   end
 
+  x.report "ERB::Util.html_escape_once" do |times|
+    times.times do
+      ERB::Util.html_escape_once(html)
+    end
+  end
+
   x.report "CGI.escapeHTML" do |times|
     times.times do
       CGI.escapeHTML(html)
@@ -61,6 +68,12 @@ Benchmark.ips do |x|
   x.report "EscapeUtils.escape_html" do |times|
     times.times do
       EscapeUtils.escape_html(html)
+    end
+  end
+
+  x.report "EscapeUtils.escape_html_once" do |times|
+    times.times do
+      EscapeUtils.escape_html_once(html)
     end
   end
 
