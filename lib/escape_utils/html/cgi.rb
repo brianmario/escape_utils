@@ -1,11 +1,9 @@
-class CGI
-  extend ::EscapeUtils::HtmlSafety
-
-  class << self
-    alias escapeHTML _escape_html
-
-    def unescapeHTML(s)
-      EscapeUtils.unescape_html(s.to_s)
+module EscapeUtils
+  module CGIHtmlSafety
+    def escapeHTML(html)
+      ::EscapeUtils::HtmlSafety.escape_once(html) { |s| super(s) }
     end
   end
 end
+
+CGI.singleton_class.prepend(EscapeUtils::CGIHtmlSafety)

@@ -6,7 +6,7 @@ For character encoding, the output string's encoding is copied from the input st
 
 It has monkey-patches for Rack::Utils, CGI, URI, ERB::Util and Haml and ActionView so you can drop this in and have your app start escaping fast as balls in no time
 
-It supports HTML, URL, URI and Javascript escaping/unescaping.
+It supports URL, URI and Javascript escaping/unescaping.
 
 ## Installing
 
@@ -29,34 +29,16 @@ utf8_string = non_utf8_string.encode('UTF-8')
 
 ### HTML
 
-#### Escaping
-
-``` ruby
-html = `curl -s http://maps.google.com`
-escaped_html = EscapeUtils.escape_html(html)
-```
-
-By default escape_utils will escape `/` characters with `&#47;`, but you can disable that by setting `EscapeUtils.html_secure = false`
-or per-call by passing `false` as the second parameter to `escape_html` like `EscapeUtils.escape_html(html, false)`
-
-For more information check out: http://www.owasp.org/index.php/XSS_(Cross_Site_Scripting)_Prevention_Cheat_Sheet#RULE_.231_-_HTML_Escape_Before_Inserting_Untrusted_Data_into_HTML_Element_Content
+As of `escape_utils 1.3.0`, regular HTML escaping methods are deprecated. Ruby 2.5 introduced C implementations for `CGI.escapeHTML` and `CGI.unescapeHTML` which are respectively faster and almost as fast as `EscapeUtils`. Use that instead.
 
 To avoid double-escaping HTML entities, use `EscapeUtils.escape_html_once`.
 
-#### Unescaping
-
-``` ruby
-html = `curl -s http://maps.google.com`
-escaped_html = EscapeUtils.escape_html(html)
-html = EscapeUtils.unescape_html(escaped_html)
-```
-
 #### Monkey Patches
 
+Since historically, `HTML` monkey patches changed the return value for `ActiveSupport::SafeBuffer` instances, they are conserved for that purpose only, but they should be considered as deprecated as well.
+
 ``` ruby
-require 'escape_utils/html/erb' # to patch ERB::Util
 require 'escape_utils/html/cgi' # to patch CGI
-require 'escape_utils/html/haml' # to patch Haml::Helpers
 ```
 
 ### URL

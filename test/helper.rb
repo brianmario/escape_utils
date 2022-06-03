@@ -1,9 +1,15 @@
 # Basic test environment.
 
-# blah fuck this
-require 'rubygems' if !defined?(Gem)
-require 'bundler/setup'
+module HideOwnWarnings
+  def warn(message)
+    unless message.include?("EscapeUtils")
+      super
+    end
+  end
+end
+Warning.prepend(HideOwnWarnings)
 
+require 'bundler/setup'
 require 'escape_utils'
 
 # bring in minitest

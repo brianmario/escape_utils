@@ -31,7 +31,7 @@ class HtmlEscapeTest < Minitest::Test
 
   def test_marks_escaped_strings_safe
     escaped = _escape_html("<strong>unsafe</strong>")
-    assert_equal "&lt;strong&gt;unsafe&lt;&#47;strong&gt;", escaped
+    assert_equal "&lt;strong&gt;unsafe&lt;/strong&gt;", escaped
     assert escaped.html_safe?
   end
 

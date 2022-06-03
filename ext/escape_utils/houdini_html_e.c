@@ -18,8 +18,8 @@
 static const char HTML_ESCAPE_TABLE[] = {
 	0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 
 	0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 
-	0, 0, 1, 0, 0, 0, 2, 3, 0, 0, 0, 0, 0, 0, 0, 4, 
-	0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 5, 0, 6, 0, 
+	0, 0, 1, 0, 0, 0, 2, 3, 0, 0, 0, 0, 0, 0, 0, 0, 
+	0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 4, 0, 5, 0, 
 	0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 
 	0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 
 	0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 
@@ -39,7 +39,6 @@ static const char *HTML_ESCAPES[] = {
         "&quot;",
         "&amp;",
         "&#39;",
-        "&#47;",
         "&lt;",
         "&gt;"
 };
@@ -73,7 +72,7 @@ is_entity(const uint8_t *src, size_t size)
 }
 
 int
-houdini_escape_html0(gh_buf *ob, const uint8_t *src, size_t size, int secure, int escape_once)
+houdini_escape_html_once(gh_buf *ob, const uint8_t *src, size_t size)
 {
 	size_t  i = 0, org, esc = 0;
 
@@ -81,7 +80,7 @@ houdini_escape_html0(gh_buf *ob, const uint8_t *src, size_t size, int secure, in
 		org = i;
 		while (i < size) {
 			esc = HTML_ESCAPE_TABLE[src[i]];
-			if (unlikely(esc != 0) && (!escape_once || !is_entity(src + i, size - i)))
+			if (unlikely(esc != 0) && !is_entity(src + i, size - i))
 				break;
 			i++;
 		}
@@ -101,22 +100,10 @@ houdini_escape_html0(gh_buf *ob, const uint8_t *src, size_t size, int secure, in
 		if (unlikely(i >= size))
 			break;
 
-		/* The forward slash is only escaped in secure mode */
-		if (src[i] == '/' && !secure) {
-			gh_buf_putc(ob, '/');
-		} else {
-			gh_buf_puts(ob, HTML_ESCAPES[esc]);
-		}
+		gh_buf_puts(ob, HTML_ESCAPES[esc]);
 
 		i++;
 	}
 
 	return 1;
 }
-
-int
-houdini_escape_html(gh_buf *ob, const uint8_t *src, size_t size)
-{
-	return houdini_escape_html0(ob, src, size, 1, 0);
-}
-
