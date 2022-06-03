@@ -5,7 +5,7 @@ class UriEscapeTest < Minitest::Test
   def test_uri_stdlib_compatibility
     (0..127).each do |i|
       c = i.chr
-      assert_equal URI.escape(c), EscapeUtils.escape_uri(c)
+      assert_equal URI::DEFAULT_PARSER.escape(c), EscapeUtils.escape_uri(c)
     end
   end
 
