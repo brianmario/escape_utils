@@ -3,6 +3,7 @@ source 'https://rubygems.org'
 group :test do
   gem 'rake-compiler'
   gem 'minitest'
+  gem 'actionview'
 end
 
 group :benchmark do

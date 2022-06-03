@@ -167,7 +167,7 @@ static VALUE rb_eu_escape_xml(VALUE self, VALUE str)
  */
 static VALUE rb_eu_escape_js(VALUE self, VALUE str)
 {
-	return rb_eu__generic(str, &houdini_escape_js);
+	return rb_eu__generic(rb_obj_as_string(str), &houdini_escape_js);
 }
 
 static VALUE rb_eu_unescape_js(VALUE self, VALUE str)
