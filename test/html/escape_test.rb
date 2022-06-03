@@ -105,26 +105,24 @@ class HtmlEscapeTest < Minitest::Test
     end
   end
 
-  if RUBY_VERSION =~ /^1.9/
-    def test_utf8_or_ascii_input_only
-      str = "<b>Bourbon & Branch</b>"
+  def test_utf8_or_ascii_input_only
+    str = "<b>Bourbon & Branch</b>"
 
-      str.force_encoding 'ISO-8859-1'
-      assert_raises Encoding::CompatibilityError do
-        EscapeUtils.escape_html(str)
-      end
-
-      str.force_encoding 'UTF-8'
-      begin
-        EscapeUtils.escape_html(str)
-      rescue Encoding::CompatibilityError => e
-        assert_nil e, "#{e.class.name} raised, expected not to"
-      end
+    str.force_encoding 'ISO-8859-1'
+    assert_raises Encoding::CompatibilityError do
+      EscapeUtils.escape_html(str)
     end
 
-    def test_return_value_is_tagged_as_utf8
-      str = "<b>Bourbon & Branch</b>".encode('utf-8')
-      assert_equal Encoding.find('UTF-8'), EscapeUtils.escape_html(str).encoding
+    str.force_encoding 'UTF-8'
+    begin
+      EscapeUtils.escape_html(str)
+    rescue Encoding::CompatibilityError => e
+      assert_nil e, "#{e.class.name} raised, expected not to"
     end
+  end
+
+  def test_return_value_is_tagged_as_utf8
+    str = "<b>Bourbon & Branch</b>".encode('utf-8')
+    assert_equal Encoding.find('UTF-8'), EscapeUtils.escape_html(str).encoding
   end
 end
