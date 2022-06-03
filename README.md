@@ -2,7 +2,7 @@
 
 Being as though we're all html escaping everything these days, why not make it faster?
 
-For character encoding in 1.9, the output string's encoding is copied from the input string.
+For character encoding, the output string's encoding is copied from the input string.
 
 It has monkey-patches for Rack::Utils, CGI, URI, ERB::Util and Haml and ActionView so you can drop this in and have your app start escaping fast as balls in no time
 
@@ -10,7 +10,7 @@ It supports HTML, URL, URI and Javascript escaping/unescaping.
 
 ## Installing
 
-Compatible with Ruby 1.9.3+
+Compatible with Ruby 2.5+
 
 ``` sh
 gem install escape_utils
