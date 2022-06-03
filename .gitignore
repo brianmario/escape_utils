@@ -7,4 +7,3 @@ doc/*
 tmp/
 Gemfile.lock
 vendor/*
-bin/
