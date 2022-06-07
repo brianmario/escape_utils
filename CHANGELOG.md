@@ -1,5 +1,7 @@
 # Unreleased
 
+- Add `EscapeUtils.escape_html_once` and `EscapeUtils.rb_eu_escape_html_once_as_html_safe` as faster implementations of Rails `escape_once` helper.
+
 # 1.2.2
 
 - Update EscapeUtils.escape_javascript to match Rails `escape_javascript`
