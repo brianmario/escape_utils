@@ -13,17 +13,13 @@ xml = xml.force_encoding('binary') if xml.respond_to?(:force_encoding)
 puts "Escaping #{xml.bytesize} bytes of xml, from #{url}"
 
 Benchmark.ips do |x|
-  x.report "fast_xs" do |times|
-    times.times do
-      xml.fast_xs
-    end
+  x.report "fast_xs" do
+    xml.fast_xs
   end
 
-  x.report "EscapeUtils.escape_xml" do |times|
-    times.times do
-      EscapeUtils.escape_xml(xml)
-    end
+  x.report "EscapeUtils.escape_xml" do
+    EscapeUtils.escape_xml(xml)
   end
 
-  x.compare!
+  x.compare!(order: :baseline)
 end

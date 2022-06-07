@@ -35,12 +35,21 @@ static const char HTML_ESCAPE_TABLE[] = {
 };
 
 static const char *HTML_ESCAPES[] = {
-        "",
-        "&quot;",
-        "&amp;",
-        "&#39;",
-        "&lt;",
-        "&gt;"
+	"",
+	"&quot;",
+	"&amp;",
+	"&#39;",
+	"&lt;",
+	"&gt;"
+};
+
+static const int HTML_ESCAPES_LENGTHS[] = {
+	0,
+	6,
+	5,
+	5,
+	4,
+	4
 };
 
 static int
@@ -100,7 +109,7 @@ houdini_escape_html_once(gh_buf *ob, const uint8_t *src, size_t size)
 		if (unlikely(i >= size))
 			break;
 
-		gh_buf_puts(ob, HTML_ESCAPES[esc]);
+		gh_buf_put(ob, HTML_ESCAPES[esc], HTML_ESCAPES_LENGTHS[esc]);
 
 		i++;
 	}

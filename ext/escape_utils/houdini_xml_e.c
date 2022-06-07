@@ -25,6 +25,20 @@ static const char *LOOKUP_CODES[] = {
 	"&gt;"
 };
 
+static const int LOOKUP_CODES_LENGTHS[] = {
+	0,
+	0,
+	0,
+	0,
+	0,
+	1,
+	6,
+	5,
+	6,
+	4,
+	4
+};
+
 static const char CODE_INVALID = 5;
 
 static const char XML_LOOKUP_TABLE[] = {
@@ -129,7 +143,7 @@ houdini_escape_xml(gh_buf *ob, const uint8_t *src, size_t size)
 		if (end >= size)
 			break;
 
-		gh_buf_puts(ob, LOOKUP_CODES[code]);
+		gh_buf_put(ob, LOOKUP_CODES[code], LOOKUP_CODES_LENGTHS[code]);
 	}
 
 	return 1;
