@@ -1,8 +1,8 @@
 module Rack
   module Utils
-    include ::EscapeUtils::HtmlSafety
-
-    alias escape_html _escape_html
+    def escape_html(html)
+      ::EscapeUtils::HtmlSafety.escape_once(html) { |s| CGI.escapeHTML(s) }
+    end
     module_function :escape_html
   end
 end

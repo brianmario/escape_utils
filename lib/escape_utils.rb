@@ -1,22 +1,64 @@
+require 'cgi'
 require 'escape_utils/escape_utils'
 require 'escape_utils/version' unless defined? EscapeUtils::VERSION
 
 module EscapeUtils
   extend self
 
-  # turn on/off the escaping of the '/' character during HTML escaping
-  # Escaping '/' is recommended by the OWASP - http://www.owasp.org/index.php/XSS_(Cross_Site_Scripting)_Prevention_Cheat_Sheet#RULE_.231_-_HTML_Escape_Before_Inserting_Untrusted_Data_into_HTML_Element_Content
-  # This is because quotes around HTML attributes are optional in most/all modern browsers at the time of writing (10/15/2010)
-  def self.html_secure
-    @html_secure
+  def html_secure
+    warn "EscapeUtils.html_secure is deprecated"
+    false
   end
-  self.html_secure = true
+
+  def html_secure=(val)
+    warn "EscapeUtils.html_secure is deprecated"
+  end
 
   # Default String class to return from HTML escaping
-  def self.html_safe_string_class
-    @html_safe_string_class
+  attr_reader :html_safe_string_class
+
+  def html_safe_string_class=(klass)
+    unless String >= klass
+      raise ArgumentError, "EscapeUtils.html_safe_string_class must inherit from ::String"
+    end
+    @html_safe_string_class = klass
   end
+
   self.html_safe_string_class = String
 
   autoload :HtmlSafety, 'escape_utils/html_safety'
+
+  def self.escape_html_once_as_html_safe(html)
+    escaped = escape_html_once(html)
+    if String == @html_safe_string_class
+      escaped
+    else
+      escaped = @html_safe_string_class.new(escaped)
+      escaped.instance_variable_set(:@html_safe, true)
+      escaped
+    end
+  end
+
+  def self.escape_html(html, secure = false)
+    warn "EscapeUtils.escape_html is deprecated. Use GCI.escapeHTML instead, it's faster"
+    CGI.escapeHTML(html)
+  end
+
+  def self.escape_html_as_html_safe(html)
+    warn "EscapeUtils.escape_html_as_html_safe is deprecated. Use GCI.escapeHTML(str).html_safe instead, it's faster"
+
+    escaped = CGI.escapeHTML(html)
+    if String == @html_safe_string_class
+      escaped
+    else
+      escaped = @html_safe_string_class.new(escaped)
+      escaped.instance_variable_set(:@html_safe, true)
+      escaped
+    end
+  end
+
+  def self.unescape_html(html)
+    warn "EscapeUtils.unescape_html is deprecated. Use GCI.unescapeHTML instead, performance is similar"
+    CGI.unescapeHTML(html)
+  end
 end
