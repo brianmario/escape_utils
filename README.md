@@ -22,7 +22,7 @@ escape_utils assumes all input is encoded as valid UTF-8. If you are dealing wit
 
 
 ``` ruby
-utf8_string = non_utf8_string.encode('UTF-8')
+utf8_string = non_utf8_string.encode(Encoding::UTF_8)
 ```
 
 ## Usage
