@@ -1,12 +1,12 @@
 # escape_utils
 
-Being as though we're all html escaping everything these days, why not make it faster?
+`EscapeUtils` used to provide optimized escaping function to replace the slow methods
+provided by Ruby. Since Ruby 2.5, the various `CGI` escape methods have been severely optimized
+and most `EscapeUtils` methods became irrelevant and were deprecated.
 
-For character encoding, the output string's encoding is copied from the input string.
+It however still provide fast escaping and unescaping methods for URL (RFC 3986), Javascript, XML, as well as an "escape HTML once" method.
 
-It has monkey-patches for Rack::Utils, CGI, URI, ERB::Util and Haml and ActionView so you can drop this in and have your app start escaping fast as balls in no time
-
-It supports URL, URI and Javascript escaping/unescaping.
+It has monkey-patches for Rack::Utils, URI and ERB::Util so you can drop this in and have your app start escaping fast as balls in no time
 
 ## Installing
 
