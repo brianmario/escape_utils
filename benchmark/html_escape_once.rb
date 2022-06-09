@@ -13,12 +13,12 @@ html = html.force_encoding('utf-8')
 puts "Escaping #{html.bytesize} bytes of html from #{url}"
 
 Benchmark.ips do |x|
-  x.report "ActionView escape_once" do # Rails expose it as ERB::Util.html_escape_once
-    ERB::Util.html_escape_once(html)
-  end
-
   x.report "EscapeUtils.escape_html_once" do
     EscapeUtils.escape_html_once(html)
+  end
+
+  x.report "ActionView::Helpers::TagHelper#escape_once" do # Rails expose it as ERB::Util.html_escape_once
+    ERB::Util.html_escape_once(html)
   end
 
   x.compare!(order: :baseline)

@@ -17,11 +17,11 @@ puts "Escaping a #{url.bytesize} byte URL"
 
 Benchmark.ips do |x|
   x.report "EscapeUtils.unescape_uri" do
-    EscapeUtils.unescape_url(escaped_url)
+    EscapeUtils.unescape_uri(escaped_url)
   end
 
   x.report "fast_xs_extra#fast_uxs_url" do
-    url.fast_uxs_cgi
+    url.fast_xs_url
   end
 
   x.compare!(order: :baseline)

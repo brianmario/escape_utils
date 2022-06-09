@@ -61,4 +61,14 @@ module EscapeUtils
     warn "EscapeUtils.unescape_html is deprecated. Use GCI.unescapeHTML instead, performance is similar"
     CGI.unescapeHTML(html)
   end
+
+  def self.escape_url(string)
+    warn "EscapeUtils.escape_url is deprecated. Use CGI.escape instead, performance is similar"
+    CGI.escape(string)
+  end
+
+  def self.unescape_url(string)
+    warn "EscapeUtils.unescape_url is deprecated. Use CGI.unescape instead, performance is similar"
+    CGI.unescape(string)
+  end
 end

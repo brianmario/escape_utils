@@ -43,29 +43,28 @@ require 'escape_utils/html/cgi' # to patch CGI
 
 ### URL
 
-Use (un)escape_uri to get RFC-compliant escaping (like PHP rawurlencode).
+Use `escape_uri` and `unescape` to get RFC 3986 compliant escaping (like PHP `rawurlencode` or `ERB::Util.url_encode`).
 
-Use (un)escape_url to get CGI escaping (where space is +).
+The difference with `CGI.escape` is that spaces (` `) are encoded as `%20` instead of `+`.
 
 #### Escaping
 
 ``` ruby
 url = "https://www.yourmom.com/cgi-bin/session.cgi?sess_args=mcEA~!!#*YH*>@!U"
-escaped_url = EscapeUtils.escape_url(url)
+escaped_url = EscapeUtils.escape_uri(url)
 ```
 
 #### Unescaping
 
 ``` ruby
 url = "https://www.yourmom.com/cgi-bin/session.cgi?sess_args=mcEA~!!#*YH*>@!U"
-escaped_url = EscapeUtils.escape_url(url)
-EscapeUtils.unescape_url(escaped_url) == url # => true
+escaped_url = EscapeUtils.escape_uri(url)
+EscapeUtils.unescape_uri(escaped_uri) == url # => true
 ```
 
 #### Monkey Patches
 
 ``` ruby
-require 'escape_utils/url/cgi' # to patch CGI
 require 'escape_utils/url/erb' # to patch ERB::Util
 require 'escape_utils/url/uri' # to patch URI
 ```
@@ -103,48 +102,20 @@ Escaping Javascript is around 16-30x faster.
 
 This output is from my laptop using the benchmark scripts in the benchmarks folder.
 
-### HTML
-
-#### Escaping
-
-```
-Rack::Utils.escape_html
- 9.650000   0.090000   9.740000 (  9.750756)
-Haml::Helpers.html_escape
- 9.310000   0.110000   9.420000 (  9.417317)
-ERB::Util.html_escape
- 5.330000   0.390000   5.720000 (  5.748394)
-CGI.escapeHTML
- 5.370000   0.380000   5.750000 (  5.791344)
-FasterHTMLEscape.html_escape
- 0.520000   0.010000   0.530000 (  0.539485)
-fast_xs_extra#fast_xs_html
- 0.310000   0.030000   0.340000 (  0.336734)
-EscapeUtils.escape_html
- 0.200000   0.050000   0.250000 (  0.258839)
-```
-
-#### Unescaping
-
-```
-CGI.unescapeHTML
- 16.520000   0.080000  16.600000 ( 16.853888)
-EscapeUtils.unescape_html
- 0.120000   0.040000   0.160000  (  0.162696)
-```
-
 ### Javascript
 
 #### Escaping
 
 ```
-ActionView::Helpers::JavaScriptHelper#escape_javascript
- 3.810000   0.100000   3.910000 (  3.925557)
-EscapeUtils.escape_javascript
- 0.200000   0.040000   0.240000 (  0.236692)
+EscapeUtils.escape_javascript:                               1567.5 i/s
+ActionView::Helpers::JavaScriptHelper#escape_javascript:      116.8 i/s - 13.42x  (± 0.00) slower
 ```
 
 #### Unescaping
+
+```
+EscapeUtils.escape_javascript:    2.089k (± 3.0%) i/s -     10.530k in   5.044615s
+```
 
 I didn't look that hard, but I'm not aware of another ruby library that does Javascript unescaping to benchmark against. Anyone know of any?
 
@@ -153,31 +124,23 @@ I didn't look that hard, but I'm not aware of another ruby library that does Jav
 #### Escaping
 
 ```
-ERB::Util.url_encode
- 0.520000   0.010000   0.530000 (  0.529277)
-Rack::Utils.escape
- 0.460000   0.010000   0.470000 (  0.466962)
-CGI.escape
- 0.440000   0.000000   0.440000 (  0.443017)
-URLEscape#escape
- 0.040000   0.000000   0.040000 (  0.045661)
-fast_xs_extra#fast_xs_url
- 0.010000   0.000000   0.010000 (  0.015429)
-EscapeUtils.escape_url
- 0.010000   0.000000   0.010000 (  0.010843)
+EscapeUtils.escape_uri:     3983745.7 i/s
+fast_xs_extra#fast_xs_url:  2371254.2 i/s - 1.68x  (± 0.00) slower
+ERB::Util.url_encode:       121954.2 i/s - 32.67x  (± 0.00) slower
 ```
 
 #### Unescaping
 
 ```
-Rack::Utils.unescape
- 0.250000   0.010000   0.260000 (  0.257558)
-CGI.unescape
- 0.250000   0.000000   0.250000 (  0.257837)
-URLEscape#unescape
- 0.040000   0.000000   0.040000 (  0.031548)
-fast_xs_extra#fast_uxs_cgi
- 0.010000   0.000000   0.010000 (  0.006062)
-EscapeUtils.unescape_url
- 0.000000   0.000000   0.000000 (  0.005679)
+EscapeUtils.unescape_uri:    3866774.5 i/s
+fast_xs_extra#fast_uxs_url:  2438900.7 i/s - 1.59x  (± 0.00) slower
+```
+
+### HTML
+
+#### Escape once
+
+```
+EscapeUtils.escape_html_once:                   2831.5 i/s
+ActionView::Helpers::TagHelper#escape_once:      161.4 i/s - 17.55x  (± 0.00) slower
 ```
