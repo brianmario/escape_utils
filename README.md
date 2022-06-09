@@ -71,6 +71,13 @@ require 'escape_utils/url/uri' # to patch URI
 
 Note that `URI.escape` and `URI.unescape` where removed in Ruby 3.0. `'escape_utils/url/uri'` is a noop on Ruby 3+.
 
+### XML
+
+```ruby
+xml = `curl -s 'https://raw.githubusercontent.com/darcyliu/google-styleguide/master/cppguide.xml'`
+escaped_xml = EscapeUtils.escape_xml(xml)
+```
+
 ### Javascript
 
 #### Escaping
