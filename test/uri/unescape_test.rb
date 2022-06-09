@@ -23,10 +23,10 @@ class UriUnescapeTest < Minitest::Test
 
   def test_uri_containing_multibyte_charactes
     matz_name = "\xE3\x81\xBE\xE3\x81\xA4\xE3\x82\x82\xE3\x81\xA8" # Matsumoto
-    matz_name.force_encoding('UTF-8') if matz_name.respond_to?(:force_encoding)
+    matz_name.force_encoding('UTF-8')
     assert_equal matz_name, EscapeUtils.unescape_uri('%E3%81%BE%E3%81%A4%E3%82%82%E3%81%A8')
     matz_name_sep = "\xE3\x81\xBE\xE3\x81\xA4 \xE3\x82\x82\xE3\x81\xA8" # Matsu moto
-    matz_name_sep.force_encoding('UTF-8') if matz_name_sep.respond_to?(:force_encoding)
+    matz_name_sep.force_encoding('UTF-8')
     assert_equal matz_name_sep, EscapeUtils.unescape_uri('%E3%81%BE%E3%81%A4%20%E3%82%82%E3%81%A8')
   end
 

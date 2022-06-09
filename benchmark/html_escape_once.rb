@@ -9,7 +9,7 @@ require 'active_support/core_ext/string/output_safety'
 
 url = "https://en.wikipedia.org/wiki/Succession_to_the_British_throne"
 html = `curl -s #{url}`
-html = html.force_encoding('utf-8') if html.respond_to?(:force_encoding)
+html = html.force_encoding('utf-8')
 puts "Escaping #{html.bytesize} bytes of html from #{url}"
 
 Benchmark.ips do |x|
