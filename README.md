@@ -70,6 +70,8 @@ require 'escape_utils/url/erb' # to patch ERB::Util
 require 'escape_utils/url/uri' # to patch URI
 ```
 
+Note that `URI.escape` and `URI.unescape` where removed in Ruby 3.0. `'escape_utils/url/uri'` is a noop on Ruby 3+.
+
 ### Javascript
 
 #### Escaping
