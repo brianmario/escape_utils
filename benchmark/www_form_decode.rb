@@ -15,6 +15,10 @@ escaped_url = EscapeUtils.escape_url(url)
 puts "Escaping a #{url.bytesize} byte URL"
 
 Benchmark.ips do |x|
+  x.report "EscapeUtils.unescape_url" do
+    EscapeUtils.unescape_url(escaped_url)
+  end
+
   x.report "Rack::Utils.unescape" do
     Rack::Utils.unescape(escaped_url)
   end
@@ -29,10 +33,6 @@ Benchmark.ips do |x|
 
   x.report "fast_xs_extra#fast_uxs_cgi" do
     url.fast_uxs_cgi
-  end
-
-  x.report "EscapeUtils.unescape_url" do
-    EscapeUtils.unescape_url(escaped_url)
   end
 
   x.compare!(order: :baseline)
