@@ -19,6 +19,10 @@ Benchmark.ips do |x|
     EscapeUtils.escape_uri(url)
   end
 
+  x.report " URI::DEFAULT_PARSER.escape" do
+     URI::DEFAULT_PARSER.escape(url)
+  end
+
   x.report "ERB::Util.url_encode" do |times|
     times.times do
       ERB::Util.url_encode(url)

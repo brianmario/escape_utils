@@ -103,9 +103,11 @@ require 'escape_utils/javascript/action_view' # to patch ActionView::Helpers::Ja
 
 ## Benchmarks
 
-In my testing, escaping html is around 10-30x faster than the pure ruby implementations in wide use today.
-While unescaping html is around 40-100x faster than CGI.unescapeHTML which is also pure ruby.
-Escaping Javascript is around 16-30x faster.
+Escaping URL following RFC 3986 is 13-32x faster than the methods provided by Ruby.
+
+Escaping Javascript is around 13x faster than Rails `escape_javascript`.
+
+`EscapeUtils.escape_html_once` is about 17x faster than Rails `escape_once`.
 
 This output is from my laptop using the benchmark scripts in the benchmarks folder.
 
@@ -131,9 +133,10 @@ I didn't look that hard, but I'm not aware of another ruby library that does Jav
 #### Escaping
 
 ```
-EscapeUtils.escape_uri:     3983745.7 i/s
-fast_xs_extra#fast_xs_url:  2371254.2 i/s - 1.68x  (± 0.00) slower
-ERB::Util.url_encode:       121954.2 i/s - 32.67x  (± 0.00) slower
+EscapeUtils.escape_uri:       4019359.2 i/s
+fast_xs_extra#fast_xs_url:    2435949.2 i/s - 1.65x  (± 0.00) slower
+URI::DEFAULT_PARSER.escape:   288800.8 i/s - 13.92x  (± 0.00) slower
+ERB::Util.url_encode:         122373.5 i/s - 32.85x  (± 0.00) slower
 ```
 
 #### Unescaping
