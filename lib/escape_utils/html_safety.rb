@@ -2,10 +2,11 @@ module EscapeUtils
   module HtmlSafety
     if "".respond_to? :html_safe?
       def self.escape_once(s)
+        s = s.to_s
         if s.html_safe?
-          s.to_s.html_safe
+          s.html_safe
         else
-          yield(s.to_s).html_safe
+          yield(s).html_safe
         end
       end
 
