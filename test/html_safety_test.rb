@@ -1,31 +1,5 @@
 require File.expand_path("../helper", __FILE__)
 
-class Object
-  def html_safe?
-    false
-  end
-end
-
-class TestSafeBuffer < String
-  def html_safe?
-    true
-  end
-
-  def html_safe
-    self
-  end
-
-  def to_s
-    self
-  end
-end
-
-class String
-  def html_safe
-    TestSafeBuffer.new(self)
-  end
-end
-
 class HtmlEscapeTest < Minitest::Test
   include EscapeUtils::HtmlSafety
 

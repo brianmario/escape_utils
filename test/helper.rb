@@ -12,6 +12,13 @@ Warning.prepend(HideOwnWarnings)
 require 'bundler/setup'
 require 'escape_utils'
 
+require 'active_support'
+require 'active_support/json'
+require "active_support/core_ext/string/output_safety"
+
+require 'action_view'
+require 'action_view/helpers'
+
 # bring in minitest
 require 'minitest/autorun'
 
