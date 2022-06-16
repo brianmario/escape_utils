@@ -1,5 +1,7 @@
 # Unreleased
 
+# 1.3.0
+
 - Deprecate `EscapeUtils.escape_url` and `EscapeUtils.unescape_url` given that Ruby 2.5 provides an optimized `CGI.escape` and `CGI.unescape` with mostly similar performance.
 - Don't patch `URI.escape` and `URI.unescape` if they don't already exist.
 - Add `EscapeUtils.escape_html_once` and `EscapeUtils.rb_eu_escape_html_once_as_html_safe` as faster implementations of Rails `escape_once` helper.
