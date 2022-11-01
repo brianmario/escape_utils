@@ -14,7 +14,8 @@ Gem::Specification.new do |s|
   s.rubygems_version = %q{1.4.2}
   s.summary = %q{Faster string escaping routines for your web apps}
   s.description = %q{Quickly perform HTML, URL, URI and Javascript escaping/unescaping}
-  s.test_files = `git ls-files test`.split("\n")
+  s.files = `git ls-files -z`.split("\x0").reject { |f| f.match?(%r{^(\.github|benchmark|test|script)/}) }
+  s.test_files = `git ls-files -z test`.split("\x0")
 
   s.required_ruby_version = ">= 2.5"
 end
