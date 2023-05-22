@@ -40,12 +40,12 @@ module EscapeUtils
   end
 
   def self.escape_html(html, secure = false)
-    warn "EscapeUtils.escape_html is deprecated. Use GCI.escapeHTML instead, it's faster"
+    warn "EscapeUtils.escape_html is deprecated. Use CGI.escapeHTML instead, it's faster"
     CGI.escapeHTML(html)
   end
 
   def self.escape_html_as_html_safe(html)
-    warn "EscapeUtils.escape_html_as_html_safe is deprecated. Use GCI.escapeHTML(str).html_safe instead, it's faster"
+    warn "EscapeUtils.escape_html_as_html_safe is deprecated. Use CGI.escapeHTML(str).html_safe instead, it's faster"
 
     escaped = CGI.escapeHTML(html)
     if String == @html_safe_string_class
@@ -58,7 +58,7 @@ module EscapeUtils
   end
 
   def self.unescape_html(html)
-    warn "EscapeUtils.unescape_html is deprecated. Use GCI.unescapeHTML instead, performance is similar"
+    warn "EscapeUtils.unescape_html is deprecated. Use CGI.unescapeHTML instead, performance is similar"
     CGI.unescapeHTML(html)
   end
 

@@ -5,8 +5,8 @@
 - Deprecate `EscapeUtils.escape_url` and `EscapeUtils.unescape_url` given that Ruby 2.5 provides an optimized `CGI.escape` and `CGI.unescape` with mostly similar performance.
 - Don't patch `URI.escape` and `URI.unescape` if they don't already exist.
 - Add `EscapeUtils.escape_html_once` and `EscapeUtils.rb_eu_escape_html_once_as_html_safe` as faster implementations of Rails `escape_once` helper.
-- Deprecate `escape_html` and `escape_html_as_html_safe` given that Ruby 2.5 optimized `GCI.escapeHTML` to be twice faster than the `EscapeUtils` implementation.
-- Deprecate `unescape_html` given that Ruby 2.5 optimized `GCI.unescapeHTML` to be only 40% slower than th `EscapeUtils` implementation.
+- Deprecate `escape_html` and `escape_html_as_html_safe` given that Ruby 2.5 optimized `CGI.escapeHTML` to be twice faster than the `EscapeUtils` implementation.
+- Deprecate `unescape_html` given that Ruby 2.5 optimized `CGI.unescapeHTML` to be only 40% slower than th `EscapeUtils` implementation.
 - Deprecate `escape_html_as_html_safe` as well.
 - Deprecate `EscapeUtils.html_safe`, there's no reason to escape for slashes `/` in 2022.
 
